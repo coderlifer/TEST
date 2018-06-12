@@ -14,8 +14,7 @@ import collections
 import random
 import json
 import time
-from scipy import misc
-import imageio
+import cv2
 
 sys.path.append(os.getcwd())
 
@@ -116,11 +115,11 @@ def load_data(data_dir=None):
 
     images = []
     for path in input_paths:
-        img = misc.imread(path)
+        img = cv2.imread(path)
         images.append(img)
 
-    input_paths = np.asarray(input_paths)
-    images = np.asarray(images)
+    # input_paths = np.asarray(input_paths)
+    # images = np.asarray(images)
 
     # print('\nlen(input_paths): {}'.format(len(input_paths)))
     # print('input_paths: {}'.format(input_paths))
@@ -324,34 +323,7 @@ def append_index(filesets, step=False):
 
 
 def load_examples(raw_input, input_paths):
-    # if input_dir is None or not os.path.exists(input_dir):
-    #     raise Exception("input_dir does not exist!")
-
-    # input_paths = glob.glob(os.path.join(input_dir, "*.jpg"))
-    # decode = tf.image.decode_jpeg
-    # if len(input_paths) == 0:
-    #     input_paths = glob.glob(os.path.join(input_dir, "*.png"))
-    #     decode = tf.image.decode_png
-
-    # if len(input_paths) == 0:
-    #     raise Exception("input_dir contains no image files")
-
-    # def get_name(path):
-    #     name, _ = os.path.splitext(os.path.basename(path))
-    #     return name
-    #
-    # # if the image names are numbers, sort by the value rather than asciibetically
-    # # having sorted inputs means that the outputs are sorted in test mode
-    # if all(get_name(path).isdigit() for path in input_paths):
-    #     input_paths = sorted(input_paths, key=lambda path: int(get_name(path)))
-    # else:
-    #     input_paths = sorted(input_paths)
-
     with tf.name_scope("load_images"):
-        # path_queue = tf.train.string_input_producer(input_paths, shuffle=args.mode == "train")
-        # reader = tf.WholeFileReader()
-        # paths, contents = reader.read(path_queue)
-        # raw_input = decode(contents)
         raw_input = tf.image.convert_image_dtype(raw_input, dtype=tf.float32)
 
         assertion = tf.assert_equal(tf.shape(raw_input)[2], 3, message="image does not have 3 channels")
@@ -359,7 +331,7 @@ def load_examples(raw_input, input_paths):
             raw_input = tf.identity(raw_input)
 
         # raw_input.set_shape([None, None, None, 3])
-        # print('\nraw_input.shape: {}'.format(raw_input.shape.as_list()))
+        print('\nraw_input.shape: {}'.format(raw_input.shape.as_list()))
 
         if args.lab_colorization:
             # load color and brightness from image, no B image exists here
@@ -371,6 +343,7 @@ def load_examples(raw_input, input_paths):
             # break apart image pair and move to range [-1, 1]
             height = raw_input.shape.as_list()[0]  # [height, width, channels]
             width = raw_input.shape.as_list()[1]  # [height, width, channels]
+            # width = tf.shape(raw_input)[1]  # [height, width, channels]
             channels = raw_input.shape.as_list()[2]  # [height, width, channels]
 
             if args.multiple_A:
@@ -385,12 +358,12 @@ def load_examples(raw_input, input_paths):
                 # a_images_edge = preprocess(raw_input[:, :width // 3, :])
                 # a_images = preprocess(raw_input[:, width // 3:(2 * width) // 3, :])
                 # a_images = tf.concat(values=[a_images_edge, a_images], axis=3)
-                # print('\na_images.shape: {}\n'.format(a_images.shape.as_list()))
+                # print('\na_images.shape: {}'.format(a_images.shape.as_list()))
 
                 b_images = preprocess(aab[2])
                 b_images = tf.reshape(b_images, [height, width // 3, channels])
                 # b_images = preprocess(raw_input[:, (2 * width) // 3:, :])
-                # print('\nb_images.shape: {}\n'.format(b_images.shape.as_list()))
+                # print('\nb_images.shape: {}'.format(b_images.shape.as_list()))
             else:
                 a_images = preprocess(raw_input[:, :width // 2, :])
                 b_images = preprocess(raw_input[:, width // 2:, :])
@@ -412,14 +385,18 @@ def load_examples(raw_input, input_paths):
 
         # area produces a nice downscaling, but does nearest neighbor for upscaling
         # assume we're going to be doing downscaling here
-        r = tf.image.resize_images(r, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
+        # r = tf.image.resize_images(r, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
+        #
+        # offset = tf.cast(
+        #     tf.floor(
+        #         tf.random_uniform([2], 0, args.scale_size - args.crop_size + 1, seed=seed)
+        #     ),
+        #     dtype=tf.int32)
+        # if args.scale_size > args.crop_size:
+        #     r = tf.image.crop_to_bounding_box(r, offset[0], offset[1], args.crop_size, args.crop_size)
+        # elif args.scale_size < args.crop_size:
+        #     raise Exception("scale size cannot be less than crop size")
 
-        offset = tf.cast(tf.floor(tf.random_uniform([2], 0, args.scale_size - args.crop_size + 1, seed=seed)),
-                         dtype=tf.int32)
-        if args.scale_size > args.crop_size:
-            r = tf.image.crop_to_bounding_box(r, offset[0], offset[1], args.crop_size, args.crop_size)
-        elif args.scale_size < args.crop_size:
-            raise Exception("scale size cannot be less than crop size")
         return r
 
     with tf.name_scope("input_images"):
@@ -447,8 +424,7 @@ def load_examples(raw_input, input_paths):
 def create_model(inputs, targets, max_steps):
     model = Pix2Pix()
 
-    out_channels = 3
-    # out_channels = int(targets.shape.as_list()[-1])
+    out_channels = int(targets.shape.as_list()[-1])
     outputs = model.get_generator(inputs, out_channels, ngf=args.ngf,
                                   conv_type=args.conv_type,
                                   channel_multiplier=args.channel_multiplier,
@@ -582,12 +558,12 @@ def train():
     for k, v in args._get_kwargs():
         print(k, "=", v)
 
-    raw_input = tf.placeholder(shape=[768, 4080, 3], name='raw_input', dtype=tf.uint8)
+    raw_input = tf.placeholder(shape=[512, 1536, 3], name='raw_input', dtype=tf.uint8)
     input_paths = tf.placeholder(shape=None, name='input_paths', dtype=tf.string)
 
     examples = load_examples(raw_input, input_paths)
-    # print('\n587.examples.inputs.shape: {}'.format(examples.inputs.shape.as_list()))
-    # print('588.examples.targets.shape: {}'.format(examples.targets.shape.as_list()))
+    # print('\n569.examples.inputs.shape: {}'.format(examples.inputs.shape.as_list()))
+    # print('examples.targets.shape: {}'.format(examples.targets.shape.as_list()))
 
     max_steps = 2 ** 32
     if args.max_epochs is not None:
@@ -620,12 +596,13 @@ def train():
         targets = deprocess(examples.targets)
         outputs = deprocess(modelNamedtuple.outputs)
 
-        # print('\n----621.inputs.shape----: {}\n'.format(inputs.shape.as_list()))
-        # print('----622.stargets.shape----: {}\n'.format(targets.shape.as_list()))
-        # print('----623.outputs.shape----: {}\n'.format(outputs.shape.as_list()))
+        # print('\n----600.inputs.shape----: {}'.format(inputs.shape.as_list()))
+        # print('----stargets.shape----: {}'.format(targets.shape.as_list()))
+        # print('----outputs.shape----: {}'.format(outputs.shape.as_list()))
 
     def convert(image):
         if args.aspect_ratio != 1.0:
+            print('\n--------------------------args.aspect_ratio != 1.0-------------------------\n')
             # upscale to correct aspect ratio
             size = [args.crop_size, int(round(args.crop_size * args.aspect_ratio))]
             image = tf.image.resize_images(image, size=size, method=tf.image.ResizeMethod.BICUBIC)
@@ -642,9 +619,9 @@ def train():
     with tf.name_scope("convert_outputs"):
         converted_outputs = convert(outputs)
 
-    # print('\n----643.converted_inputs.shape----: {}\n'.format(converted_inputs.shape.as_list()))
-    # print('----644.converted_targets.shape----: {}\n'.format(converted_targets.shape.as_list()))
-    # print('----645.converted_outputs.shape----: {}\n'.format(converted_outputs.shape.as_list()))
+    # print('\n----625.converted_inputs.shape----: {}\n'.format(converted_inputs.shape.as_list()))
+    # print('----converted_targets.shape----: {}'.format(converted_targets.shape.as_list()))
+    # print('----converted_outputs.shape----: {}'.format(converted_outputs.shape.as_list()))
 
     with tf.name_scope("encode_images"):
         if args.multiple_A:
@@ -695,8 +672,13 @@ def train():
             idx = step % 118
             if idx == 0:
                 shuffle_indices = np.random.permutation(np.arange(len(train_data)))
-                train_data = train_data[shuffle_indices]
-                train_paths = train_paths[shuffle_indices]
+                train_data_new = []
+                train_paths_new = []
+                for i in shuffle_indices:
+                    train_data_new.append(train_data[i])
+                    train_paths_new.append(train_paths[i])
+                train_data = train_data_new
+                train_paths = train_paths_new
 
             def should(freq):
                 return freq > 0 and ((step + 1) % freq == 0 or step == max_steps - 1)

@@ -16,7 +16,7 @@ Heavily based on code (affinelayer/pix2pix-tensorflow)[https://github.com/affine
 # train
 # cd to `Pix2Pix` folder and run command bellow
 ---- webpage, 2A ----
-CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
+CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='train' \
   --conv_type='conv2d' \
@@ -27,7 +27,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --beta2=0.9 \
   --loss_type='HINGE' \
   --n_dis=5 \
-  --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/train_resized \
+  --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/train \
   --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_train_trainval_D_N_30_30_1 \
   --max_epochs=400 \
   --which_direction=AtoB \
@@ -39,7 +39,36 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --gan_weight=1.0 \
   --multiple_A \
   --upsampe_method=depth_to_space \
-  --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val_resized
+  --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val
+
+
+
+CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
+  --batch_size=1 \
+  --mode='train' \
+  --conv_type='conv2d' \
+  --channel_multiplier=0 \
+  --initial_lr=0.0002 \
+  --end_lr=0.0001 \
+  --beta1=0. \
+  --beta2=0.9 \
+  --loss_type='HINGE' \
+  --n_dis=5 \
+  --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/train \
+  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_train_trainval_D_N_1 \
+  --max_epochs=400 \
+  --which_direction=AtoB \
+  --save_freq=10 \
+  --ngf=128 \
+  --ndf=128 \
+  --scale_size=572 \
+  --l1_weight=20.0 \
+  --gan_weight=1.0 \
+  --multiple_A \
+  --upsampe_method=depth_to_space \
+  --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val
+
+
 
 
 2360

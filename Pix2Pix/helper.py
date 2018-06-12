@@ -101,7 +101,7 @@ def resize_img(root_dir, subfolder):
     print(imgs)
     for img in imgs:
         # try:
-        im = np.array(Image.open(os.path.join(input_dir, img)), dtype=np.float32)
+        # im = np.array(Image.open(), dtype=np.float32)
         # print(im.shape)
         # coarse_img = \
         #     scipy.ndimage.interpolation.zoom(
@@ -110,7 +110,8 @@ def resize_img(root_dir, subfolder):
         #         np.dtype(np.float32),
         #         mode='nearest'
         #     )
-        coarse_img = cv2.resize(im, tuple(RGB_SCALE), interpolation=cv2.INTER_NEAREST)
+        im = cv2.imread(os.path.join(input_dir, img))
+        coarse_img = cv2.resize(im, tuple(RGB_SCALE), interpolation=cv2.INTER_AREA)
 
         prefix = os.path.splitext(img)[0] + '.png'
         cv2.imwrite(os.path.join(output_dir, prefix), coarse_img)
@@ -200,7 +201,7 @@ def msers_detection(root_dir, subfolder):
 if __name__ == '__main__':
     # mkval('/home/thinkpad/Downloads/DT/pix2pix_data/stimuli', 'mixed')
     # rename_files('/home/thinkpad/Downloads/DT/pix2pix_data/', 'val')
-    resize_img('/home/thinkpad/PycharmProjects/', 'val')
+    resize_img('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data_2A/tmp/', 'val')
     # feat_extr('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data/A', 'test')
     # edge_detection('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data/A', 'test')
     # msers_detection('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data/A', 'test')
