@@ -270,8 +270,8 @@ def augment(image, brightness):
     return rgb
 
 
-def save_images(fetches, step=None):
-    image_dir = os.path.join(args.output_dir, "images")
+def save_images(output_dir, fetches, step=None):
+    image_dir = os.path.join(output_dir, "images")
     if not os.path.exists(image_dir):
         os.makedirs(image_dir)
 
@@ -297,8 +297,8 @@ def save_images(fetches, step=None):
     return filesets
 
 
-def append_index(filesets, step=False):
-    index_path = os.path.join(args.output_dir, "index.html")
+def append_index(output_dir, filesets, step=False):
+    index_path = os.path.join(output_dir, "index.html")
     if os.path.exists(index_path):
         index = open(index_path, "a")
     else:
@@ -552,8 +552,8 @@ def train():
     np.random.seed(args.seed)
     random.seed(args.seed)
 
-    if not os.path.exists(args.output_dir):
-        os.makedirs(args.output_dir)
+    # if not os.path.exists(args.output_dir):
+    #     os.makedirs(args.output_dir)
 
     for k, v in args._get_kwargs():
         print(k, "=", v)
@@ -714,10 +714,10 @@ def train():
             #     # print("recording summary")
             #     summary_writer.add_summary(results["summary"], results["global_step"])
 
-            if should(args.display_freq):
-                # print("saving display images")
-                filesets = save_images(results["display"], step=results["global_step"])
-                append_index(filesets, step=True)
+            # if should(args.display_freq):
+            #     # print("saving display images")
+            #     filesets = save_images(args.output_dir, results["display"], step=results["global_step"])
+            #     append_index(args.output_dir, filesets, step=True)
 
             if should(args.progress_freq):
                 # global_step will have the correct step count if we resume from a checkpoint
@@ -735,21 +735,26 @@ def train():
             if should(args.save_freq):
                 tf.logging.info('validating...')
 
+                train_epoch_ = math.ceil(results["global_step"] / examples.steps_per_epoch)
+                val_output_dir = os.path.join(args.output_dir, str(train_epoch_))
+                if not os.path.exists(val_output_dir):
+                    os.makedirs(val_output_dir)
+
                 args.scale_size = args.crop_size
                 args.flip = False
 
-                s = time.time()
-                max_steps = len(val_data)
-                for step in range(max_steps):
+                # s = time.time()
+                max_val_steps = len(val_data)
+                for step in range(max_val_steps):
                     results = sess.run(display_fetches,
                                        feed_dict={raw_input: val_data[step],
                                                   input_paths: val_paths[step]})
-                    filesets = save_images(results)
+                    filesets = save_images(val_output_dir, results)
                     for i, f in enumerate(filesets):
                         print("evaluated image", f["name"])
-                    index_path = append_index(filesets)
+                    index_path = append_index(val_output_dir, filesets)
                 print("wrote index at", index_path)
-                print("rate", (time.time() - s) / max_steps)
+                # print("rate", (time.time() - s) / max_val_steps)
 
         # coord.request_stop()
         # coord.join(threads)

@@ -101,7 +101,7 @@ def resize_img(root_dir, subfolder):
     print(imgs)
     for img in imgs:
         # try:
-        # im = np.array(Image.open(), dtype=np.float32)
+        # im = np.array(Image.open(os.path.join(input_dir, img)), dtype=np.float32)
         # print(im.shape)
         # coarse_img = \
         #     scipy.ndimage.interpolation.zoom(
@@ -110,8 +110,12 @@ def resize_img(root_dir, subfolder):
         #         np.dtype(np.float32),
         #         mode='nearest'
         #     )
-        im = cv2.imread(os.path.join(input_dir, img))
-        coarse_img = cv2.resize(im, tuple(RGB_SCALE), interpolation=cv2.INTER_AREA)
+        # im = cv2.imread(os.path.join(input_dir, img), cv2.IMREAD_COLOR)
+        # im = cv2.imread(os.path.join(input_dir, img), cv2.IMREAD_GRAYSCALE)
+        im = cv2.imread(os.path.join(input_dir, img), cv2.IMREAD_UNCHANGED)
+        print(im.shape)
+        # coarse_img = cv2.resize(im, tuple(RGB_SCALE), interpolation=cv2.INTER_AREA)
+        coarse_img = cv2.resize(im, tuple(RGB_SCALE), interpolation=cv2.INTER_NEAREST)
 
         prefix = os.path.splitext(img)[0] + '.png'
         cv2.imwrite(os.path.join(output_dir, prefix), coarse_img)
