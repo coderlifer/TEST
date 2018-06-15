@@ -32,14 +32,15 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=2360 \
-  --ngf=128 \
-  --ndf=128 \
+  --ngf=64 \
+  --ndf=64 \
   --scale_size=572 \
   --l1_weight=20.0 \
   --gan_weight=1.0 \
   --multiple_A \
   --upsampe_method=depth_to_space \
   --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val
+
 
 
 
@@ -55,23 +56,22 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --loss_type='HINGE' \
   --n_dis=5 \
   --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/train \
-  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_trainval_D_N_30_30_1_7layers \
+  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_trainval_atten \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=2360 \
-  --ngf=128 \
-  --ndf=128 \
+  --ngf=64 \
+  --ndf=64 \
   --scale_size=572 \
   --l1_weight=20.0 \
   --gan_weight=1.0 \
   --multiple_A \
+  --net_type='UNet_Attention' \
   --upsampe_method=depth_to_space \
   --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val
 
 
 
-
-2360
 
 # infer
 CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \

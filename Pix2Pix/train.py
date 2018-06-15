@@ -378,34 +378,34 @@ def load_examples(raw_input, input_paths):
     # synchronize seed for image operations so that we do the same operations to both input and output images
     seed = random.randint(0, 2 ** 31 - 1)
 
-    def transform(image):
-        r = image
-        if args.flip:
-            r = tf.image.random_flip_left_right(r, seed=seed)
-
-        # area produces a nice downscaling, but does nearest neighbor for upscaling
-        # assume we're going to be doing downscaling here
-        # r = tf.image.resize_images(r, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
-        #
-        # offset = tf.cast(
-        #     tf.floor(
-        #         tf.random_uniform([2], 0, args.scale_size - args.crop_size + 1, seed=seed)
-        #     ),
-        #     dtype=tf.int32)
-        # if args.scale_size > args.crop_size:
-        #     r = tf.image.crop_to_bounding_box(r, offset[0], offset[1], args.crop_size, args.crop_size)
-        # elif args.scale_size < args.crop_size:
-        #     raise Exception("scale size cannot be less than crop size")
-
-        return r
+    # def transform(image):
+    #     r = image
+    #     # if args.flip:
+    #     #     r = tf.image.random_flip_left_right(r, seed=seed)
+    #
+    #     # area produces a nice downscaling, but does nearest neighbor for upscaling
+    #     # assume we're going to be doing downscaling here
+    #     # r = tf.image.resize_images(r, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
+    #     #
+    #     # offset = tf.cast(
+    #     #     tf.floor(
+    #     #         tf.random_uniform([2], 0, args.scale_size - args.crop_size + 1, seed=seed)
+    #     #     ),
+    #     #     dtype=tf.int32)
+    #     # if args.scale_size > args.crop_size:
+    #     #     r = tf.image.crop_to_bounding_box(r, offset[0], offset[1], args.crop_size, args.crop_size)
+    #     # elif args.scale_size < args.crop_size:
+    #     #     raise Exception("scale size cannot be less than crop size")
+    #
+    #     return r
 
     with tf.name_scope("input_images"):
-        input_images = transform(inputs)
-        input_images = tf.expand_dims(input_images, 0)
+        # input_images = transform(inputs)
+        input_images = tf.expand_dims(inputs, 0)
 
     with tf.name_scope("target_images"):
-        target_images = transform(targets)
-        target_images = tf.expand_dims(target_images, 0)
+        # target_images = transform(targets)
+        target_images = tf.expand_dims(targets, 0)
 
     # paths_batch, inputs_batch, targets_batch = tf.train.batch([paths, input_images, target_images],
     #                                                           batch_size=args.batch_size)
@@ -702,8 +702,8 @@ def train():
             # if should(args.summary_freq):
             #     fetches["summary"] = summary_op
 
-            if should(args.display_freq):
-                fetches["display"] = display_fetches
+            # if should(args.display_freq):
+            #     fetches["display"] = display_fetches
 
             # results = sess.run(fetches, options=options, run_metadata=run_metadata)
             results = sess.run(fetches,
