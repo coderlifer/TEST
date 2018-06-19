@@ -422,18 +422,17 @@ def train():
     # print('----outputs.shape----: {}'.format(outputs.shape.as_list()))  # [1, 512, 512, 3]
 
     # reverse any processing on images so they can be written to disk or displayed to user
-    converted_inputs = convert(inputs)
-    converted_targets = convert(targets)
-    converted_outputs = convert(outputs)
-    # print('\n----430.converted_inputs.shape----: {}\n'.format(converted_inputs.shape.as_list()))  # [1, 512, 512, 6]
-    # print('----converted_targets.shape----: {}'.format(converted_targets.shape.as_list()))  # [1, 512, 512, 3]
-    # print('----converted_outputs.shape----: {}'.format(converted_outputs.shape.as_list()))  # [1, 512, 512, 3]
+    converted_inputs = convert(inputs)  # [1, 512, 512, 6]
+    converted_targets = convert(targets)  # [1, 512, 512, 3]
+    converted_outputs = convert(outputs)  # [1, 512, 512, 3]
+    # print('\n----430.converted_inputs.shape----: {}\n'.format(converted_inputs.shape.as_list()))
+    # print('----converted_targets.shape----: {}'.format(converted_targets.shape.as_list()))
+    # print('----converted_outputs.shape----: {}'.format(converted_outputs.shape.as_list()))
 
     with tf.variable_scope("encode_images"):
         if args.multiple_A:
             # channels = converted_inputs.shape.as_list()[3]
-            converted_inputs = tf.split(converted_inputs, 2, 3)[1]
-            # [1, 512, 512, 3]
+            converted_inputs = tf.split(converted_inputs, 2, 3)[1]  # [1, 512, 512, 3]
             # print('\n----438.converted_inputs.shape----: {}\n'.format(converted_inputs.shape.as_list()))
 
         display_fetches = {
