@@ -466,7 +466,7 @@ def unet_generator(generator_inputs, generator_outputs_channels, ngf, conv_type,
                                        conv_type=conv_type, channel_multiplier=channel_multiplier, padding=padding,
                                        spectral_normed=False, update_collection=None, inputs_norm=False,
                                        he_init=True, biases=True)
-        output = tf.tanh(output)
+        output = tf.nn.tanh(output)
 
         layers.append(output)
 
