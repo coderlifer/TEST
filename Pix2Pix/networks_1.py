@@ -63,7 +63,7 @@ def Self_Attn(x, pixel_wise=True):
     if pixel_wise:
         # [N, H, W, in_dim // 8]
         f_x = \
-            lib.ops.conv2d.Conv2D(x, x.shape.as_list[-1], in_dim // 8,
+            lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8,
                                   filter_size=1, stride=1,
                                   name='Conv2D.f_x', conv_type='conv2d', channel_multiplier=0, padding='SAME',
                                   spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
@@ -94,7 +94,7 @@ def Self_Attn(x, pixel_wise=True):
 
         out = tf.matmul(h_x, attention)
         # out = tf.matmul(h_x, tf.transpose(attention, [0, 1, 2]))
-        out = out.view(N, in_dim, H, W)  # [N, in_dim, W, H]
+        out = tf.reshape(out, [N, in_dim, H, W])  # [N, in_dim, W, H]
         out = tf.transpose(out, [0, 2, 3, 1])  # [N, H, W, in_dim]
 
         self_attn_map = gamma * out + x

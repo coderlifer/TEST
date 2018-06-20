@@ -50,53 +50,46 @@ def Self_Attn(x, pixel_wise=True):
       x: [b_size, f_size, f_size, in_dim]
       pixel_wise:
     Return:
-      [batch_size, in_dim, W, H]
+      [batch_size, H, W, in_dim]
     """
 
     N = x.shape.as_list()[0]
     H = x.shape.as_list()[1]
     W = x.shape.as_list()[2]
     in_dim = x.shape.as_list()[-1]
-    # print('\n----in_dim of Self_Attn----: {}'.format(in_dim))
 
     gamma = tf.get_variable(name='gamma', shape=[1], dtype=tf.float32, initializer=tf.zeros_initializer())
 
     if pixel_wise:
         # [N, H, W, in_dim // 8]
-        f_x = \
-            lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8,
-                                  filter_size=1, stride=1,
-                                  name='Conv2D.f_x', conv_type='conv2d', channel_multiplier=0, padding='SAME',
+        f = \
+            lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8, filter_size=1, stride=1,
+                                  name='Conv2D.f', conv_type='conv2d', channel_multiplier=0, padding='SAME',
                                   spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
                                   mask_type=None, weightnorm=None, biases=True, gain=1.)
-        f_ready = tf.reshape(f_x, [N, H * W, -1])  # [N, H*W, in_dim // 8]
+        f_ready = tf.reshape(f, [N, H * W, -1])  # [N, H*W, in_dim // 8]
 
         # [N, H, W, in_dim // 8]
-        g_x = \
-            lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8,
-                                  filter_size=1, stride=1,
-                                  name='Conv2D.g_x', conv_type='conv2d', channel_multiplier=0, padding='SAME',
+        g = \
+            lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8, filter_size=1, stride=1,
+                                  name='Conv2D.g', conv_type='conv2d', channel_multiplier=0, padding='SAME',
                                   spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
                                   mask_type=None, weightnorm=None, biases=True, gain=1.)
-        g_x = tf.transpose(g_x, [0, 3, 1, 2])  # [N, in_dim // 8, H, W]
-        g_ready = tf.reshape(g_x, [N, -1, H * W])  # [N, in_dim // 8, H*W]
+        g_ready = tf.reshape(g, [N, H * W, -1])  # [N, H*W, in_dim // 8]
 
-        energy = tf.matmul(f_ready, g_ready)  # [N, H*W, H*W]
+        energy = tf.matmul(f_ready, g_ready, transpose_b=True)  # [N, H*W, H*W]
         attention = tf.nn.softmax(energy, axis=-1)  # [N, H*W, H*W]
 
         # [N, H, W, in_dim]
-        h_x = \
+        h = \
             lib.ops.conv2d.Conv2D(x, in_dim, in_dim, filter_size=1, stride=1,
-                                  name='Conv2D.h_x', conv_type='conv2d', channel_multiplier=0, padding='SAME',
+                                  name='Conv2D.h', conv_type='conv2d', channel_multiplier=0, padding='SAME',
                                   spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
                                   mask_type=None, weightnorm=None, biases=True, gain=1.)
-        h_x = tf.transpose(h_x, [0, 3, 1, 2])  # [N, in_dim, H, W]
-        h_x = tf.reshape(h_x, [N, -1, H * W])  # [N, in_dim, H*W]
+        h = tf.reshape(h, [N, H * W, -1])  # [N, H*W, in_dim]
 
-        out = tf.matmul(h_x, attention)
-        # out = tf.matmul(h_x, tf.transpose(attention, [0, 1, 2]))
-        out = tf.reshape(out, [N, in_dim, H, W])  # [N, in_dim, W, H]
-        out = tf.transpose(out, [0, 2, 3, 1])  # [N, H, W, in_dim]
+        out = tf.matmul(attention, h)  # [N, H*W, in_dim]
+        out = tf.reshape(out, [N, H, W, in_dim])  # [N, in_dim, W, H]
 
         self_attn_map = gamma * out + x
 
@@ -192,7 +185,6 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
         ngf * 8,  # encoder_6: [batch, 16, 16, ngf * 8] => [batch, 8, 8, ngf * 8]
         ngf * 8,  # encoder_7: [batch, 8, 8, ngf * 8] => [batch, 4, 4, ngf * 8]
         ngf * 8,  # encoder_8: [batch, 4, 4, ngf * 8] => [batch, 2, 2, ngf * 8]
-        ngf * 8,  # encoder_8: [batch, 2, 2, ngf * 8] => [batch, 1, 1, ngf * 8]
     ]
 
     for out_channels in layer_specs:
@@ -206,6 +198,9 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
                                               he_init=True, biases=True)
 
             output = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+            # output = convolved
+
+            # output, attn_score = Self_Attn(output)  # attention module
 
             layers.append(output)
 
@@ -214,7 +209,7 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
         (ngf * 8, 0.5),  # decoder_7: [batch, 2, 2, ngf * 8 * 2] => [batch, 4, 4, ngf * 8 * 2]
         (ngf * 8, 0.5),  # decoder_6: [batch, 4, 4, ngf * 8 * 2] => [batch, 8, 8, ngf * 8 * 2]
         (ngf * 8, 0.0),  # decoder_5: [batch, 8, 8, ngf * 8 * 2] => [batch, 16, 16, ngf * 8 * 2]
-        (ngf * 8, 0.0),  # decoder_5: [batch, 16, 16, ngf * 8 * 2] => [batch, 32, 32, ngf * 8 * 2]
+        # (ngf * 8, 0.0),  # decoder_5: [batch, 16, 16, ngf * 8 * 2] => [batch, 32, 32, ngf * 8 * 2]
         (ngf * 4, 0.0),  # decoder_4: [batch, 32, 32, ngf * 8 * 2] => [batch, 64, 64, ngf * 4 * 2]
         (ngf * 2, 0.0),  # decoder_3: [batch, 64, 64, ngf * 4 * 2] => [batch, 128, 128, ngf * 2 * 2]
         (ngf, 0.0),  # decoder_2: [batch, 128, 128, ngf * 2 * 2] => [batch, 256, 256, ngf * 2]
@@ -281,7 +276,7 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
                                        conv_type=conv_type, channel_multiplier=channel_multiplier, padding=padding,
                                        spectral_normed=False, update_collection=None, inputs_norm=False,
                                        he_init=True, biases=True)
-        output = tf.tanh(output)
+        output = tf.nn.tanh(output)
 
         layers.append(output)
 
