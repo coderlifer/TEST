@@ -34,7 +34,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --save_freq=2360 \
   --ngf=64 \
   --ndf=64 \
-  --scale_size=572 \
+  --scale_size=512 \
   --l1_weight=20.0 \
   --gan_weight=1.0 \
   --multiple_A \

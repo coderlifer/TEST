@@ -11,7 +11,7 @@ import scipy.ndimage
 import scipy.misc
 import shutil
 
-RGB_SCALE = np.array([512, 512], dtype=np.float32)
+RGB_SCALE = np.array([1360, 768], dtype=np.float32)
 GRAY_SCALE = np.array([512, 512, 3], dtype=np.float32)
 
 
@@ -205,7 +205,7 @@ def msers_detection(root_dir, subfolder):
 if __name__ == '__main__':
     # mkval('/home/thinkpad/Downloads/DT/pix2pix_data/stimuli', 'mixed')
     # rename_files('/home/thinkpad/Downloads/DT/pix2pix_data/', 'val')
-    resize_img('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data_2A/tmp/', 'val')
+    resize_img('/home/thinkpad/Downloads/DT/best/', 'val')
     # feat_extr('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data/A', 'test')
     # edge_detection('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data/A', 'test')
     # msers_detection('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data/A', 'test')
