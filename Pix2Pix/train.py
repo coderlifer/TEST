@@ -551,8 +551,10 @@ def train():
 
                 if should(args.save_freq):
                     print("saving model...")
-                    saver.save(
-                        sess, os.path.join(args.output_dir, "model"), global_step=modelNamedtuple.global_step)
+                    saver.save(sess,
+                               os.path.join(args.output_dir, "model"),
+                               global_step=modelNamedtuple.global_step,
+                               write_meta_graph=False)
 
         coord.request_stop()
         coord.join(threads)
