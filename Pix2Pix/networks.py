@@ -200,7 +200,7 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
             output = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
             # output = convolved
 
-            # output, attn_score = Self_Attn(output)  # attention module
+            output, attn_score = Self_Attn(output)  # attention module
 
             layers.append(output)
 
@@ -249,8 +249,8 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
 
             output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
 
-            if decoder_layer in [5, 6, 7]:
-                output, attn_score = Self_Attn(output)  # attention module
+            # if decoder_layer in [4, 5, 6]:
+            output, attn_score = Self_Attn(output)  # attention module
 
             if dropout > 0.0:
                 output = tf.nn.dropout(output, keep_prob=1 - dropout)
@@ -327,8 +327,8 @@ def unet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collect
             normalized = convolved
             rectified = nonlinearity(normalized, 'lrelu', 0.2)
 
-            if i in [2, 3]:
-                rectified, attn_score = Self_Attn(rectified)  # attention module
+            # if i in [1, 2, 3]:
+            rectified, attn_score = Self_Attn(rectified)  # attention module
 
             layers.append(rectified)
 

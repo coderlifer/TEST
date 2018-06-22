@@ -32,8 +32,8 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=2360 \
-  --ngf=64 \
-  --ndf=64 \
+  --ngf=128 \
+  --ndf=128 \
   --scale_size=572 \
   --l1_weight=20.0 \
   --gan_weight=1.0 \
@@ -42,18 +42,32 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val
 
 
+
+
 CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='test' \
   --conv_type='conv2d' \
+  --channel_multiplier=0 \
+  --initial_lr=0.0002 \
+  --end_lr=0.0001 \
+  --beta1=0. \
+  --beta2=0.9 \
+  --loss_type='HINGE' \
+  --n_dis=5 \
   --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/val \
-  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_trainval_D_N_30_30_1/output_test_256 \
+  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_resize_512/output_test_512 \
+  --max_epochs=400 \
   --which_direction=AtoB \
+  --save_freq=2360 \
   --ngf=64 \
   --ndf=64 \
-  --scale_size=512 \
-  --checkpoint_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_trainval_D_N_30_30_1 \
+  --scale_size=572 \
+  --l1_weight=20.0 \
+  --gan_weight=1.0 \
+  --checkpoint_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_resize_512 \
   --multiple_A \
+  --net_type='UNet' \
   --upsampe_method=depth_to_space
 
 
@@ -82,8 +96,9 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --gan_weight=1.0 \
   --multiple_A \
   --net_type='UNet_Attention' \
-  --upsampe_method=depth_to_space \
-  --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val
+  --upsampe_method=depth_to_space
+
+  --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/val
 
 
 
@@ -100,7 +115,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --beta2=0.9 \
   --loss_type='HINGE' \
   --n_dis=5 \
-  --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val \
+  --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/val \
   --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_256/output_test_256 \
   --max_epochs=400 \
   --which_direction=AtoB \
