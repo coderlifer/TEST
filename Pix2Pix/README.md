@@ -38,12 +38,13 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --l1_weight=20.0 \
   --gan_weight=1.0 \
   --multiple_A \
-  --upsampe_method=depth_to_space \
+  --net_type='UNet' \
+  --upsampe_method='resize'
+
   --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val
 
 
-
-
+# infer
 CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='test' \
@@ -72,7 +73,8 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
 
 
 
-# attention
+
+#### attention
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='train' \
@@ -99,8 +101,6 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --upsampe_method=depth_to_space
 
   --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/val
-
-
 
 
 # infer

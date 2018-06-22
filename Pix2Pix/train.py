@@ -318,8 +318,8 @@ def create_model(inputs, targets, max_steps):
             end_learning_rate=args.end_lr
         )
 
-    with tf.name_scope("lr_summary"):
-        tf.summary.scalar("lr", learning_rate)
+    # with tf.name_scope("lr_summary"):
+    #     tf.summary.scalar("lr", learning_rate)
 
     with tf.name_scope("discriminator_train"):
         discrim_tvars = [var for var in tf.trainable_variables() if var.name.startswith("d_net")]
@@ -444,9 +444,9 @@ def train():
     # with tf.name_scope("outputs_summary"):
     #     tf.summary.image("outputs", converted_outputs)
 
-    tf.summary.scalar("discriminator_loss", modelNamedtuple.discrim_loss)
-    tf.summary.scalar("generator_loss_GAN", modelNamedtuple.gen_loss_GAN)
-    tf.summary.scalar("generator_loss_L1", modelNamedtuple.gen_loss_L1)
+    # tf.summary.scalar("discriminator_loss", modelNamedtuple.discrim_loss)
+    # tf.summary.scalar("generator_loss_GAN", modelNamedtuple.gen_loss_GAN)
+    # tf.summary.scalar("generator_loss_L1", modelNamedtuple.gen_loss_L1)
 
     # for var in tf.trainable_variables():
     #     tf.summary.histogram(var.op.name + "/values", var)
@@ -465,13 +465,13 @@ def train():
 
         parameter_count = tf.reduce_sum([tf.reduce_prod(tf.shape(v)) for v in tf.trainable_variables()])
 
-    summary_op = tf.summary.merge_all()
+    # summary_op = tf.summary.merge_all()
     saver = tf.train.Saver(var_list=tf.trainable_variables(), max_to_keep=10)
 
     config = tf.ConfigProto(allow_soft_placement=True)
     config.gpu_options.allow_growth = True
     with tf.Session(config=config) as sess:
-        summary_writer = tf.summary.FileWriter(args.output_dir, sess.graph)
+        # summary_writer = tf.summary.FileWriter(args.output_dir, sess.graph)
         sess.run(tf.global_variables_initializer())
         print("parameter_count =", sess.run(parameter_count))
 
@@ -518,8 +518,8 @@ def train():
                     fetches["gen_loss_GAN"] = modelNamedtuple.gen_loss_GAN
                     fetches["gen_loss_L1"] = modelNamedtuple.gen_loss_L1
 
-                if should(args.summary_freq):
-                    fetches["summary"] = summary_op
+                # if should(args.summary_freq):
+                #     fetches["summary"] = summary_op
 
                 if should(args.display_freq):
                     fetches["display"] = display_fetches
@@ -527,9 +527,9 @@ def train():
                 # results = sess.run(fetches, options=options, run_metadata=run_metadata)
                 results = sess.run(fetches)
 
-                if should(args.summary_freq):
-                    # print("recording summary")
-                    summary_writer.add_summary(results["summary"], results["global_step"])
+                # if should(args.summary_freq):
+                #     # print("recording summary")
+                #     summary_writer.add_summary(results["summary"], results["global_step"])
 
                 if should(args.display_freq):
                     # print("saving display images")
