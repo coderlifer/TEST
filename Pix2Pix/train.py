@@ -455,9 +455,9 @@ def train():
     #     tf.summary.histogram(var.op.name + "/gradients", grad)
 
     with tf.name_scope("parameter_count"):
-        # print('\n----tf.global_variables()----')
-        # for var in tf.global_variables():
-        #     print(var.name)
+        print('\n----tf.global_variables()----')
+        for var in tf.global_variables():
+            print(var.name)
 
         print('\n----tf.trainable_variables()----')
         for var in tf.trainable_variables():

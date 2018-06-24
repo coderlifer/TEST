@@ -205,7 +205,7 @@ def msers_detection(root_dir, subfolder):
 if __name__ == '__main__':
     # mkval('/home/thinkpad/Downloads/DT/pix2pix_data/stimuli', 'mixed')
     # rename_files('/home/thinkpad/Downloads/DT/pix2pix_data/', 'val')
-    resize_img('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data_2A/tmp/', 'val')
+    resize_img('/media/thinkpad/Windows/Users/Lenovo/Downloads/Saliency/ws_pred/output_test/val/25960', 'val')
     # feat_extr('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data/A', 'test')
     # edge_detection('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data/A', 'test')
     # msers_detection('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data/A', 'test')

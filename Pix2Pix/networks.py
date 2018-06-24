@@ -197,10 +197,10 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
                                               spectral_normed=True, update_collection=None, inputs_norm=False,
                                               he_init=True, biases=True)
 
-            output = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+            # output = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
             # output = convolved
 
-            output, attn_score = Self_Attn(output)  # attention module
+            output, attn_score = Self_Attn(convolved)  # attention module
 
             layers.append(output)
 
@@ -247,7 +247,7 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
             #                                     padding="same",
             #                                     kernel_initializer=tf.contrib.layers.xavier_initializer)
 
-            output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+            # output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
 
             # if decoder_layer in [4, 5, 6]:
             output, attn_score = Self_Attn(output)  # attention module
