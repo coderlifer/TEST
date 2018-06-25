@@ -459,13 +459,14 @@ def train():
         # for var in tf.global_variables():
         #     print(var.name)
 
+        print('\n----not in tf.trainable_variables()----')
         for var in tf.global_variables():
             if var not in tf.trainable_variables():
-                print(var)
+                print(var.name)
 
-        # print('\n----tf.trainable_variables()----')
-        # for var in tf.trainable_variables():
-        #     print(var.name)/home/thinkpad/Downloads/DT/GAN_Lib_Tensorflow/Pix2Pix/model.py
+        print('\n----tf.trainable_variables()----')
+        for var in tf.trainable_variables():
+            print(var.name)
 
         parameter_count = tf.reduce_sum([tf.reduce_prod(tf.shape(v)) for v in tf.trainable_variables()])
 
