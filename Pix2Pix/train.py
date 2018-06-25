@@ -371,12 +371,12 @@ def train():
             raise Exception("checkpoint required for test mode")
 
         # load some options from the checkpoint
-        # options = {"which_direction", "ngf", "ndf", "lab_colorization"}
-        # with open(os.path.join(args.checkpoint_dir, "options.json"), 'r') as f:
-        #     for key, val in json.loads(f.read()).items():
-        #         if key in options:
-        #             print("loaded", key, "=", val)
-        #             setattr(args, key, val)
+        options = {"which_direction", "ngf", "ndf", "lab_colorization"}
+        with open(os.path.join(args.checkpoint_dir, "options.json"), 'r') as f:
+            for key, val in json.loads(f.read()).items():
+                if key in options:
+                    print("loaded", key, "=", val)
+                    setattr(args, key, val)
         # disable these features in test mode
         args.scale_size = CROP_SIZE
         args.flip = False
@@ -470,7 +470,7 @@ def train():
         parameter_count = tf.reduce_sum([tf.reduce_prod(tf.shape(v)) for v in tf.trainable_variables()])
 
     # summary_op = tf.summary.merge_all()
-    saver = tf.train.Saver(var_list=tf.trainable_variables(), max_to_keep=10)
+    saver = tf.train.Saver(max_to_keep=10)
 
     config = tf.ConfigProto(allow_soft_placement=True)
     config.gpu_options.allow_growth = True

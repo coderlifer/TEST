@@ -32,14 +32,14 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=2360 \
-  --ngf=128 \
-  --ndf=128 \
+  --ngf=64 \
+  --ndf=64 \
   --scale_size=572 \
   --l1_weight=20.0 \
   --gan_weight=1.0 \
   --multiple_A \
   --net_type='UNet' \
-  --upsampe_method='resize'
+  --upsampe_method='depth_to_space'
 
   --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val
 
