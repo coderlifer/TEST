@@ -117,14 +117,14 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --n_dis=1 \
   --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/val \
   --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_256/output_test_256 \
-  --max_epochs=400 \
+  --max_epochs=500 \
   --which_direction=AtoB \
   --save_freq=2360 \
   --ngf=64 \
   --ndf=64 \
   --scale_size=286 \
   --checkpoint_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_256 \
-  --l1_weight=20.0 \
+  --l1_weight=10.0 \
   --gan_weight=1.0 \
   --multiple_A \
   --net_type='UNet_Attention' \
