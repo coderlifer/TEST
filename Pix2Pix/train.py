@@ -21,6 +21,7 @@ sys.path.append(os.getcwd())
 
 import common as lib
 import common.misc
+import common.plot
 
 from Pix2Pix.model import Pix2Pix
 
@@ -556,12 +557,20 @@ def train():
                     print("gen_loss_GAN", results["gen_loss_GAN"])
                     print("gen_loss_L1", results["gen_loss_L1"])
 
+                    lib.plot.plot('d_loss', results["discrim_loss"])
+                    lib.plot.plot('g_loss_GAN', results["gen_loss_GAN"])
+                    lib.plot.plot('g_loss_L1', results["gen_loss_L1"])
+
                 if should(args.save_freq):
                     print("saving model...")
                     saver.save(sess,
                                os.path.join(args.output_dir, "model"),
                                global_step=modelNamedtuple.global_step,
                                write_meta_graph=False)
+
+                    lib.plot.flush()
+
+                lib.plot.tick()
 
         coord.request_stop()
         coord.join(threads)

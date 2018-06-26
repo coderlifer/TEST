@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="46c59c96-ba5d-4cee-9911-55e756ea0e4a" name="Default" comment="">
+    <list default="true" id="46c59c96-ba5d-4cee-9911-55e756ea0e4a" name="Default" comment="Update.">
+      <change afterPath="$PROJECT_DIR$/../Python-Scripts/KMeans/tmp.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/Self-Attention-GAN-Tensorflow.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/misc.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/modules.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/README.md" afterDir="false" />
@@ -22,12 +21,7 @@
       <change beforePath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/ops.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/ops.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/TEST.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TEST.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pix2Pix/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pix2Pix/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pix2Pix/networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/networks.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pix2Pix/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../show-attend-and-tell/core/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/../show-attend-and-tell/core/model.py" afterDir="false" />
@@ -45,35 +39,81 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="networks.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pix2Pix/train.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="561">
+              <caret line="570" column="31" selection-start-line="570" selection-start-column="31" selection-end-line="570" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="networks.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="153" column="12" selection-start-line="153" selection-start-column="12" selection-end-line="153" selection-end-column="12" />
+            <state relative-caret-position="696">
+              <caret line="259" column="32" selection-start-line="259" selection-start-column="32" selection-end-line="259" selection-end-column="32" />
               <folding>
                 <element signature="e#280#298#0" expanded="true" />
-                <element signature="e#6386#13393#0" />
-                <element signature="e#17501#21246#0" />
+                <element signature="e#9542#16624#0" />
+                <element signature="e#16768#20513#0" />
+                <element signature="e#20659#24942#0" />
+                <element signature="e#25173#31858#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pix2pix_model.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/models/pix2pix_model.py">
+      <file leaf-file-name="conv2d.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/common/ops/conv2d.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="48">
-              <caret line="2" column="33" selection-start-line="2" selection-start-column="33" selection-end-line="2" selection-end-column="33" />
+            <state relative-caret-position="297">
+              <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="resnet_block.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/common/resnet_block.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-696">
+              <caret line="99" column="4" selection-start-line="99" selection-start-column="4" selection-end-line="99" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="gan_cifar_resnet.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../GAN_Lib_Tensorflow/SNGAN/gan_cifar_resnet.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="541">
+              <caret line="268" column="11" lean-forward="true" selection-start-line="268" selection-start-column="11" selection-end-line="268" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="networks.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/models/networks.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="144">
+              <caret line="156" column="39" lean-forward="true" selection-start-line="156" selection-start-column="39" selection-end-line="156" selection-end-column="39" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="FindInProjectRecents">
     <findStrings>
       <find>Self_Attn</find>
       <find>spectral_normed</find>
+      <find>stride</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -85,8 +125,10 @@
         <option value="$APPLICATION_CONFIG_DIR$/pycharm64.vmoptions" />
         <option value="$PROJECT_DIR$/Pix2Pix/helper.py" />
         <option value="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/SAGAN.py" />
-        <option value="$PROJECT_DIR$/Pix2Pix/train.py" />
         <option value="$PROJECT_DIR$/Pix2Pix/README.md" />
+        <option value="$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/models/networks.py" />
+        <option value="$PROJECT_DIR$/../Python-Scripts/KMeans/tmp.py" />
+        <option value="$PROJECT_DIR$/Pix2Pix/train.py" />
         <option value="$PROJECT_DIR$/Pix2Pix/networks.py" />
       </list>
     </option>
@@ -118,6 +160,33 @@
       <pane id="ProjectPane">
         <subPane>
           <expand>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TEST" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TEST" type="462c0819:PsiDirectoryNode" />
+              <item name="Pix2Pix" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="GAN_Lib_Tensorflow" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="GAN_Lib_Tensorflow" type="462c0819:PsiDirectoryNode" />
+              <item name="SNGAN" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Python-Scripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Python-Scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="KMeans" type="462c0819:PsiDirectoryNode" />
+            </path>
             <path>
               <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
               <item name="pytorch-CycleGAN-and-pix2pix" type="462c0819:PsiDirectoryNode" />
@@ -187,6 +256,14 @@
       <option name="presentableId" value="Default" />
       <updated>1529977320986</updated>
     </task>
+    <task id="LOCAL-00001" summary="Add implementation of resnet_d.">
+      <created>1529993918163</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1529993918163</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -229,6 +306,8 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../AttnGAN" />
     </ignored-roots>
+    <MESSAGE value="Add implementation of resnet_d." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add implementation of resnet_d." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
@@ -237,8 +316,10 @@
           <caret line="93" column="39" selection-start-line="93" selection-start-column="39" selection-end-line="93" selection-end-column="39" />
           <folding>
             <element signature="e#280#298#0" expanded="true" />
-            <element signature="e#6386#13393#0" />
-            <element signature="e#17501#21246#0" />
+            <element signature="e#9542#16624#0" />
+            <element signature="e#16768#20513#0" />
+            <element signature="e#20659#24942#0" />
+            <element signature="e#25173#31858#0" />
           </folding>
         </state>
       </provider>
@@ -256,8 +337,10 @@
           <caret line="93" column="39" lean-forward="true" selection-start-line="93" selection-start-column="39" selection-end-line="93" selection-end-column="39" />
           <folding>
             <element signature="e#280#298#0" expanded="true" />
-            <element signature="e#6386#13393#0" />
-            <element signature="e#17501#21246#0" />
+            <element signature="e#9542#16624#0" />
+            <element signature="e#16768#20513#0" />
+            <element signature="e#20659#24942#0" />
+            <element signature="e#25173#31858#0" />
           </folding>
         </state>
       </provider>
@@ -275,8 +358,10 @@
           <caret line="39" column="9" lean-forward="true" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
           <folding>
             <element signature="e#280#298#0" expanded="true" />
-            <element signature="e#6386#13393#0" />
-            <element signature="e#17501#21246#0" />
+            <element signature="e#9542#16624#0" />
+            <element signature="e#16768#20513#0" />
+            <element signature="e#20659#24942#0" />
+            <element signature="e#25173#31858#0" />
           </folding>
         </state>
       </provider>
@@ -341,46 +426,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1465">
-          <caret line="376" column="41" selection-start-line="376" selection-start-column="41" selection-end-line="376" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/ops/conv2d.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-126">
-          <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/resnet_block.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../GAN_Lib_Tensorflow/SNGAN/gan_cifar_resnet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4872">
-          <caret line="79" column="4" selection-start-line="79" selection-start-column="4" selection-end-line="79" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="153" column="12" selection-start-line="153" selection-start-column="12" selection-end-line="153" selection-end-column="12" />
-          <folding>
-            <element signature="e#280#298#0" expanded="true" />
-            <element signature="e#6386#13393#0" />
-            <element signature="e#17501#21246#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/models/cycle_gan_model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -392,8 +437,91 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/models/pix2pix_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="2" column="33" selection-start-line="2" selection-start-column="33" selection-end-line="2" selection-end-column="33" />
+        <state relative-caret-position="192">
+          <caret line="38" column="33" selection-start-line="38" selection-start-column="33" selection-end-line="38" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Python-Scripts/KMeans/tmp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="35" column="36" lean-forward="true" selection-start-line="35" selection-start-column="36" selection-end-line="35" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Python-Scripts/KMeans/kmeans.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1752">
+          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../GAN_Lib_Tensorflow/common/plot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/plot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="12" column="43" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="570" column="31" selection-start-line="570" selection-start-column="31" selection-end-line="570" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/models/networks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="156" column="39" lean-forward="true" selection-start-line="156" selection-start-column="39" selection-end-line="156" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../GAN_Lib_Tensorflow/SNGAN/gan_cifar_resnet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="541">
+          <caret line="268" column="11" lean-forward="true" selection-start-line="268" selection-start-column="11" selection-end-line="268" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/resnet_block.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-696">
+          <caret line="99" column="4" selection-start-line="99" selection-start-column="4" selection-end-line="99" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/ops/conv2d.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="696">
+          <caret line="259" column="32" selection-start-line="259" selection-start-column="32" selection-end-line="259" selection-end-column="32" />
+          <folding>
+            <element signature="e#280#298#0" expanded="true" />
+            <element signature="e#9542#16624#0" />
+            <element signature="e#16768#20513#0" />
+            <element signature="e#20659#24942#0" />
+            <element signature="e#25173#31858#0" />
+          </folding>
         </state>
       </provider>
     </entry>
