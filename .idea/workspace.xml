@@ -1,10 +1,401 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="46c59c96-ba5d-4cee-9911-55e756ea0e4a" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/Self-Attention-GAN-Tensorflow.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/helper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/networks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OpenSALICON/Readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/../OpenSALICON/Readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OpenSALICON/Salicon.py" beforeDir="false" afterPath="$PROJECT_DIR$/../OpenSALICON/Salicon.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Python-Scripts/DecisionTree/treepredict.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Python-Scripts/DecisionTree/treepredict.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/SAGAN.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/SAGAN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/ops.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/ops.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/TEST.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TEST.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pix2Pix/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pix2Pix/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/helper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pix2Pix/networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/networks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pix2Pix/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../show-attend-and-tell/core/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/../show-attend-and-tell/core/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../show-attend-and-tell/core/vggnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/../show-attend-and-tell/core/vggnet.py" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/TEST$helper.coverage" NAME="helper Coverage Results" MODIFIED="1529981036956" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Pix2Pix" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="networks.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="390">
+              <caret line="153" column="12" selection-start-line="153" selection-start-column="12" selection-end-line="153" selection-end-column="12" />
+              <folding>
+                <element signature="e#280#298#0" expanded="true" />
+                <element signature="e#6386#13393#0" />
+                <element signature="e#17501#21246#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pix2pix_model.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/models/pix2pix_model.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="48">
+              <caret line="2" column="33" selection-start-line="2" selection-start-column="33" selection-end-line="2" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>Self_Attn</find>
+      <find>spectral_normed</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$APPLICATION_CONFIG_DIR$/pycharm64.vmoptions" />
+        <option value="$PROJECT_DIR$/Pix2Pix/helper.py" />
+        <option value="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/SAGAN.py" />
+        <option value="$PROJECT_DIR$/Pix2Pix/train.py" />
+        <option value="$PROJECT_DIR$/Pix2Pix/README.md" />
+        <option value="$PROJECT_DIR$/Pix2Pix/networks.py" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="300" />
+    <option name="y" value="17" />
+    <option name="width" value="1400" />
+    <option name="height" value="1038" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pytorch-CycleGAN-and-pix2pix" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pytorch-CycleGAN-and-pix2pix" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
   <component name="PropertiesComponent">
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="helper" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="TEST" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Pix2Pix" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Pix2Pix/helper.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.helper" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="46c59c96-ba5d-4cee-9911-55e756ea0e4a" name="Default" comment="" />
+      <created>1529977320986</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1529977320986</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="80" y="-5" width="1841" height="1086" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Python Console" order="7" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32983193" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19467102" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="right" id="SciView" order="3" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.md" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/../AttnGAN" />
+    </ignored-roots>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2232">
+          <caret line="93" column="39" selection-start-line="93" selection-start-column="39" selection-end-line="93" selection-end-column="39" />
+          <folding>
+            <element signature="e#280#298#0" expanded="true" />
+            <element signature="e#6386#13393#0" />
+            <element signature="e#17501#21246#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4440">
+          <caret line="192" column="1" lean-forward="true" selection-start-line="192" selection-start-column="1" selection-end-line="192" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2232">
+          <caret line="93" column="39" lean-forward="true" selection-start-line="93" selection-start-column="39" selection-end-line="93" selection-end-column="39" />
+          <folding>
+            <element signature="e#280#298#0" expanded="true" />
+            <element signature="e#6386#13393#0" />
+            <element signature="e#17501#21246#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4728">
+          <caret line="204" column="13" lean-forward="true" selection-start-line="204" selection-start-column="13" selection-end-line="204" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="936">
+          <caret line="39" column="9" lean-forward="true" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
+          <folding>
+            <element signature="e#280#298#0" expanded="true" />
+            <element signature="e#6386#13393#0" />
+            <element signature="e#17501#21246#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1920">
+          <caret line="80" column="24" lean-forward="true" selection-start-line="80" selection-start-column="24" selection-end-line="80" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/pycharm64.vmoptions">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="3" column="9" lean-forward="true" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../AttnGAN/example_bird.png" />
+    <entry file="file://$PROJECT_DIR$/../AttnGAN/example_coco.png" />
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="192" column="1" selection-start-line="192" selection-start-column="1" selection-end-line="192" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/SAGAN.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="22" column="62" selection-start-line="22" selection-start-column="62" selection-end-line="22" selection-end-column="62" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="552">
+          <caret line="101" lean-forward="true" selection-start-line="77" selection-end-line="101" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/networks_1.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/networks_2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="291" lean-forward="true" selection-start-line="291" selection-end-line="302" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1465">
+          <caret line="376" column="41" selection-start-line="376" selection-start-column="41" selection-end-line="376" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/ops/conv2d.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-126">
+          <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/resnet_block.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../GAN_Lib_Tensorflow/SNGAN/gan_cifar_resnet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4872">
+          <caret line="79" column="4" selection-start-line="79" selection-start-column="4" selection-end-line="79" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="153" column="12" selection-start-line="153" selection-start-column="12" selection-end-line="153" selection-end-column="12" />
+          <folding>
+            <element signature="e#280#298#0" expanded="true" />
+            <element signature="e#6386#13393#0" />
+            <element signature="e#17501#21246#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/models/cycle_gan_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/models/pix2pix_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="2" column="33" selection-start-line="2" selection-start-column="33" selection-end-line="2" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>

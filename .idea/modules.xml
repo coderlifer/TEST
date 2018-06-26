@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../GAN_Lib_Tensorflow/.idea/GAN_Lib_Tensorflow.iml" filepath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/.idea/GAN_Lib_Tensorflow.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ImageCaption_Tensorflow/.idea/ImageCaption_Tensorflow.iml" filepath="$PROJECT_DIR$/../ImageCaption_Tensorflow/.idea/ImageCaption_Tensorflow.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../OpenSALICON/.idea/OpenSALICON.iml" filepath="$PROJECT_DIR$/../OpenSALICON/.idea/OpenSALICON.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Python-Scripts/.idea/Python-Scripts.iml" filepath="$PROJECT_DIR$/../Python-Scripts/.idea/Python-Scripts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/Self-Attention-GAN-Tensorflow.iml" filepath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/Self-Attention-GAN-Tensorflow.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/TEST.iml" filepath="$PROJECT_DIR$/.idea/TEST.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/.idea/pytorch-CycleGAN-and-pix2pix.iml" filepath="$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/.idea/pytorch-CycleGAN-and-pix2pix.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../show-attend-and-tell/.idea/show-attend-and-tell.iml" filepath="$PROJECT_DIR$/../show-attend-and-tell/.idea/show-attend-and-tell.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../tensorflow-vgg/.idea/tensorflow-vgg.iml" filepath="$PROJECT_DIR$/../tensorflow-vgg/.idea/tensorflow-vgg.iml" />
     </modules>
   </component>
 </project>

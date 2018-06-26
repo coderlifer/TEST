@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../ImageCaption_Tensorflow" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../OpenSALICON" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../Python-Scripts" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../show-attend-and-tell" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../tensorflow-vgg" vcs="Git" />
+  </component>
+</project>

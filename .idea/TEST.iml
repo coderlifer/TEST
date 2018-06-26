@@ -4,5 +4,17 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="jdk" jdkName="Python 3.5 (gymlab)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="GAN_Lib_Tensorflow" />
+    <orderEntry type="module" module-name="ImageCaption_Tensorflow" />
+    <orderEntry type="module" module-name="OpenSALICON" />
+    <orderEntry type="module" module-name="Python-Scripts" />
+    <orderEntry type="module" module-name="Self-Attention-GAN-Tensorflow" />
+    <orderEntry type="module" module-name="show-attend-and-tell" />
+    <orderEntry type="module" module-name="tensorflow-vgg" />
+    <orderEntry type="module" module-name="pytorch-CycleGAN-and-pix2pix" />
+  </component>
+  <component name="TestRunnerService">
+    <option name="projectConfiguration" value="Twisted Trial" />
+    <option name="PROJECT_TEST_RUNNER" value="Twisted Trial" />
   </component>
 </module>

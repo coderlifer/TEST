@@ -144,22 +144,74 @@ def resnet_generator(generator_inputs, generator_outputs_channels, ngf, conv_typ
     return output
 
 
-def resnet_discriminator(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
-                         conv_type, channel_multiplier, padding):
+def resnet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
+             conv_type, channel_multiplier, padding):
     """
-
     Args:
-      input_images: A batch of images to translate. Images should be normalized
+      discrim_inputs: A batch of images to translate. Images should be normalized
         already. Shape is [batch, height, width, channels].
-      outputs_channels:
-      ngf:
 
     Returns:
-      Returns generated image batch.
     """
+    n_downsampling = 5
+    layers = []
 
-    # (N, 4, 4, 1024)
-    pass
+    # 2 x [batch, 512, 512, in_channels] => [batch, 512, 512, in_channels * 2]
+    inputs = tf.concat([discrim_inputs, discrim_targets], axis=3)
+
+    # layer_1: [batch, 512, 512, in_channels * 2] => [batch, 256, 256, ndf]
+    with tf.variable_scope("layer_1"):
+        output = OptimizedResBlockDisc1(inputs, DIM_D=ndf, activation_fn='relu',
+                                        spectral_normed=spectral_normed,
+                                        update_collection=None,
+                                        inputs_norm=False,
+                                        biases=True)
+        layers.append(output)
+
+    # layer_2: [batch, 256, 256, ndf] => [batch, 128, 128, ndf * 2]
+    # layer_3: [batch, 128, 128, ndf * 2] => [batch, 64, 64, ndf * 4]
+    # layer_4: [batch, 64, 64, ndf * 4] => [batch, 32, 32, ndf * 8]
+    # layer_5: [batch, 32, 32, ndf * 8] => [batch, 16, 16, ndf * 8]
+    # layer_6: [batch, 16, 16, ndf * 8] => [batch, 8, 8, ndf * 8]
+    for i in range(n_downsampling):
+        with tf.variable_scope("layer_%d" % (len(layers) + 1)):
+            out_channels = ndf * min(2 ** (i + 1), 8)
+            output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
+                                   name='D.Block.%d' % (len(layers) + 1),
+                                   spectral_normed=spectral_normed,
+                                   update_collection=update_collection,
+                                   inputs_norm=False,
+                                   resample='down', labels=None, biases=True, activation_fn='relu')
+
+            layers.append(output)
+
+    # layer_7: [batch, 8, 8, ndf * 8] => [batch, 8, 8, ndf * 4]
+    with tf.variable_scope("layer_%d" % (len(layers) + 1)):
+        output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], ndf * 4, 3,
+                               name='D.Block.%d' % (len(layers) + 1),
+                               spectral_normed=spectral_normed,
+                               update_collection=update_collection,
+                               inputs_norm=False,
+                               resample=None, labels=None, biases=True, activation_fn='relu')
+        layers.append(output)
+
+    # layer_8: [batch, 8, 8, ndf * 4] => [batch, 8, 8, ndf * 2]
+    with tf.variable_scope("layer_%d" % (len(layers) + 1)):
+        output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], ndf * 2, 3,
+                               name='D.Block.%d' % (len(layers) + 1),
+                               spectral_normed=spectral_normed,
+                               update_collection=update_collection,
+                               inputs_norm=False,
+                               resample=None, labels=None, biases=True, activation_fn='relu')
+        output = nonlinearity(output, 'lrelu', 0.2)
+        output = tf.reduce_mean(output, axis=[1, 2])
+        output_wgan = lib.ops.linear.Linear(output, ndf * 2, 1, 'D.Output',
+                                            spectral_normed=spectral_normed,
+                                            update_collection=update_collection)
+        output_wgan = tf.reshape(output_wgan, [-1])
+        layers.append(output_wgan)
+
+    return layers[-1]
 
 
 # ######################## U-Net attention ######################## #
@@ -187,6 +239,7 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
         ngf * 8,  # encoder_6: [batch, 16, 16, ngf * 8] => [batch, 8, 8, ngf * 8]
         ngf * 8,  # encoder_7: [batch, 8, 8, ngf * 8] => [batch, 4, 4, ngf * 8]
         ngf * 8,  # encoder_8: [batch, 4, 4, ngf * 8] => [batch, 2, 2, ngf * 8]
+        ngf * 8,  # encoder_9: [batch, 2, 2, ngf * 8] => [batch, 1, 1, ngf * 8]
     ]
 
     for out_channels in layer_specs:
@@ -208,11 +261,11 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
             layers.append(output)
 
     layer_specs = [
-        (ngf * 8, 0.5),  # decoder_8: [batch, 1, 1, ngf * 8] => [batch, 2, 2, ngf * 8 * 2]
-        (ngf * 8, 0.5),  # decoder_7: [batch, 2, 2, ngf * 8 * 2] => [batch, 4, 4, ngf * 8 * 2]
-        (ngf * 8, 0.5),  # decoder_6: [batch, 4, 4, ngf * 8 * 2] => [batch, 8, 8, ngf * 8 * 2]
-        (ngf * 8, 0.0),  # decoder_5: [batch, 8, 8, ngf * 8 * 2] => [batch, 16, 16, ngf * 8 * 2]
-        # (ngf * 8, 0.0),  # decoder_5: [batch, 16, 16, ngf * 8 * 2] => [batch, 32, 32, ngf * 8 * 2]
+        (ngf * 8, 0.0),  # decoder_9: [batch, 1, 1, ngf * 8] => [batch, 2, 2, ngf * 8 * 2]
+        (ngf * 8, 0.0),  # decoder_8: [batch, 2, 2, ngf * 8 * 2] => [batch, 4, 4, ngf * 8 * 2]
+        (ngf * 8, 0.0),  # decoder_7: [batch, 4, 4, ngf * 8 * 2] => [batch, 8, 8, ngf * 8 * 2]
+        (ngf * 8, 0.0),  # decoder_6: [batch, 8, 8, ngf * 8 * 2] => [batch, 16, 16, ngf * 8 * 2]
+        (ngf * 8, 0.0),  # decoder_5: [batch, 16, 16, ngf * 8 * 2] => [batch, 32, 32, ngf * 8 * 2]
         (ngf * 4, 0.0),  # decoder_4: [batch, 32, 32, ngf * 8 * 2] => [batch, 64, 64, ngf * 4 * 2]
         (ngf * 2, 0.0),  # decoder_3: [batch, 64, 64, ngf * 4 * 2] => [batch, 128, 128, ngf * 2 * 2]
         (ngf, 0.0),  # decoder_2: [batch, 128, 128, ngf * 2 * 2] => [batch, 256, 256, ngf * 2]
@@ -254,7 +307,7 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
 
             output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
 
-            if decoder_layer in [5, 6]:
+            if decoder_layer in [6]:
                 output, attn_score = Self_Attn(output)  # attention module
 
             if dropout > 0.0:
@@ -356,6 +409,89 @@ def unet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collect
                                           he_init=True, biases=True)
         # output = tf.sigmoid(convolved)
         output = convolved
+
+        layers.append(output)
+
+    return layers[-1]
+
+
+def unet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
+            conv_type, channel_multiplier, padding):
+    n_layers = 5
+    layers = []
+
+    # 2x [batch, height, width, in_channels] => [batch, height, width, in_channels * 2]
+    inputs = tf.concat([discrim_inputs, discrim_targets], axis=3)
+
+    # layer_1: [batch, 512, 512, in_channels * 2] => [batch, 256, 256, ndf]
+    with tf.variable_scope("layer_1"):
+        padded_input = tf.pad(inputs, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
+        convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], ndf, 4, 2,
+                                          'Conv2D',
+                                          conv_type=conv_type,
+                                          channel_multiplier=channel_multiplier,
+                                          padding=padding,
+                                          spectral_normed=spectral_normed,
+                                          update_collection=update_collection,
+                                          inputs_norm=False,
+                                          he_init=True, biases=True)
+        rectified = nonlinearity(convolved, 'lrelu', 0.2)
+
+        layers.append(rectified)
+
+    # layer_2: [batch, 256, 256, ndf] => [batch, 128, 128, ndf * 2]
+    # layer_3: [batch, 128, 128, ndf * 2] => [batch, 64, 64, ndf * 4]
+    # layer_4: [batch, 64, 64, ndf * 4] => [batch, 32, 32, ndf * 8]
+    # layer_5: [batch, 32, 32, ndf * 4] => [batch, 16, 16, ndf * 8]
+    # layer_6: [batch, 16, 16, ndf * 8] => [batch, 8, 8, ndf * 8]
+    for i in range(n_layers):
+        with tf.variable_scope("layer_%d" % (len(layers) + 1)):
+            out_channels_ = ndf * min(2 ** (i + 1), 8)
+            # stride = 1 if i == n_layers - 1 else 2  # last layer here has stride 1
+            stride = 2
+            padded_input = tf.pad(layers[-1], [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
+            convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], out_channels_, 4, stride,
+                                              'Conv2D',
+                                              conv_type=conv_type,
+                                              channel_multiplier=channel_multiplier,
+                                              padding=padding,
+                                              spectral_normed=spectral_normed,
+                                              update_collection=update_collection,
+                                              inputs_norm=False,
+                                              he_init=True, biases=True)
+
+            # normalized = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+            rectified = nonlinearity(convolved, 'lrelu', 0.2)
+
+            if i in [2, 3]:
+                rectified, attn_score = Self_Attn(rectified)  # attention module
+
+            layers.append(rectified)
+
+    # layer_7: [batch, 8, 8, ndf * 8] => [batch, 7, 7, ndf * 2]
+    with tf.variable_scope("layer_%d" % (len(layers) + 1)):
+        padded_input = tf.pad(rectified, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
+        output = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], ndf * 2, 4, 1,
+                                       'Conv2D',
+                                       conv_type=conv_type,
+                                       channel_multiplier=channel_multiplier,
+                                       padding=padding,
+                                       spectral_normed=spectral_normed,
+                                       update_collection=update_collection,
+                                       inputs_norm=False,
+                                       he_init=True, biases=True)
+        # output = tf.sigmoid(convolved)
+
+        layers.append(output)
+
+    # layer_8: [batch, 7, 7, ndf * 2] => [batch, 1]
+    with tf.variable_scope("layer_%d" % (len(layers) + 1)):
+        output = nonlinearity(output, 'lrelu', 0.2)
+        output = tf.reduce_mean(output, axis=[1, 2])
+        output = lib.ops.linear.Linear(output, output.shape.as_list()[-1], 1, 'D.Output',
+                                       spectral_normed=spectral_normed,
+                                       update_collection=update_collection)
+        output = tf.reshape(output, [-1])
 
         layers.append(output)
 
@@ -573,7 +709,7 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
         data_dict = None
 
     rgb_scaled = (generator_inputs + 1) / 2  # [-1, 1] => [0, 1]
-    rgb_scaled = rgb_scaled * 255.0
+    rgb_scaled *= 255.0
 
     print('\nrgb_scaled.shape.as_list(): {0}\n'.format(rgb_scaled.shape.as_list()))
 
@@ -874,6 +1010,7 @@ def get_var(initial_value, name, idx, var_name, trainable=True, data_dict=None):
     Args:
       initial_value: A batch of images to translate.
         Images should be normalized already. Shape is [batch, height, width, channels].
+      name:
       idx:
       var_name:
       trainable:
