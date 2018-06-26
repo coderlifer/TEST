@@ -23,7 +23,6 @@
       <change beforePath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pix2Pix/networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/networks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pix2Pix/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../show-attend-and-tell/core/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/../show-attend-and-tell/core/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../show-attend-and-tell/core/vggnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/../show-attend-and-tell/core/vggnet.py" afterDir="false" />
     </list>
@@ -51,8 +50,8 @@
       <file leaf-file-name="networks.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="696">
-              <caret line="259" column="32" selection-start-line="259" selection-start-column="32" selection-end-line="259" selection-end-column="32" />
+            <state relative-caret-position="216">
+              <caret line="224" column="12" lean-forward="true" selection-start-line="224" selection-start-column="12" selection-end-line="224" selection-end-column="12" />
               <folding>
                 <element signature="e#280#298#0" expanded="true" />
                 <element signature="e#9542#16624#0" />
@@ -60,33 +59,6 @@
                 <element signature="e#20659#24942#0" />
                 <element signature="e#25173#31858#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="conv2d.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/ops/conv2d.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="297">
-              <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="resnet_block.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/resnet_block.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-696">
-              <caret line="99" column="4" selection-start-line="99" selection-start-column="4" selection-end-line="99" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gan_cifar_resnet.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../GAN_Lib_Tensorflow/SNGAN/gan_cifar_resnet.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="541">
-              <caret line="268" column="11" lean-forward="true" selection-start-line="268" selection-start-column="11" selection-end-line="268" selection-end-column="11" />
             </state>
           </provider>
         </entry>
@@ -263,12 +235,18 @@
       <option name="project" value="LOCAL" />
       <updated>1529993918163</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Update.">
+      <created>1530010450366</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1530010450366</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="80" y="-5" width="1841" height="1086" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -307,7 +285,8 @@
       <path value="$PROJECT_DIR$/../AttnGAN" />
     </ignored-roots>
     <MESSAGE value="Add implementation of resnet_d." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add implementation of resnet_d." />
+    <MESSAGE value="Update." />
+    <option name="LAST_COMMIT_MESSAGE" value="Update." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
@@ -483,27 +462,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/models/networks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="156" column="39" lean-forward="true" selection-start-line="156" selection-start-column="39" selection-end-line="156" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../GAN_Lib_Tensorflow/SNGAN/gan_cifar_resnet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="541">
-          <caret line="268" column="11" lean-forward="true" selection-start-line="268" selection-start-column="11" selection-end-line="268" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/resnet_block.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-696">
-          <caret line="99" column="4" selection-start-line="99" selection-start-column="4" selection-end-line="99" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/common/ops/conv2d.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="297">
@@ -511,10 +469,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/common/resnet_block.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-840">
+          <caret line="99" column="4" selection-start-line="99" selection-start-column="4" selection-end-line="99" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../GAN_Lib_Tensorflow/SNGAN/gan_cifar_resnet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-323">
+          <caret line="268" column="11" lean-forward="true" selection-start-line="268" selection-start-column="11" selection-end-line="268" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/models/networks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="156" column="39" lean-forward="true" selection-start-line="156" selection-start-column="39" selection-end-line="156" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="696">
-          <caret line="259" column="32" selection-start-line="259" selection-start-column="32" selection-end-line="259" selection-end-column="32" />
+        <state relative-caret-position="216">
+          <caret line="224" column="12" lean-forward="true" selection-start-line="224" selection-start-column="12" selection-end-line="224" selection-end-column="12" />
           <folding>
             <element signature="e#280#298#0" expanded="true" />
             <element signature="e#9542#16624#0" />

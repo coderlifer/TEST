@@ -265,7 +265,9 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
         padded_input = tf.pad(output, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
         convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], ndf * 8, 4, 1,
                                           name='Conv2D',
-                                          conv_type=conv_type, channel_multiplier=channel_multiplier, padding=padding,
+                                          conv_type=conv_type,
+                                          channel_multiplier=channel_multiplier,
+                                          padding=padding,
                                           spectral_normed=spectral_normed,
                                           update_collection=update_collection,
                                           inputs_norm=False,
@@ -278,15 +280,16 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
     # layer_6: [batch, 31, 31, ndf * 8] => [batch, 30, 30, 1]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
         padded_input = tf.pad(rectified, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
-        convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], 1, 4, 1,
-                                          name='Conv2D',
-                                          conv_type=conv_type, channel_multiplier=channel_multiplier, padding=padding,
-                                          spectral_normed=spectral_normed,
-                                          update_collection=update_collection,
-                                          inputs_norm=False,
-                                          he_init=True, biases=True)
+        output = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], 1, 4, 1,
+                                       name='Conv2D',
+                                       conv_type=conv_type,
+                                       channel_multiplier=channel_multiplier,
+                                       padding=padding,
+                                       spectral_normed=spectral_normed,
+                                       update_collection=update_collection,
+                                       inputs_norm=False,
+                                       he_init=True, biases=True)
         # output = tf.sigmoid(convolved)
-        output = convolved
 
         layers.append(output)
 
