@@ -144,6 +144,7 @@ def resnet_generator(generator_inputs, generator_outputs_channels, ngf, conv_typ
     return output
 
 
+# TODO
 def resnet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
              conv_type, channel_multiplier, padding):
     """
@@ -215,6 +216,7 @@ def resnet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_colle
     return layers[-1]
 
 
+# TODO
 def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
               conv_type, channel_multiplier, padding):
     """
@@ -497,6 +499,7 @@ def unet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collect
     return layers[-1]
 
 
+# TODO
 def unet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
             conv_type, channel_multiplier, padding):
     n_layers = 5

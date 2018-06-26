@@ -12,6 +12,7 @@
     <orderEntry type="module" module-name="show-attend-and-tell" />
     <orderEntry type="module" module-name="tensorflow-vgg" />
     <orderEntry type="module" module-name="pytorch-CycleGAN-and-pix2pix" />
+    <orderEntry type="module" module-name="DeRaindrop" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="Twisted Trial" />
