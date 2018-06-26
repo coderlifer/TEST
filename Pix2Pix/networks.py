@@ -96,6 +96,9 @@ def Self_Attn(x, pixel_wise=True):
         return self_attn_map, attention
 
 
+# ######################## ResNet ######################## #
+
+
 def resnet_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, channel_multiplier, padding):
     """
 
@@ -429,6 +432,14 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
 
 def unet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
            conv_type, channel_multiplier, padding):
+    """
+    Args:
+      discrim_inputs: A batch of images to translate. Images should be normalized
+        already. Shape is [batch, height, width, channels].
+
+    Returns:
+      [N, 30, 30, ndf]
+    """
     n_layers = 4
     layers = []
 
@@ -502,6 +513,15 @@ def unet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collect
 # TODO
 def unet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
             conv_type, channel_multiplier, padding):
+    """
+    Args:
+      discrim_inputs: A batch of images to translate. Images should be normalized
+        already. Shape is [batch, height, width, channels].
+
+    Returns:
+      [N, 1]
+    """
+
     n_layers = 5
     layers = []
 
