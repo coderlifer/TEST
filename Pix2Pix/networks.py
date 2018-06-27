@@ -394,7 +394,7 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
 
             output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
 
-            if decoder_layer in [6]:
+            if decoder_layer in [5, 6]:
                 output, attn_score = Self_Attn(output)  # attention module
 
             if dropout > 0.0:

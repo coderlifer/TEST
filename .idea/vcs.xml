@@ -7,6 +7,7 @@
     <mapping directory="$PROJECT_DIR$/../OpenSALICON" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../Python-Scripts" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../pix2pix-tensorflow" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../show-attend-and-tell" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../tensorflow-vgg" vcs="Git" />
   </component>
