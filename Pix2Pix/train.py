@@ -218,6 +218,14 @@ def load_examples():
         if args.flip:
             r = tf.image.random_flip_left_right(r, seed=seed)
 
+            r = tf.image.random_flip_up_down(r, seed=seed)
+
+            # k = np.random.choice([1, 2, 3, 4], 1, replace=False)[0]
+            # r = tf.image.rot90(image=r, k=k)
+            #
+            # if k > 2:
+            #     r = tf.image.transpose_image(r)
+
         # area produces a nice downscaling, but does nearest neighbor for upscaling
         # assume we're going to be doing downscaling here
         r = tf.image.resize_images(r, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
@@ -474,7 +482,7 @@ def train():
         parameter_count = tf.reduce_sum([tf.reduce_prod(tf.shape(v)) for v in tf.trainable_variables()])
 
     # summary_op = tf.summary.merge_all()
-    saver = tf.train.Saver(max_to_keep=10)
+    saver = tf.train.Saver(max_to_keep=20)
 
     config = tf.ConfigProto(allow_soft_placement=True)
     config.gpu_options.allow_growth = True
