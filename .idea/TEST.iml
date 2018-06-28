@@ -14,6 +14,7 @@
     <orderEntry type="module" module-name="pytorch-CycleGAN-and-pix2pix" />
     <orderEntry type="module" module-name="DeRaindrop" />
     <orderEntry type="module" module-name="pix2pix-tensorflow" />
+    <orderEntry type="module" module-name="GAN_Lib_Tensorflow" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="Twisted Trial" />

@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../DeRaindrop" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../GAN_Lib_Tensorflow" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../ImageCaption_Tensorflow" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../OpenSALICON" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../Python-Scripts" vcs="Git" />
