@@ -218,7 +218,7 @@ def load_examples():
         if args.flip:
             r = tf.image.random_flip_left_right(r, seed=seed)
 
-            r = tf.image.random_flip_up_down(r, seed=seed)
+            # r = tf.image.random_flip_up_down(r, seed=seed)
 
             # k = np.random.choice([1, 2, 3, 4], 1, replace=False)[0]
             # r = tf.image.rot90(image=r, k=k)
@@ -238,11 +238,26 @@ def load_examples():
             raise Exception("scale size cannot be less than crop size")
         return r
 
-    with tf.name_scope("input_images"):
-        input_images = transform(inputs)
+    with tf.name_scope("transform_images"):
+        print('\ninputs.shape: {}'.format(inputs.shape.as_list()))
+        print('targets.shape: {}'.format(targets.shape.as_list()))
 
-    with tf.name_scope("target_images"):
-        target_images = transform(targets)
+        it = tf.concat(values=[inputs, targets], axis=2)
+        print('it.shape: {}'.format(it.shape.as_list()))
+
+        it_transformed = transform(it)
+        print('it_transformed.shape: {}'.format(it_transformed.shape.as_list()))
+
+        a_edge, a, target_images = tf.split(it_transformed, 3, 2)
+        input_images = tf.concat(values=[a_edge, a], axis=2)
+        print('input_images.shape: {}'.format(input_images.shape.as_list()))
+        print('target_images.shape: {}'.format(target_images.shape.as_list()))
+
+    # with tf.name_scope("input_images"):
+    #     input_images = transform(inputs)
+    #
+    # with tf.name_scope("target_images"):
+    #     target_images = transform(targets)
 
     paths_batch, inputs_batch, targets_batch = tf.train.batch([paths, input_images, target_images],
                                                               batch_size=args.batch_size)
