@@ -244,14 +244,12 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
                                         update_collection=None,
                                         inputs_norm=False,
                                         biases=True)
-        rectified = nonlinearity(output, 'lrelu', 0.2)
-
-        layers.append(rectified)
+        output = nonlinearity(output, 'lrelu', 0.2)
+        layers.append(output)
 
     # layer_2: [batch, 256, 256, ndf] => [batch, 128, 128, ndf * 2]
     # layer_3: [batch, 128, 128, ndf * 2] => [batch, 64, 64, ndf * 4]
     # layer_4: [batch, 64, 64, ndf * 4] => [batch, 32, 32, ndf * 8]
-    # layer_5: [batch, 32, 32, ndf * 4] => [batch, 31, 31, ndf * 8]
     for i in range(n_layers):
         with tf.variable_scope("layer_%d" % (len(layers) + 1)):
             out_channels_ = ndf * min(2 ** (i + 1), 8)
@@ -264,7 +262,9 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
 
             layers.append(output)
 
-    # layer_6: [batch, 32, 32, ndf * 8] => [batch, 31, 31, ndf * 8]
+    print('1.shape: {}'.format(layers[-1].shape.as_list()))
+
+    # layer_5: [batch, 32, 32, ndf * 8] => [batch, 31, 31, ndf * 8]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
         output = nonlinearity(layers[-1], 'lrelu', 0.2)
         padded_input = tf.pad(output, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
@@ -279,24 +279,28 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
                                           he_init=True, biases=True)
 
         # normalized = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
-        rectified = nonlinearity(output, 'lrelu', 0.2)
-        layers.append(convolved)
+        rectified = nonlinearity(convolved, 'lrelu', 0.2)
+        layers.append(rectified)
+
+    print('2.shape: {}'.format(layers[-1].shape.as_list()))
 
     # layer_6: [batch, 31, 31, ndf * 8] => [batch, 30, 30, 1]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
-        padded_input = tf.pad(rectified, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
-        output = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], 1, 4, 1,
-                                       name='Conv2D',
-                                       conv_type=conv_type,
-                                       channel_multiplier=channel_multiplier,
-                                       padding=padding,
-                                       spectral_normed=spectral_normed,
-                                       update_collection=update_collection,
-                                       inputs_norm=False,
-                                       he_init=True, biases=True)
+        padded_input = tf.pad(layers[-1], [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
+        convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], 1, 4, 1,
+                                          name='Conv2D',
+                                          conv_type=conv_type,
+                                          channel_multiplier=channel_multiplier,
+                                          padding=padding,
+                                          spectral_normed=spectral_normed,
+                                          update_collection=update_collection,
+                                          inputs_norm=False,
+                                          he_init=True, biases=True)
         # output = tf.sigmoid(convolved)
 
-        layers.append(output)
+        layers.append(convolved)
+
+    print('3.shape: {}'.format(layers[-1].shape.as_list()))
 
     return layers[-1]
 
