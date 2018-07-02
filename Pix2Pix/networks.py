@@ -52,48 +52,48 @@ def Self_Attn(x, pixel_wise=True):
     Return:
       [batch_size, H, W, in_dim]
     """
+    with tf.variable_scope('Self_Attn'):
+        N = x.shape.as_list()[0]
+        H = x.shape.as_list()[1]
+        W = x.shape.as_list()[2]
+        in_dim = x.shape.as_list()[-1]
 
-    N = x.shape.as_list()[0]
-    H = x.shape.as_list()[1]
-    W = x.shape.as_list()[2]
-    in_dim = x.shape.as_list()[-1]
+        gamma = tf.get_variable(name='gamma', shape=[1], dtype=tf.float32, initializer=tf.zeros_initializer())
 
-    gamma = tf.get_variable(name='gamma', shape=[1], dtype=tf.float32, initializer=tf.zeros_initializer())
+        if pixel_wise:
+            # [N, H, W, in_dim // 8]
+            f = \
+                lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8, filter_size=1, stride=1,
+                                      name='Conv2D.f', conv_type='conv2d', channel_multiplier=0, padding='SAME',
+                                      spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
+                                      mask_type=None, weightnorm=None, biases=True, gain=1.)
+            f_ready = tf.reshape(f, [N, H * W, -1])  # [N, H*W, in_dim // 8]
 
-    if pixel_wise:
-        # [N, H, W, in_dim // 8]
-        f = \
-            lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8, filter_size=1, stride=1,
-                                  name='Conv2D.f', conv_type='conv2d', channel_multiplier=0, padding='SAME',
-                                  spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
-                                  mask_type=None, weightnorm=None, biases=True, gain=1.)
-        f_ready = tf.reshape(f, [N, H * W, -1])  # [N, H*W, in_dim // 8]
+            # [N, H, W, in_dim // 8]
+            g = \
+                lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8, filter_size=1, stride=1,
+                                      name='Conv2D.g', conv_type='conv2d', channel_multiplier=0, padding='SAME',
+                                      spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
+                                      mask_type=None, weightnorm=None, biases=True, gain=1.)
+            g_ready = tf.reshape(g, [N, H * W, -1])  # [N, H*W, in_dim // 8]
 
-        # [N, H, W, in_dim // 8]
-        g = \
-            lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8, filter_size=1, stride=1,
-                                  name='Conv2D.g', conv_type='conv2d', channel_multiplier=0, padding='SAME',
-                                  spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
-                                  mask_type=None, weightnorm=None, biases=True, gain=1.)
-        g_ready = tf.reshape(g, [N, H * W, -1])  # [N, H*W, in_dim // 8]
+            energy = tf.matmul(f_ready, g_ready, transpose_b=True)  # [N, H*W, H*W]
+            attention = tf.nn.softmax(energy, axis=-1)  # [N, H*W, H*W]
 
-        energy = tf.matmul(f_ready, g_ready, transpose_b=True)  # [N, H*W, H*W]
-        attention = tf.nn.softmax(energy, axis=-1)  # [N, H*W, H*W]
+            # [N, H, W, in_dim]
+            h = \
+                lib.ops.conv2d.Conv2D(x, in_dim, in_dim, filter_size=1, stride=1,
+                                      name='Conv2D.h', conv_type='conv2d', channel_multiplier=0, padding='SAME',
+                                      spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
+                                      mask_type=None, weightnorm=None, biases=True, gain=1.)
+            h = tf.reshape(h, [N, H * W, -1])  # [N, H*W, in_dim]
 
-        # [N, H, W, in_dim]
-        h = \
-            lib.ops.conv2d.Conv2D(x, in_dim, in_dim, filter_size=1, stride=1,
-                                  name='Conv2D.h', conv_type='conv2d', channel_multiplier=0, padding='SAME',
-                                  spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
-                                  mask_type=None, weightnorm=None, biases=True, gain=1.)
-        h = tf.reshape(h, [N, H * W, -1])  # [N, H*W, in_dim]
+            out = tf.matmul(attention, h)  # [N, H*W, in_dim]
+            out = tf.reshape(out, [N, H, W, in_dim])  # [N, in_dim, W, H]
 
-        out = tf.matmul(attention, h)  # [N, H*W, in_dim]
-        out = tf.reshape(out, [N, H, W, in_dim])  # [N, in_dim, W, H]
+            self_attn_map = gamma * out + x
 
-        self_attn_map = gamma * out + x
-
-        return self_attn_map, attention
+            return self_attn_map, attention
 
 
 # ######################## ResNet ######################## #
@@ -280,6 +280,9 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
 
         # normalized = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
         rectified = nonlinearity(convolved, 'lrelu', 0.2)
+
+        rectified, attn_score = Self_Attn(rectified)  # attention module
+
         layers.append(rectified)
 
     print('2.shape: {}'.format(layers[-1].shape.as_list()))
@@ -398,7 +401,7 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
 
             output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
 
-            if decoder_layer in [5, 6]:
+            if decoder_layer in [6]:
                 output, attn_score = Self_Attn(output)  # attention module
 
             if dropout > 0.0:
@@ -489,7 +492,7 @@ def unet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collect
             normalized = convolved
             rectified = nonlinearity(normalized, 'lrelu', 0.2)
 
-            if i in [2, 3]:
+            if i in [3]:
                 rectified, attn_score = Self_Attn(rectified)  # attention module
 
             layers.append(rectified)
