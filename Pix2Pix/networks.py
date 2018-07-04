@@ -315,6 +315,11 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
 
 def unet_g_(generator_inputs, generator_outputs_channels, ngf, conv_type, channel_multiplier, padding,
             upsampe_method='depth_to_space'):
+    """ UNet using ResNet architecture.
+    Args:
+
+    Returns:
+    """
     layers = []
 
     # encoder_1: [batch, 512, 512, in_channels] => [batch, 256, 256, ngf]
