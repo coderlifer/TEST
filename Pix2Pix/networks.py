@@ -313,6 +313,112 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
 
 # ######################## U-Net attention ######################## #
 
+def unet_g_(generator_inputs, generator_outputs_channels, ngf, conv_type, channel_multiplier, padding,
+            upsampe_method='depth_to_space'):
+    layers = []
+
+    # encoder_1: [batch, 512, 512, in_channels] => [batch, 256, 256, ngf]
+    with tf.variable_scope("encoder_1"):
+        output = ResidualBlock(generator_inputs, generator_inputs.shape.as_list()[-1], ngf, 3,
+                               name='G.Block.%d' % (len(layers) + 1),
+                               spectral_normed=True,
+                               update_collection=None,
+                               inputs_norm=False,
+                               resample='down', labels=None, biases=True, activation_fn='relu')
+        layers.append(output)
+        print('G.shape: {}'.format(layers[-1].shape.as_list()))
+
+    layer_specs = [
+        ngf * 2,  # encoder_2: [batch, 256, 256, ngf] => [batch, 128, 128, ngf * 2]
+        ngf * 4,  # encoder_3: [batch, 128, 128, ngf * 2] => [batch, 64, 64, ngf * 4]
+        ngf * 8,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 32, 32, ngf * 8]
+        ngf * 8,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
+        ngf * 8,  # encoder_6: [batch, 16, 16, ngf * 8] => [batch, 8, 8, ngf * 8]
+        ngf * 8,  # encoder_7: [batch, 8, 8, ngf * 8] => [batch, 4, 4, ngf * 8]
+        ngf * 8,  # encoder_8: [batch, 4, 4, ngf * 8] => [batch, 2, 2, ngf * 8]
+        ngf * 8,  # encoder_9: [batch, 2, 2, ngf * 8] => [batch, 1, 1, ngf * 8]
+    ]
+
+    for out_channels in layer_specs:
+        with tf.variable_scope("encoder_%d" % (len(layers) + 1)):
+            output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
+                                   name='G.Block.%d' % (len(layers) + 1),
+                                   spectral_normed=True,
+                                   update_collection=None,
+                                   inputs_norm=False,
+                                   resample='down', labels=None, biases=True, activation_fn='relu')
+
+            # output, attn_score = Self_Attn(output)  # attention module
+
+            layers.append(output)
+            print('G.shape: {}'.format(layers[-1].shape.as_list()))
+
+    layer_specs = [
+        (ngf * 8, 0.0),  # decoder_9: [batch, 1, 1, ngf * 8] => [batch, 2, 2, ngf * 8 * 2]
+        (ngf * 8, 0.0),  # decoder_8: [batch, 2, 2, ngf * 8 * 2] => [batch, 4, 4, ngf * 8 * 2]
+        (ngf * 8, 0.0),  # decoder_7: [batch, 4, 4, ngf * 8 * 2] => [batch, 8, 8, ngf * 8 * 2]
+        (ngf * 8, 0.0),  # decoder_6: [batch, 8, 8, ngf * 8 * 2] => [batch, 16, 16, ngf * 8 * 2]
+        (ngf * 8, 0.0),  # decoder_5: [batch, 16, 16, ngf * 8 * 2] => [batch, 32, 32, ngf * 8 * 2]
+        (ngf * 4, 0.0),  # decoder_4: [batch, 32, 32, ngf * 8 * 2] => [batch, 64, 64, ngf * 4 * 2]
+        (ngf * 2, 0.0),  # decoder_3: [batch, 64, 64, ngf * 4 * 2] => [batch, 128, 128, ngf * 2 * 2]
+        (ngf, 0.0),  # decoder_2: [batch, 128, 128, ngf * 2 * 2] => [batch, 256, 256, ngf * 2]
+    ]
+
+    num_encoder_layers = len(layers)
+    for decoder_layer, (out_channels, dropout) in enumerate(layer_specs):
+        skip_layer = num_encoder_layers - decoder_layer - 1
+        with tf.variable_scope("decoder_%d" % (skip_layer + 1)):
+            if decoder_layer == 0:
+                # first decoder layer doesn't have skip connections
+                # since it is directly connected to the skip_layer
+                inputs = layers[-1]
+            else:
+                inputs = tf.concat([layers[-1], layers[skip_layer]], axis=3)
+
+            output = ResidualBlock(inputs, inputs.shape.as_list()[-1], out_channels, 3,
+                                   name='G.Block.%d' % (len(layers) + 1),
+                                   spectral_normed=True,
+                                   update_collection=None,
+                                   inputs_norm=False,
+                                   resample='up', labels=None, biases=True, activation_fn='relu')
+
+            if decoder_layer in [5, 6]:
+                output, attn_score = Self_Attn(output)  # attention module
+
+            if dropout > 0.0:
+                output = tf.nn.dropout(output, keep_prob=1 - dropout)
+
+            layers.append(output)
+            print('G.shape: {}'.format(layers[-1].shape.as_list()))
+
+    # decoder_1: [batch, 256, 256, ngf * 2] => [batch, 512, 512, generator_outputs_channels]
+    with tf.variable_scope("decoder_1"):
+        inputs = tf.concat([layers[-1], layers[0]], axis=3)
+
+        output = ResidualBlock(inputs, inputs.shape.as_list()[-1], generator_outputs_channels, 3,
+                               name='G.Block.%d' % (len(layers) + 1),
+                               spectral_normed=True,
+                               update_collection=None,
+                               inputs_norm=False,
+                               resample='up', labels=None, biases=True, activation_fn='relu')
+        output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+        output = tf.nn.relu(output)
+
+        output = lib.ops.conv2d.Conv2D(output, output.shape.as_list()[-1], generator_outputs_channels, 1,
+                                       1, 'Conv2D',
+                                       conv_type=conv_type,
+                                       channel_multiplier=channel_multiplier,
+                                       padding='SAME',
+                                       spectral_normed=True, update_collection=None, inputs_norm=False,
+                                       he_init=True, biases=True)
+        output = tf.nn.tanh(output)
+
+        layers.append(output)
+
+        print('G.output.shape: {}'.format(layers[-1].shape.as_list()))
+
+    return layers[-1]
+
 
 def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel_multiplier, padding,
            upsampe_method='depth_to_space'):

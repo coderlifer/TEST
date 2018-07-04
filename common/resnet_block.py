@@ -44,7 +44,8 @@ def Normalize(name, inputs, labels=None, spectral_normed=True):
                 return outputs
             else:
                 # print('Batchnorm')
-                outputs = lib.ops.normalization.batch_norm(inputs, fused=True)
+                # outputs = lib.ops.normalization.batch_norm(inputs, fused=True)
+                outputs = lib.ops.normalization.instance_norm(inputs, epsilon=1e-06)
                 return outputs
         else:
             return inputs
