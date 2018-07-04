@@ -239,7 +239,7 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
 
     # layer_1: [batch, 512, 512, in_channels * 2] => [batch, 256, 256, ndf]
     with tf.variable_scope("layer_1"):
-        output = OptimizedResBlockDisc1(inputs, DIM_D=ndf, activation_fn='relu',
+        output = OptimizedResBlockDisc1(inputs, DIM_D=ndf, activation_fn='lrelu',
                                         spectral_normed=spectral_normed,
                                         update_collection=None,
                                         inputs_norm=False,
@@ -258,19 +258,50 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
                                    spectral_normed=spectral_normed,
                                    update_collection=update_collection,
                                    inputs_norm=False,
-                                   resample='down', labels=None, biases=True, activation_fn='relu')
+                                   resample='down', labels=None, biases=True, activation_fn='lrelu')
 
-            if i == 2:
-                output, attn_score = Self_Attn(output)  # attention module
+            # if i == 2:
+            #     output = nonlinearity(output, 'lrelu', 0.2)
+            #     output, attn_score = Self_Attn(output)  # attention module
 
             layers.append(output)
 
     print('1.shape: {}'.format(layers[-1].shape.as_list()))
 
-    # layer_5: [batch, 32, 32, ndf * 8] => [batch, 31, 31, ndf * 8]
+    # layer_5: [batch, 32, 32, ndf * 8] => [batch, 32, 32, ndf * 2]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
-        output = nonlinearity(layers[-1], 'lrelu', 0.2)
-        padded_input = tf.pad(output, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
+        output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], ndf * 2, 3,
+                               name='D.Block.%d' % (len(layers) + 1),
+                               spectral_normed=spectral_normed,
+                               update_collection=update_collection,
+                               inputs_norm=False,
+                               resample=None, labels=None, biases=True, activation_fn='lrelu')
+
+        layers.append(output)
+
+        print('2.shape: {}'.format(layers[-1].shape.as_list()))
+
+    # layer_6: [batch, 32, 32, ndf * 8] => [batch, 32, 32, ndf * 2]
+    with tf.variable_scope("layer_%d" % (len(layers) + 1)):
+        output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], ndf * 2, 3,
+                               name='D.Block.%d' % (len(layers) + 1),
+                               spectral_normed=spectral_normed,
+                               update_collection=update_collection,
+                               inputs_norm=False,
+                               resample=None, labels=None, biases=True, activation_fn='lrelu')
+
+        output = nonlinearity(output, 'lrelu', 0.2)
+
+        output, attn_score = Self_Attn(output)  # attention module
+
+        layers.append(output)
+
+        print('2.shape: {}'.format(layers[-1].shape.as_list()))
+
+    # layer_7: [batch, 32, 32, ndf * 8] => [batch, 31, 31, ndf * 8]
+    with tf.variable_scope("layer_%d" % (len(layers) + 1)):
+        # output = nonlinearity(layers[-1], 'lrelu', 0.2)
+        padded_input = tf.pad(layers[-1], [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
         convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], ndf * 8, 4, 1,
                                           name='Conv2D',
                                           conv_type=conv_type,
@@ -290,7 +321,7 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
 
     print('2.shape: {}'.format(layers[-1].shape.as_list()))
 
-    # layer_6: [batch, 31, 31, ndf * 8] => [batch, 30, 30, 1]
+    # layer_8: [batch, 31, 31, ndf * 8] => [batch, 30, 30, 1]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
         padded_input = tf.pad(layers[-1], [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
         convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], 1, 4, 1,
