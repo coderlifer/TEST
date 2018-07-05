@@ -99,7 +99,89 @@ def Self_Atten(x, pixel_wise=True):
 # ######################## ResNet ######################## #
 
 
-def resnet_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, channel_multiplier, padding):
+def resnet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel_multiplier, padding,
+             upsampe_method='depth_to_space'):
+    """ UNet using ResNet architecture.
+    Args:
+
+    Returns:
+    """
+    layers = []
+
+    # encoder_1: [batch, 512, 512, in_channels] => [batch, 512, 512, ngf]
+    with tf.variable_scope("layer_1"):
+        inputs = tf.pad(generator_inputs, [[0, 0], [3, 3], [3, 3], [0, 0]], mode="REFLECT")
+        output = lib.ops.conv2d.Conv2D(inputs, inputs.shape.as_list()[-1], ngf, 7, 1,
+                                       name='Conv2D', conv_type='conv2d', channel_multiplier=0, padding='VALID',
+                                       spectral_normed=True, update_collection=None, inputs_norm=False,
+                                       he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+        output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN")
+        output = nonlinearity(output, 'relu', 0.2)
+
+        layers.append(output)
+        print('resnet_g: {}'.format(layers[-1].shape.as_list()))
+
+    n_downsampling = 4  # [batch, 512, 512, ngf] ----> [batch, 32, 32, ngf * 8]
+    for i in range(n_downsampling):
+        with tf.variable_scope('layer_{}'.format(len(layers) + 1)):
+            mult = min(4, 2 ** i) * 2  # 2, 4, 8, 8
+            output = lib.ops.conv2d.Conv2D(layers[-1], layers[-1].shape.as_list()[-1], ngf * mult, 3, 2,
+                                           name='Conv2D', conv_type='conv2d', channel_multiplier=0, padding='SAME',
+                                           spectral_normed=True, update_collection=None, inputs_norm=False,
+                                           he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+            output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN")
+            output = nonlinearity(output, 'relu', 0.2)
+
+            layers.append(output)
+            print('resnet_g: {}'.format(layers[-1].shape.as_list()))
+
+    # [batch, 128, 128, ngf * 8] ----> [batch, 128, 128, ngf * 8]
+    mult = min(8, 2 ** n_downsampling)
+    n_block = 6
+    for i in range(n_block):
+        with tf.variable_scope('layer_{}'.format(len(layers) + 1)):
+            output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], ngf * mult, 3,
+                                   name='G.Block.%d' % (len(layers) + 1),
+                                   spectral_normed=True,
+                                   update_collection=None,
+                                   inputs_norm=False,
+                                   resample=None, labels=None, biases=True, activation_fn='relu')
+
+            layers.append(output)
+            print('resnet_g: {}'.format(layers[-1].shape.as_list()))
+
+    for i in range(n_downsampling):
+        with tf.variable_scope('layer_{}'.format(len(layers) + 1)):
+            mult = min(8, 2 ** (n_downsampling - i - 1))
+
+            inputs = tf.concat([layers[-1], layers[-1], layers[-1], layers[-1]], axis=3)
+            inputs = tf.depth_to_space(inputs, 2)
+            output = lib.ops.conv2d.Conv2D(inputs, inputs.shape.as_list()[-1], ngf * mult, 1, 1,
+                                           name='Conv2D', conv_type='conv2d', channel_multiplier=0, padding='SAME',
+                                           spectral_normed=True, update_collection=None, inputs_norm=False,
+                                           he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+            output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN")
+            output = nonlinearity(output, 'relu', 0.2)
+
+            layers.append(output)
+            print('resnet_g: {}'.format(layers[-1].shape.as_list()))
+
+    with tf.variable_scope('layer_{}'.format(len(layers) + 1)):
+        inputs = tf.pad(layers[-1], [[0, 0], [3, 3], [3, 3], [0, 0]], mode="REFLECT")
+        output = lib.ops.conv2d.Conv2D(inputs, inputs.shape.as_list()[-1], generator_outputs_channels, 7, 1,
+                                       name='Conv2D', conv_type='conv2d', channel_multiplier=0, padding='VALID',
+                                       spectral_normed=True, update_collection=None, inputs_norm=False,
+                                       he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+        # output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN")
+        output = tf.nn.tanh(output)
+
+        layers.append(output)
+        print('resnet_g: {}'.format(layers[-1].shape.as_list()))
+
+    return layers[-1]
+
+
+def resnet_g_(generator_inputs, generator_outputs_channels, ngf, conv_type, channel_multiplier, padding):
     """
 
     Args:
@@ -116,7 +198,7 @@ def resnet_generator(generator_inputs, generator_outputs_channels, ngf, conv_typ
     output = ResidualBlock(generator_inputs, generator_inputs.shape.as_list()[-1], ngf, 7, 'G.1',
                            resample='None', labels=None, activation_fn='relu')
     output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN")
-    output = tf.nn.relu(output)
+    output = nonlinearity(output, 'lrelu', 0.2)
 
     # (N, img_h // 2, img_w // 2, 1024)
     n_downsampling = 2

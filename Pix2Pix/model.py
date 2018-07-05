@@ -35,16 +35,16 @@ class Pix2Pix(object):
                                                  padding=padding,
                                                  upsampe_method=upsampe_method)
             elif net_type == 'UNet_Attention':
-                output = networks.unet_g_(inputs, outputs_channels, ngf,
-                                          conv_type=conv_type,
-                                          channel_multiplier=channel_multiplier,
-                                          padding=padding,
-                                          upsampe_method=upsampe_method)
+                output = networks.resnet_g(inputs, outputs_channels, ngf,
+                                           conv_type=conv_type,
+                                           channel_multiplier=channel_multiplier,
+                                           padding=padding,
+                                           upsampe_method=upsampe_method)
             elif net_type == 'ResNet':
-                output = networks.resnet_generator(inputs, outputs_channels, ngf,
-                                                   conv_type=conv_type,
-                                                   channel_multiplier=channel_multiplier,
-                                                   padding=padding)
+                output = networks.resnet_g(inputs, outputs_channels, ngf,
+                                           conv_type=conv_type,
+                                           channel_multiplier=channel_multiplier,
+                                           padding=padding)
             elif net_type == 'VGG':
                 output = networks.vgg_generator(inputs, outputs_channels, ngf,
                                                 conv_type=conv_type,
