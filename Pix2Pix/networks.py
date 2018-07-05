@@ -43,7 +43,7 @@ def norm_layer(inputs, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN"
     return outputs
 
 
-def Self_Attn(x, pixel_wise=True):
+def Self_Atten(x, pixel_wise=True):
     """
 
     Args:
@@ -292,7 +292,7 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
 
         output = nonlinearity(output, 'lrelu', 0.2)
 
-        output, attn_score = Self_Attn(output)  # attention module
+        output, attn_score = Self_Atten(output)  # attention module
 
         layers.append(output)
 
@@ -315,7 +315,7 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
         # normalized = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
         rectified = nonlinearity(convolved, 'lrelu', 0.2)
 
-        rectified, attn_score = Self_Attn(rectified)  # attention module
+        rectified, attn_score = Self_Atten(rectified)  # attention module
 
         layers.append(rectified)
 
@@ -419,7 +419,7 @@ def unet_g_(generator_inputs, generator_outputs_channels, ngf, conv_type, channe
                                    resample='up', labels=None, biases=True, activation_fn='relu')
 
             if decoder_layer in [5, 6]:
-                output, attn_score = Self_Attn(output)  # attention module
+                output, attn_score = Self_Atten(output)  # attention module
 
             if dropout > 0.0:
                 output = tf.nn.dropout(output, keep_prob=1 - dropout)
@@ -437,6 +437,7 @@ def unet_g_(generator_inputs, generator_outputs_channels, ngf, conv_type, channe
                                update_collection=None,
                                inputs_norm=False,
                                resample='up', labels=None, biases=True, activation_fn='relu')
+
         output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
         output = tf.nn.relu(output)
 
@@ -547,7 +548,7 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
             output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
 
             if decoder_layer in [5, 6]:
-                output, attn_score = Self_Attn(output)  # attention module
+                output, attn_score = Self_Atten(output)  # attention module
 
             if dropout > 0.0:
                 output = tf.nn.dropout(output, keep_prob=1 - dropout)
@@ -638,7 +639,7 @@ def unet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collect
             rectified = nonlinearity(normalized, 'lrelu', 0.2)
 
             if i in [3]:
-                rectified, attn_score = Self_Attn(rectified)  # attention module
+                rectified, attn_score = Self_Atten(rectified)  # attention module
 
             layers.append(rectified)
 
@@ -721,7 +722,7 @@ def unet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collec
             rectified = nonlinearity(convolved, 'lrelu', 0.2)
 
             if i in [2, 3]:
-                rectified, attn_score = Self_Attn(rectified)  # attention module
+                rectified, attn_score = Self_Atten(rectified)  # attention module
 
             layers.append(rectified)
 

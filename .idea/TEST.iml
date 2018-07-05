@@ -8,13 +8,14 @@
     <orderEntry type="module" module-name="ImageCaption_Tensorflow" />
     <orderEntry type="module" module-name="OpenSALICON" />
     <orderEntry type="module" module-name="Python-Scripts" />
-    <orderEntry type="module" module-name="Self-Attention-GAN-Tensorflow" />
     <orderEntry type="module" module-name="show-attend-and-tell" />
     <orderEntry type="module" module-name="tensorflow-vgg" />
     <orderEntry type="module" module-name="pytorch-CycleGAN-and-pix2pix" />
     <orderEntry type="module" module-name="DeRaindrop" />
     <orderEntry type="module" module-name="pix2pix-tensorflow" />
     <orderEntry type="module" module-name="GAN_Lib_Tensorflow" />
+    <orderEntry type="module" module-name="Mask_RCNN" />
+    <orderEntry type="module" module-name="skip_thoughts" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="Twisted Trial" />
