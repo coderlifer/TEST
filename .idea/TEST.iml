@@ -16,6 +16,8 @@
     <orderEntry type="module" module-name="GAN_Lib_Tensorflow" />
     <orderEntry type="module" module-name="Mask_RCNN" />
     <orderEntry type="module" module-name="skip_thoughts" />
+    <orderEntry type="module" module-name="Self-Attention-GAN-Tensorflow" />
+    <orderEntry type="module" module-name="Self-Attention-GAN" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="Twisted Trial" />

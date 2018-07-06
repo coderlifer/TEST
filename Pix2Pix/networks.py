@@ -43,7 +43,7 @@ def norm_layer(inputs, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN"
     return outputs
 
 
-def Self_Atten(x, pixel_wise=True):
+def Self_Atten(x, spectral_normed=True):
     """
 
     Args:
@@ -60,40 +60,45 @@ def Self_Atten(x, pixel_wise=True):
 
         gamma = tf.get_variable(name='gamma', shape=[1], dtype=tf.float32, initializer=tf.zeros_initializer())
 
-        if pixel_wise:
-            # [N, H, W, in_dim // 8]
-            f = \
-                lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8, filter_size=1, stride=1,
-                                      name='Conv2D.f', conv_type='conv2d', channel_multiplier=0, padding='SAME',
-                                      spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
-                                      mask_type=None, weightnorm=None, biases=True, gain=1.)
-            f_ready = tf.reshape(f, [N, H * W, -1])  # [N, H*W, in_dim // 8]
+        # [N, H, W, in_dim // 8]
+        f = \
+            lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8, filter_size=1, stride=1,
+                                  name='Conv2D.f', conv_type='conv2d', channel_multiplier=0, padding='SAME',
+                                  spectral_normed=spectral_normed,
+                                  update_collection=None,
+                                  inputs_norm=False,
+                                  he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+        f_ready = tf.reshape(f, [N, H * W, -1])  # [N, H*W, in_dim // 8]
 
-            # [N, H, W, in_dim // 8]
-            g = \
-                lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8, filter_size=1, stride=1,
-                                      name='Conv2D.g', conv_type='conv2d', channel_multiplier=0, padding='SAME',
-                                      spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
-                                      mask_type=None, weightnorm=None, biases=True, gain=1.)
-            g_ready = tf.reshape(g, [N, H * W, -1])  # [N, H*W, in_dim // 8]
+        # [N, H, W, in_dim // 8]
+        g = \
+            lib.ops.conv2d.Conv2D(x, x.shape.as_list()[-1], in_dim // 8, filter_size=1, stride=1,
+                                  name='Conv2D.g', conv_type='conv2d', channel_multiplier=0, padding='SAME',
+                                  spectral_normed=spectral_normed,
+                                  update_collection=None,
+                                  inputs_norm=False,
+                                  he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+        g_ready = tf.reshape(g, [N, H * W, -1])  # [N, H*W, in_dim // 8]
 
-            energy = tf.matmul(f_ready, g_ready, transpose_b=True)  # [N, H*W, H*W]
-            attention = tf.nn.softmax(energy, axis=-1)  # [N, H*W, H*W]
+        energy = tf.matmul(g_ready, f_ready, transpose_b=True)  # [N, H*W, H*W]
+        attention = tf.nn.softmax(energy, axis=-1)  # [N, H*W, H*W]
 
-            # [N, H, W, in_dim]
-            h = \
-                lib.ops.conv2d.Conv2D(x, in_dim, in_dim, filter_size=1, stride=1,
-                                      name='Conv2D.h', conv_type='conv2d', channel_multiplier=0, padding='SAME',
-                                      spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
-                                      mask_type=None, weightnorm=None, biases=True, gain=1.)
-            h = tf.reshape(h, [N, H * W, -1])  # [N, H*W, in_dim]
+        # [N, H, W, in_dim]
+        h = \
+            lib.ops.conv2d.Conv2D(x, in_dim, in_dim, filter_size=1, stride=1,
+                                  name='Conv2D.h', conv_type='conv2d', channel_multiplier=0, padding='SAME',
+                                  spectral_normed=spectral_normed,
+                                  update_collection=None,
+                                  inputs_norm=False,
+                                  he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+        h = tf.reshape(h, [N, H * W, -1])  # [N, H*W, in_dim]
 
-            out = tf.matmul(attention, h)  # [N, H*W, in_dim]
-            out = tf.reshape(out, [N, H, W, in_dim])  # [N, in_dim, W, H]
+        out = tf.matmul(attention, h)  # [N, H*W, in_dim]
+        out = tf.reshape(out, [N, H, W, in_dim])  # [N, in_dim, W, H]
 
-            self_attn_map = gamma * out + x
+        self_attn_map = gamma * out + x
 
-            return self_attn_map, attention
+        return self_attn_map, attention
 
 
 # ######################## ResNet ######################## #
@@ -111,11 +116,13 @@ def resnet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, chann
     # encoder_1: [batch, 512, 512, in_channels] => [batch, 512, 512, ngf]
     with tf.variable_scope("layer_1"):
         inputs = tf.pad(generator_inputs, [[0, 0], [3, 3], [3, 3], [0, 0]], mode="REFLECT")
+        print('resnet_g.inputs: {}'.format(inputs.shape.as_list()))
+
         output = lib.ops.conv2d.Conv2D(inputs, inputs.shape.as_list()[-1], ngf, 7, 1,
                                        name='Conv2D', conv_type='conv2d', channel_multiplier=0, padding='VALID',
                                        spectral_normed=True, update_collection=None, inputs_norm=False,
                                        he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
-        output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN")
+        output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
         output = nonlinearity(output, 'relu', 0.2)
 
         layers.append(output)
@@ -129,13 +136,13 @@ def resnet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, chann
                                            name='Conv2D', conv_type='conv2d', channel_multiplier=0, padding='SAME',
                                            spectral_normed=True, update_collection=None, inputs_norm=False,
                                            he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
-            output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN")
+            output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
             output = nonlinearity(output, 'relu', 0.2)
 
             layers.append(output)
             print('resnet_g: {}'.format(layers[-1].shape.as_list()))
 
-    # [batch, 128, 128, ngf * 8] ----> [batch, 128, 128, ngf * 8]
+    # [batch, 32, 32, ngf * 8] ----> [batch, 32, 32, ngf * 8]
     mult = min(8, 2 ** n_downsampling)
     n_block = 6
     for i in range(n_block):
@@ -150,83 +157,41 @@ def resnet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, chann
             layers.append(output)
             print('resnet_g: {}'.format(layers[-1].shape.as_list()))
 
+    # [batch, 32, 32, ngf * 8] ----> [batch, 512, 512, ngf]
     for i in range(n_downsampling):
         with tf.variable_scope('layer_{}'.format(len(layers) + 1)):
             mult = min(8, 2 ** (n_downsampling - i - 1))
 
             inputs = tf.concat([layers[-1], layers[-1], layers[-1], layers[-1]], axis=3)
             inputs = tf.depth_to_space(inputs, 2)
-            output = lib.ops.conv2d.Conv2D(inputs, inputs.shape.as_list()[-1], ngf * mult, 1, 1,
+            output = lib.ops.conv2d.Conv2D(inputs, inputs.shape.as_list()[-1], ngf * mult, 3, 1,
                                            name='Conv2D', conv_type='conv2d', channel_multiplier=0, padding='SAME',
                                            spectral_normed=True, update_collection=None, inputs_norm=False,
                                            he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
-            output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN")
+            output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
             output = nonlinearity(output, 'relu', 0.2)
+
+            if i in [1]:
+                output, attn_score = Self_Atten(output)  # attention module
+                print('Self_Atten.D: {}'.format(output.shape.as_list()))
 
             layers.append(output)
             print('resnet_g: {}'.format(layers[-1].shape.as_list()))
 
+    # [batch, 512, 512, ngf] ----> [batch, 512, 512, 3]
     with tf.variable_scope('layer_{}'.format(len(layers) + 1)):
         inputs = tf.pad(layers[-1], [[0, 0], [3, 3], [3, 3], [0, 0]], mode="REFLECT")
         output = lib.ops.conv2d.Conv2D(inputs, inputs.shape.as_list()[-1], generator_outputs_channels, 7, 1,
                                        name='Conv2D', conv_type='conv2d', channel_multiplier=0, padding='VALID',
                                        spectral_normed=True, update_collection=None, inputs_norm=False,
                                        he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
-        # output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN")
+        # output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
         output = tf.nn.tanh(output)
 
         layers.append(output)
         print('resnet_g: {}'.format(layers[-1].shape.as_list()))
 
     return layers[-1]
-
-
-def resnet_g_(generator_inputs, generator_outputs_channels, ngf, conv_type, channel_multiplier, padding):
-    """
-
-    Args:
-      input_images: A batch of images to translate. Images should be normalized
-        already. Shape is [batch, height, width, channels].
-      outputs_channels:
-      ngf:
-
-    Returns:
-      Returns generated image batch.
-    """
-
-    # (N, img_h, img_w, 1024)
-    output = ResidualBlock(generator_inputs, generator_inputs.shape.as_list()[-1], ngf, 7, 'G.1',
-                           resample='None', labels=None, activation_fn='relu')
-    output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN")
-    output = nonlinearity(output, 'lrelu', 0.2)
-
-    # (N, img_h // 2, img_w // 2, 1024)
-    n_downsampling = 2
-    for i in range(n_downsampling):
-        mult = 2 ** i
-        # model += [nn.Conv2d(ngf * mult, ngf * mult * 2, kernel_size=3,
-        #                     stride=2, padding=1, bias=use_bias)
-        output = \
-            lib.ops.conv2d.Conv2D(output, output.shape.as_list()[-1], ngf * mult * 2, filter_size=3, stride=2,
-                                  name='Conv2D.%d' % (i + 2), conv_type='conv2d', channel_multiplier=0, padding='SAME',
-                                  spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
-                                  mask_type=None, weightnorm=None, biases=True, gain=1.)
-        output = ResidualBlock(output, output.shape.as_list()[-1], ngf * mult * 2, 3, 'G.%d' % (i + 2),
-                               resample='down', labels=None, activation_fn='relu')
-        output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN")
-        output = tf.nn.relu(output)
-
-    # (N, img_h, img_w, 1024)
-    output = ResidualBlock(output, output.shape.as_list()[-1], 256, 3, 'G.3',
-                           resample='down', labels=None, activation_fn='relu')
-
-    output = Normalize('G.OutputN', output)
-    output = nonlinearity(output, activation_fn='relu')
-    output = lib.ops.conv2d.Conv2D(output, output.shape.as_list()[-1], 3, 3, 1, 'G.Output',
-                                   he_init=False, biases=True)
-    output = tf.nn.tanh(output)
-
-    return output
 
 
 # TODO
@@ -253,7 +218,9 @@ def resnet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_colle
                                         update_collection=None,
                                         inputs_norm=False,
                                         biases=True)
+
         layers.append(output)
+        print('resnet_d: {}'.format(layers[-1].shape.as_list()))
 
     # layer_2: [batch, 256, 256, ndf] => [batch, 128, 128, ndf * 2]
     # layer_3: [batch, 128, 128, ndf * 2] => [batch, 64, 64, ndf * 4]
@@ -270,7 +237,12 @@ def resnet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_colle
                                    inputs_norm=False,
                                    resample='down', labels=None, biases=True, activation_fn='relu')
 
+            if i == 0:
+                output, attn_score = Self_Atten(output)  # attention module
+                print('Self_Atten.D: {}'.format(output.shape.as_list()))
+
             layers.append(output)
+            print('resnet_d: {}'.format(layers[-1].shape.as_list()))
 
     # layer_7: [batch, 8, 8, ndf * 8] => [batch, 8, 8, ndf * 4]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
@@ -281,22 +253,26 @@ def resnet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_colle
                                inputs_norm=False,
                                resample=None, labels=None, biases=True, activation_fn='relu')
         layers.append(output)
+        print('resnet_d: {}'.format(layers[-1].shape.as_list()))
 
     # layer_8: [batch, 8, 8, ndf * 4] => [batch, 8, 8, ndf * 2]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
-        output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], ndf * 2, 3,
+        output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], ndf, 3,
                                name='D.Block.%d' % (len(layers) + 1),
                                spectral_normed=spectral_normed,
                                update_collection=update_collection,
                                inputs_norm=False,
                                resample=None, labels=None, biases=True, activation_fn='relu')
+        print('resnet_d: {}'.format(layers[-1].shape.as_list()))
+
         output = nonlinearity(output, 'lrelu', 0.2)
         output = tf.reduce_mean(output, axis=[1, 2])
-        output_wgan = lib.ops.linear.Linear(output, ndf * 2, 1, 'D.Output',
+        output_wgan = lib.ops.linear.Linear(output, ndf, 1, 'D.Output',
                                             spectral_normed=spectral_normed,
                                             update_collection=update_collection)
         output_wgan = tf.reshape(output_wgan, [-1])
         layers.append(output_wgan)
+        print('resnet_d: {}'.format(layers[-1].shape.as_list()))
 
     return layers[-1]
 
@@ -426,8 +402,8 @@ def resnet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_coll
 
 # ######################## U-Net attention ######################## #
 
-def unet_g_(generator_inputs, generator_outputs_channels, ngf, conv_type, channel_multiplier, padding,
-            upsampe_method='depth_to_space'):
+def unetResnetG(generator_inputs, generator_outputs_channels, ngf, conv_type, channel_multiplier, padding,
+                upsampe_method='depth_to_space'):
     """ UNet using ResNet architecture.
     Args:
 
@@ -541,6 +517,11 @@ def unet_g_(generator_inputs, generator_outputs_channels, ngf, conv_type, channe
 
 def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel_multiplier, padding,
            upsampe_method='depth_to_space'):
+    """ UNet.
+    Args:
+
+    Returns:
+    """
     layers = []
 
     # encoder_1: [batch, 512, 512, in_channels] => [batch, 256, 256, ngf]
