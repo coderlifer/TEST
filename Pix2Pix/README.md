@@ -75,7 +75,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
 
 
 #### attention
-CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
+CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='train' \
   --conv_type='conv2d' \
@@ -85,14 +85,14 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --beta1=0. \
   --beta2=0.9 \
   --loss_type='HINGE' \
-  --n_dis=5 \
+  --n_dis=1 \
   --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/train \
-  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_512_0 \
+  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_512_1 \
   --max_epochs=600 \
   --which_direction=AtoB \
   --save_freq=2360 \
-  --ngf=64 \
-  --ndf=64 \
+  --ngf=100 \
+  --ndf=100 \
   --scale_size=572 \
   --l1_weight=20.0 \
   --gan_weight=1.0 \
