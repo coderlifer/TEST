@@ -337,7 +337,8 @@ def create_model(inputs, targets, max_steps):
         # gen_loss_L1 = tf.reduce_mean(tf.abs(targets - outputs))
         # gen_loss = gen_loss_GAN * args.gan_weight + gen_loss_L1 * args.l1_weight
 
-        gen_loss_bce = -tf.reduce_mean(targets * tf.log(outputs) + (1 - targets) * tf.log(1 - outputs))
+        gen_loss_bce = -tf.reduce_mean(
+            targets * tf.log(outputs + 1e-10) + (1 - targets) * tf.log(1 - outputs + 1e-10))
         gen_loss = gen_loss_GAN * args.gan_weight + gen_loss_bce * args.l1_weight
 
     with tf.name_scope('global_step'):
