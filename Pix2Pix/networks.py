@@ -1062,10 +1062,10 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
     conv3_4 = conv_layer(conv3_3, 256, 256, "conv3_4", trainable=False, data_dict=data_dict)
     pool3 = max_pool(conv3_4, 'pool3')  # [28, 28, 256], [64, 64, 256]
 
-    conv4_1 = conv_layer(pool3, 256, 512, "conv4_1", trainable=False, data_dict=data_dict)
-    conv4_2 = conv_layer(conv4_1, 512, 512, "conv4_2", trainable=False, data_dict=data_dict)
-    conv4_3 = conv_layer(conv4_2, 512, 512, "conv4_3", trainable=False, data_dict=data_dict)
-    conv4_4 = conv_layer(conv4_3, 512, 512, "conv4_4", trainable=False, data_dict=data_dict)
+    conv4_1 = conv_layer(pool3, 256, 512, "conv4_1", trainable=True, data_dict=data_dict)
+    conv4_2 = conv_layer(conv4_1, 512, 512, "conv4_2", trainable=True, data_dict=data_dict)
+    conv4_3 = conv_layer(conv4_2, 512, 512, "conv4_3", trainable=True, data_dict=data_dict)
+    conv4_4 = conv_layer(conv4_3, 512, 512, "conv4_4", trainable=True, data_dict=data_dict)
     pool4 = max_pool(conv4_4, 'pool4')  # [14, 14, 512], [32, 32, 512]
 
     conv5_1 = conv_layer(pool4, 512, 512, "conv5_1", trainable=True, data_dict=data_dict)
@@ -1099,11 +1099,15 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
                                     conv_type=conv_type, channel_multiplier=channel_multiplier, padding='SAME',
                                     spectral_normed=False, update_collection=None, inputs_norm=False,
                                     he_init=True, biases=True)  # [8, 8, 512]
+    conv6_1 = norm_layer(conv6_1, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv6_1 = nonlinearity(conv6_1, 'relu', 0.2)
 
     conv6_2 = lib.ops.conv2d.Conv2D(conv6_1, conv6_1.shape.as_list()[-1], 512, 3, 2, 'conv6_2',
                                     conv_type=conv_type, channel_multiplier=channel_multiplier, padding='SAME',
                                     spectral_normed=False, update_collection=None, inputs_norm=False,
                                     he_init=True, biases=True)  # [4, 4, 512]
+    conv6_2 = norm_layer(conv6_2, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv6_2 = nonlinearity(conv6_2, 'relu', 0.2)
 
     # decoder part
     conv6_2_decoder = tf.concat([conv6_2, conv6_2, conv6_2, conv6_2], axis=3, name="conv6_2_concat")
@@ -1113,6 +1117,8 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
                                             spectral_normed=False,
                                             update_collection=None,
                                             he_init=True, biases=True)
+    conv6_2_decoder = norm_layer(conv6_2_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv6_2_decoder = nonlinearity(conv6_2_decoder, 'relu', 0.2)
 
     conv6_2_decoder = tf.concat([conv6_2_decoder, conv6_1], axis=3)
     conv6_1_decoder = tf.concat([conv6_2_decoder, conv6_2_decoder, conv6_2_decoder, conv6_2_decoder], axis=3,
@@ -1123,6 +1129,8 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
                                             spectral_normed=False,
                                             update_collection=None,
                                             he_init=True, biases=True)
+    conv6_1_decoder = norm_layer(conv6_1_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv6_1_decoder = nonlinearity(conv6_1_decoder, 'relu', 0.2)
 
     conv6_1_decoder = tf.concat([conv6_1_decoder, pool5], axis=3)
     pool5_decoder = tf.concat([conv6_1_decoder, conv6_1_decoder, conv6_1_decoder, conv6_1_decoder], axis=3,
@@ -1130,12 +1138,20 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
     pool5_decoder = tf.depth_to_space(pool5_decoder, 2, name='pool5_decoder')  # [32, 32, 512*2]
     conv5_4_decoder = lib.ops.conv2d.Conv2D(pool5_decoder, pool5_decoder.shape.as_list()[-1], 512, 3, 1,
                                             "conv5_4_decoder", he_init=True, biases=True)
+    conv5_4_decoder = norm_layer(conv5_4_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv5_4_decoder = nonlinearity(conv5_4_decoder, 'relu', 0.2)
     conv5_3_decoder = lib.ops.conv2d.Conv2D(conv5_4_decoder, conv5_4_decoder.shape.as_list()[-1], 512, 3, 1,
                                             "conv5_3_decoder", he_init=True, biases=True)
+    conv5_3_decoder = norm_layer(conv5_3_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv5_3_decoder = nonlinearity(conv5_3_decoder, 'relu', 0.2)
     conv5_2_decoder = lib.ops.conv2d.Conv2D(conv5_3_decoder, conv5_3_decoder.shape.as_list()[-1], 512, 3, 1,
                                             "conv5_2_decoder", he_init=True, biases=True)
+    conv5_2_decoder = norm_layer(conv5_2_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv5_2_decoder = nonlinearity(conv5_2_decoder, 'relu', 0.2)
     conv5_1_decoder = lib.ops.conv2d.Conv2D(conv5_2_decoder, conv5_2_decoder.shape.as_list()[-1], 512, 3, 1,
                                             "conv5_1_decoder", he_init=True, biases=True)
+    conv5_1_decoder = norm_layer(conv5_1_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv5_1_decoder = nonlinearity(conv5_1_decoder, 'relu', 0.2)
 
     conv5_1_decoder = tf.concat([conv5_1_decoder, pool4], axis=3)
     pool4_decoder = tf.concat([conv5_1_decoder, conv5_1_decoder, conv5_1_decoder, conv5_1_decoder], axis=3,
@@ -1143,12 +1159,20 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
     pool4_decoder = tf.depth_to_space(pool4_decoder, 2, name='pool4_decoder')  # [64, 64, 512*2]
     conv4_4_decoder = lib.ops.conv2d.Conv2D(pool4_decoder, pool4_decoder.shape.as_list()[-1], 512, 3, 1,
                                             "conv4_4_decoder", he_init=True, biases=True)
+    conv4_4_decoder = norm_layer(conv4_4_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv4_4_decoder = nonlinearity(conv4_4_decoder, 'relu', 0.2)
     conv4_3_decoder = lib.ops.conv2d.Conv2D(conv4_4_decoder, conv4_4_decoder.shape.as_list()[-1], 512, 3, 1,
                                             "conv4_3_decoder", he_init=True, biases=True)
+    conv4_3_decoder = norm_layer(conv4_3_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv4_3_decoder = nonlinearity(conv4_3_decoder, 'relu', 0.2)
     conv4_2_decoder = lib.ops.conv2d.Conv2D(conv4_3_decoder, conv4_3_decoder.shape.as_list()[-1], 512, 3, 1,
                                             "conv4_2_decoder", he_init=True, biases=True)
+    conv4_2_decoder = norm_layer(conv4_2_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv4_2_decoder = nonlinearity(conv4_2_decoder, 'relu', 0.2)
     conv4_1_decoder = lib.ops.conv2d.Conv2D(conv4_2_decoder, conv4_2_decoder.shape.as_list()[-1], 256, 3, 1,
                                             "conv4_1_decoder", he_init=True, biases=True)
+    conv4_1_decoder = norm_layer(conv4_1_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv4_1_decoder = nonlinearity(conv4_1_decoder, 'relu', 0.2)
 
     conv4_1_decoder = tf.concat([conv4_1_decoder, pool3], axis=3)
     pool3_decoder = tf.concat([conv4_1_decoder, conv4_1_decoder, conv4_1_decoder, conv4_1_decoder], axis=3,
@@ -1156,12 +1180,20 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
     pool3_decoder = tf.depth_to_space(pool3_decoder, 2, name='pool3_decoder')  # [128, 128, 256*2]
     conv3_4_decoder = lib.ops.conv2d.Conv2D(pool3_decoder, pool3_decoder.shape.as_list()[-1], 256, 3, 1,
                                             "conv3_4_decoder", he_init=True, biases=True)
+    conv3_4_decoder = norm_layer(conv3_4_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv3_4_decoder = nonlinearity(conv3_4_decoder, 'relu', 0.2)
     conv3_3_decoder = lib.ops.conv2d.Conv2D(conv3_4_decoder, conv3_4_decoder.shape.as_list()[-1], 256, 3, 1,
                                             "conv3_3_decoder", he_init=True, biases=True)
+    conv3_3_decoder = norm_layer(conv3_3_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv3_3_decoder = nonlinearity(conv3_3_decoder, 'relu', 0.2)
     conv3_2_decoder = lib.ops.conv2d.Conv2D(conv3_3_decoder, conv3_3_decoder.shape.as_list()[-1], 256, 3, 1,
                                             "conv3_2_decoder", he_init=True, biases=True)
+    conv3_2_decoder = norm_layer(conv3_2_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv3_2_decoder = nonlinearity(conv3_2_decoder, 'relu', 0.2)
     conv3_1_decoder = lib.ops.conv2d.Conv2D(conv3_2_decoder, conv3_2_decoder.shape.as_list()[-1], 128, 3, 1,
                                             "conv3_1_decoder", he_init=True, biases=True)
+    conv3_1_decoder = norm_layer(conv3_1_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv3_1_decoder = nonlinearity(conv3_1_decoder, 'relu', 0.2)
 
     conv3_1_decoder = tf.concat([conv3_1_decoder, pool2], axis=3)
     pool2_decoder = tf.concat([conv3_1_decoder, conv3_1_decoder, conv3_1_decoder, conv3_1_decoder], axis=3,
@@ -1169,8 +1201,12 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
     pool2_decoder = tf.depth_to_space(pool2_decoder, 2, name='pool2_decoder')  # [256, 256, 128*2]
     conv2_2_decoder = lib.ops.conv2d.Conv2D(pool2_decoder, pool2_decoder.shape.as_list()[-1], 128, 3, 1,
                                             "conv2_2_decoder", he_init=True, biases=True)
+    conv2_2_decoder = norm_layer(conv2_2_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv2_2_decoder = nonlinearity(conv2_2_decoder, 'relu', 0.2)
     conv2_1_decoder = lib.ops.conv2d.Conv2D(conv2_2_decoder, conv2_2_decoder.shape.as_list()[-1], 64, 3, 1,
                                             "conv2_1_decoder", he_init=True, biases=True)
+    conv2_1_decoder = norm_layer(conv2_1_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv2_1_decoder = nonlinearity(conv2_1_decoder, 'relu', 0.2)
 
     conv2_1_decoder = tf.concat([conv2_1_decoder, pool1], axis=3)
     pool1_decoder = tf.concat([conv2_1_decoder, conv2_1_decoder, conv2_1_decoder, conv2_1_decoder], axis=3,
@@ -1178,10 +1214,13 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
     pool1_decoder = tf.depth_to_space(pool1_decoder, 2, name='pool1_decoder')  # [512, 512, 64*2]
     conv1_2_decoder = lib.ops.conv2d.Conv2D(pool1_decoder, pool1_decoder.shape.as_list()[-1], 64, 3, 1,
                                             "conv1_2_decoder", he_init=True, biases=True)
+    conv1_2_decoder = norm_layer(conv1_2_decoder, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+    conv1_2_decoder = nonlinearity(conv1_2_decoder, 'relu', 0.2)
 
     conv1_2_decoder = tf.concat([conv1_2_decoder, bgr], axis=3)
     bgr_output = lib.ops.conv2d.Conv2D(conv1_2_decoder, conv1_2_decoder.shape.as_list()[-1], 3, 3, 1,
                                        "bgr_output", he_init=True, biases=True)
+    bgr_output = norm_layer(bgr_output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
 
     bgr_output = tf.nn.tanh(bgr_output)
 

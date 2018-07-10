@@ -330,8 +330,16 @@ def create_model(inputs, targets, max_steps):
     with tf.name_scope("g_loss"):
         # gen_loss_GAN = tf.reduce_mean(-tf.log(predict_fake + EPS))
         _, gen_loss_GAN = lib.misc.get_loss(predict_real, predict_fake, loss_type=args.loss_type)
-        gen_loss_L1 = tf.reduce_mean(tf.abs(targets - outputs))
-        gen_loss = gen_loss_GAN * args.gan_weight + gen_loss_L1 * args.l1_weight
+
+        # gen_loss_L1 = tf.reduce_mean(tf.abs(targets - outputs))
+        # gen_loss = gen_loss_GAN * args.gan_weight + gen_loss_L1 * args.l1_weight
+
+        outputs_ = deprocess(outputs)
+        outputs_1 = 1 - outputs_
+        targets_ = deprocess(targets)
+        targets_1 = 1 - targets_
+        gen_loss_bce = -tf.reduce_sum(outputs_ * tf.log(targets_) + outputs_1 * tf.log(targets_1))
+        gen_loss = gen_loss_GAN * args.gan_weight + gen_loss_bce * args.l1_weight
 
     with tf.name_scope('global_step'):
         global_step = tf.train.get_or_create_global_step()
@@ -364,7 +372,7 @@ def create_model(inputs, targets, max_steps):
         gen_train = gen_optim.apply_gradients(gen_grads_and_vars, global_step=global_step)
 
     ema = tf.train.ExponentialMovingAverage(decay=0.99)
-    update_losses = ema.apply([discrim_loss, gen_loss_GAN, gen_loss_L1])
+    update_losses = ema.apply([discrim_loss, gen_loss_GAN, gen_loss_bce])
 
     # global_step = tf.train.get_or_create_global_step()
     # incr_global_step = tf.assign(global_step, global_step + 1)
@@ -376,7 +384,7 @@ def create_model(inputs, targets, max_steps):
         discrim_loss=ema.average(discrim_loss),
         discrim_grads_and_vars=discrim_grads_and_vars,
         gen_loss_GAN=ema.average(gen_loss_GAN),
-        gen_loss_L1=ema.average(gen_loss_L1),
+        gen_loss_L1=ema.average(gen_loss_bce),
         gen_grads_and_vars=gen_grads_and_vars,
         d_train=discrim_train,
         g_train=gen_train,
