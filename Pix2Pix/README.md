@@ -75,7 +75,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
 
 
 #### attention
-CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
+CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='train' \
   --conv_type='conv2d' \
@@ -94,7 +94,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --ngf=86 \
   --ndf=86 \
   --scale_size=572 \
-  --l1_weight=20.0 \
+  --l1_weight=0.05 \
   --gan_weight=1.0 \
   --multiple_A \
   --net_type='UNet_Attention' \
@@ -129,8 +129,6 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --multiple_A \
   --net_type='UNet_Attention' \
   --upsampe_method=depth_to_space
-
-
 
 
 ---- VGG ----
@@ -172,6 +170,8 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --checkpoint_dir=../output_train_vgg \
   --net_type='VGG' \
   --upsampe_method=depth_to_space
+
+
 
 
 
