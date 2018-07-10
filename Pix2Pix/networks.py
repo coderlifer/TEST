@@ -1046,7 +1046,7 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
     ], axis=3)
     # assert bgr.get_shape().as_list()[1:] == [224, 224, 3]
 
-    conv1_1 = conv_layer(bgr, 3, 64, "conv1_1", trainable=False, data_dict=data_dict)
+    conv1_1 = conv_layer(bgr, 6, 64, "conv1_1", trainable=True, data_dict=None)
     conv1_2 = conv_layer(conv1_1, 64, 64, "conv1_2", trainable=False, data_dict=data_dict)
     pool1 = max_pool(conv1_2, 'pool1')  # [112, 112, 64], [256, 256, 64]
 

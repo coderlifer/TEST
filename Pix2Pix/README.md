@@ -148,7 +148,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_bce.py \
   --ngf=64 \
   --ndf=64 \
   --scale_size=572 \
-  --l1_weight=0.05.0 \
+  --l1_weight=0.05 \
   --gan_weight=1.0 \
   --multiple_A \
   --net_type='VGG' \
