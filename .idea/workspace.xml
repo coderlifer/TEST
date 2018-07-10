@@ -13,6 +13,7 @@
       <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/misc.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/modules.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pix2Pix/train_bce.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../OpenSALICON/Readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/../OpenSALICON/Readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../OpenSALICON/Salicon.py" beforeDir="false" afterPath="$PROJECT_DIR$/../OpenSALICON/Salicon.py" afterDir="false" />
@@ -25,7 +26,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pix2Pix/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pix2Pix/networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/networks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pix2Pix/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../show-attend-and-tell/core/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/../show-attend-and-tell/core/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../show-attend-and-tell/core/vggnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/../show-attend-and-tell/core/vggnet.py" afterDir="false" />
     </list>
@@ -48,11 +48,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="train_bce.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="409">
+              <caret line="330" column="44" lean-forward="true" selection-start-line="330" selection-start-column="44" selection-end-line="330" selection-end-column="44" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="networks.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="203">
-              <caret line="704" column="25" selection-start-line="704" selection-start-column="25" selection-end-line="704" selection-end-column="25" />
+            <state relative-caret-position="568">
+              <caret line="1316" column="36" lean-forward="true" selection-start-line="1316" selection-start-column="36" selection-end-line="1316" selection-end-column="36" />
               <folding>
                 <element signature="e#526#1179#0" />
                 <element signature="e#1227#3796#0" />
@@ -60,25 +69,21 @@
                 <element signature="e#8995#12931#0" />
                 <element signature="e#13088#18809#0" />
                 <element signature="e#19044#24685#0" />
+                <element signature="e#24839#32044#0" />
+                <element signature="e#32188#36215#0" />
+                <element signature="e#36368#40848#0" />
+                <element signature="e#41079#47764#0" />
+                <element signature="e#47932#51353#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Pix2Pix/train.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="339" column="21" selection-start-line="336" selection-start-column="10" selection-end-line="339" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="77" column="18" selection-start-line="77" selection-start-column="18" selection-end-line="77" selection-end-column="18" />
+            <state relative-caret-position="727">
+              <caret line="155" lean-forward="true" selection-start-line="155" selection-end-line="155" />
             </state>
           </provider>
         </entry>
@@ -103,13 +108,14 @@
       <find>activation_fn</find>
       <find>which_model_netD</find>
       <find>tf.pad</find>
-      <find>spectral_normed</find>
       <find>SpectralNorm</find>
       <find>vc</find>
       <find>ConvLayer</find>
       <find>deprocess</find>
       <find>gen_loss_GAN</find>
       <find>Self_Atten</find>
+      <find>norm_layer</find>
+      <find>spectral_normed</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -145,9 +151,10 @@
         <option value="$PROJECT_DIR$/../Python-Scripts/main.py" />
         <option value="$USER_HOME$/Downloads/code/saliency-salgan-2017/scripts/02-train.py" />
         <option value="$USER_HOME$/Downloads/code/saliency-salgan-2017/scripts/models/generator.py" />
-        <option value="$PROJECT_DIR$/Pix2Pix/README.md" />
-        <option value="$PROJECT_DIR$/Pix2Pix/networks.py" />
         <option value="$PROJECT_DIR$/Pix2Pix/train.py" />
+        <option value="$PROJECT_DIR$/Pix2Pix/networks.py" />
+        <option value="$PROJECT_DIR$/Pix2Pix/train_bce.py" />
+        <option value="$PROJECT_DIR$/Pix2Pix/README.md" />
       </list>
     </option>
   </component>
@@ -185,6 +192,10 @@
               <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
               <item name="TEST" type="462c0819:PsiDirectoryNode" />
               <item name="Pix2Pix" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pix2pix-tensorflow" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
@@ -530,7 +541,14 @@
       <option name="project" value="LOCAL" />
       <updated>1531195324061</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Update.">
+      <created>1531201605904</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1531201605904</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -586,10 +604,10 @@
     <MESSAGE value="Add DBSCAN." />
     <MESSAGE value="Python 3 compatibility." />
     <MESSAGE value="Clustering algorithm comparision using scipy implementation." />
-    <MESSAGE value="Update." />
     <MESSAGE value="Self atten in UNet with [1, 128, 128, C] in both G and D." />
     <MESSAGE value="Change g loss to BCE." />
-    <option name="LAST_COMMIT_MESSAGE" value="Change g loss to BCE." />
+    <MESSAGE value="Update." />
+    <option name="LAST_COMMIT_MESSAGE" value="Update." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -597,16 +615,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Downloads/code/Mask_RCNN/object_detection/trainer_test.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/code/Mask_RCNN/object_detection/models/faster_rcnn_resnet_v1_feature_extractor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="624">
-          <caret line="246" column="37" selection-start-line="246" selection-start-column="37" selection-end-line="246" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Downloads/code/Mask_RCNN/object_detection/train.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="531">
@@ -852,22 +860,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/networks12.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train12.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/model12.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/networks12.py" />
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/train12.py" />
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/model12.py" />
     <entry file="file://$USER_HOME$/Downloads/code/saliency-salgan-2017/scripts/02-train.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="623">
           <caret line="45" column="35" lean-forward="true" selection-start-line="45" selection-start-column="35" selection-end-line="45" selection-end-column="35" />
-          <folding>
-            <element signature="e#305#314#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -880,20 +879,13 @@
     </entry>
     <entry file="file://$USER_HOME$/Downloads/code/saliency-salgan-2017/scripts/models/model_salgan.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-763">
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
+        <state relative-caret-position="-763" />
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Downloads/code/saliency-salgan-2017/scripts/models/generator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="292">
           <caret line="69" column="61" lean-forward="true" selection-start-line="69" selection-start-column="61" selection-end-line="69" selection-end-column="61" />
-          <folding>
-            <element signature="e#0#51#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -904,24 +896,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/misc.py">
+    <entry file="file://$PROJECT_DIR$/../pix2pix-tensorflow/pix2pix.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1287">
-          <caret line="309" column="4" selection-start-line="309" selection-start-column="4" selection-end-line="309" selection-end-column="4" />
+        <state relative-caret-position="720">
+          <caret line="42" column="60" lean-forward="true" selection-start-line="42" selection-start-column="55" selection-end-line="42" selection-end-column="60" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="77" column="18" selection-start-line="77" selection-start-column="18" selection-end-line="77" selection-end-column="18" />
+        <state relative-caret-position="448">
+          <caret line="360" column="47" selection-start-line="360" selection-start-column="47" selection-end-line="360" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/misc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="359" lean-forward="true" selection-start-line="359" selection-end-line="359" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="409">
+          <caret line="330" column="44" lean-forward="true" selection-start-line="330" selection-start-column="44" selection-end-line="330" selection-end-column="44" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="704" column="25" selection-start-line="704" selection-start-column="25" selection-end-line="704" selection-end-column="25" />
+        <state relative-caret-position="568">
+          <caret line="1316" column="36" lean-forward="true" selection-start-line="1316" selection-start-column="36" selection-end-line="1316" selection-end-column="36" />
           <folding>
             <element signature="e#526#1179#0" />
             <element signature="e#1227#3796#0" />
@@ -929,14 +935,19 @@
             <element signature="e#8995#12931#0" />
             <element signature="e#13088#18809#0" />
             <element signature="e#19044#24685#0" />
+            <element signature="e#24839#32044#0" />
+            <element signature="e#32188#36215#0" />
+            <element signature="e#36368#40848#0" />
+            <element signature="e#41079#47764#0" />
+            <element signature="e#47932#51353#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train.py">
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="339" column="21" selection-start-line="336" selection-start-column="10" selection-end-line="339" selection-end-column="21" />
+        <state relative-caret-position="727">
+          <caret line="155" lean-forward="true" selection-start-line="155" selection-end-line="155" />
         </state>
       </provider>
     </entry>

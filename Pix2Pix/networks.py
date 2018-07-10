@@ -1034,8 +1034,6 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
     rgb_scaled = (generator_inputs + 1) / 2  # [-1, 1] => [0, 1]
     rgb_scaled *= 255.0
 
-    print('\nrgb_scaled.shape.as_list(): {0}\n'.format(rgb_scaled.shape.as_list()))
-
     # Convert RGB to BGR
     red, green, blue = tf.split(value=rgb_scaled, num_or_size_splits=3, axis=3)
     # assert red.get_shape().as_list()[1:] == [224, 224, 1]
@@ -1222,13 +1220,13 @@ def vgg_generator(generator_inputs, generator_outputs_channels, ngf, conv_type, 
                                        "bgr_output", he_init=True, biases=True)
     bgr_output = norm_layer(bgr_output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
 
-    bgr_output = tf.nn.tanh(bgr_output)
+    bgr_output = tf.nn.sigmoid(bgr_output)
 
-    # convert bgr to rgb
-    b, g, r = tf.split(bgr_output, 3, axis=3)
-    rgb = tf.concat([r, g, b], axis=3)
+    # # convert bgr to rgb
+    # b, g, r = tf.split(bgr_output, 3, axis=3)
+    # rgb = tf.concat([r, g, b], axis=3)
 
-    return rgb
+    return bgr_output
 
 
 def vgg_discriminator(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
@@ -1252,6 +1250,7 @@ def vgg_discriminator(discrim_inputs, discrim_targets, ndf, spectral_normed, upd
 
     # 2x [batch, height, width, in_channels] => [batch, height, width, in_channels * 2]
     inputs = tf.concat([discrim_inputs, discrim_targets], axis=3)
+    print('inputs.shape: {}'.format(inputs.shape.as_list()))
 
     # block 1
     output = lib.ops.conv2d.Conv2D(inputs, inputs.shape.as_list()[-1], 32, 1, 1, 'D_conv1',
@@ -1265,6 +1264,7 @@ def vgg_discriminator(discrim_inputs, discrim_targets, ndf, spectral_normed, upd
                                    he_init=True, biases=True)  # [512, 512, 64]
     output = tf.nn.relu(output)
     output = tf.nn.max_pool(output, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')  # [256, 256, 64]
+    print('block 1.shape: {}'.format(inputs.shape.as_list()))
 
     # block 2
     output = lib.ops.conv2d.Conv2D(output, output.shape.as_list()[-1], 64, 3, 1, 'D_conv3',
@@ -1278,6 +1278,7 @@ def vgg_discriminator(discrim_inputs, discrim_targets, ndf, spectral_normed, upd
                                    he_init=True, biases=True)  # [256, 256, 64]
     output = tf.nn.relu(output)
     output = tf.nn.max_pool(output, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')  # [128, 128, 64]
+    print('block 2.shape: {}'.format(inputs.shape.as_list()))
 
     # block 3
     output = lib.ops.conv2d.Conv2D(output, output.shape.as_list()[-1], 64, 3, 1, 'D_conv5',
@@ -1291,26 +1292,30 @@ def vgg_discriminator(discrim_inputs, discrim_targets, ndf, spectral_normed, upd
                                    he_init=True, biases=True)  # [128, 128, 64]
     output = tf.nn.relu(output)
     output = tf.nn.max_pool(output, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')  # [64, 64, 64]
+    print('block 3.shape: {}'.format(inputs.shape.as_list()))
 
     # fc layer
     output = tf.reshape(output, [output.shape.as_list()[0], -1])
     output = lib.ops.linear.Linear(output, output.shape.as_list()[-1], 100, 'D.fc1',
-                                   spectral_normed=spectral_normed, update_collection=update_collection,
+                                   spectral_normed=True, update_collection=update_collection,
                                    inputs_norm=False,
                                    biases=True, initialization=None, weightnorm=None, gain=1.)
     output = tf.nn.tanh(output)
+    print('fc1.shape: {}'.format(inputs.shape.as_list()))
 
     output = lib.ops.linear.Linear(output, output.shape.as_list()[-1], 2, 'D.fc2',
-                                   spectral_normed=spectral_normed, update_collection=update_collection,
+                                   spectral_normed=True, update_collection=update_collection,
                                    inputs_norm=False,
                                    biases=True, initialization=None, weightnorm=None, gain=1.)
     output = tf.nn.tanh(output)
+    print('fc2.shape: {}'.format(inputs.shape.as_list()))
 
     output = lib.ops.linear.Linear(output, output.shape.as_list()[-1], 1, 'D.Output',
-                                   spectral_normed=spectral_normed, update_collection=update_collection,
+                                   spectral_normed=True, update_collection=update_collection,
                                    inputs_norm=False,
                                    biases=True, initialization=None, weightnorm=None, gain=1.)
     # output = tf.nn.sigmoid(output)
+    print('Output.shape: {}'.format(inputs.shape.as_list()))
 
     return output
 
