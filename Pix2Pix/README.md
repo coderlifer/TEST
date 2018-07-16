@@ -88,8 +88,8 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --max_epochs=600 \
   --which_direction=AtoB \
   --save_freq=2360 \
-  --ngf=86 \
-  --ndf=86 \
+  --ngf=64 \
+  --ndf=64 \
   --scale_size=572 \
   --l1_weight=100.0 \
   --gan_weight=1.0 \
@@ -113,14 +113,14 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --loss_type='HINGE' \
   --n_dis=1 \
   --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/val \
-  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_512_0/output_test_512 \
+  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_512_1/output_test_512 \
   --max_epochs=600 \
   --which_direction=AtoB \
   --save_freq=2360 \
   --ngf=64 \
   --ndf=64 \
   --scale_size=572 \
-  --checkpoint_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_512_0 \
+  --checkpoint_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_512_1 \
   --l1_weight=20.0 \
   --gan_weight=1.0 \
   --multiple_A \
@@ -129,9 +129,36 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
 
 
 ---- VGG ----
-CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_bce.py \
+CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_bce.py \
   --batch_size=1 \
   --mode='train' \
+  --conv_type='conv2d' \
+  --channel_multiplier=0 \
+  --initial_lr=0.001 \
+  --end_lr=0.0008 \
+  --beta1=0. \
+  --beta2=0.9 \
+  --loss_type='HINGE' \
+  --n_dis=1 \
+  --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/train \
+  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_512_1 \
+  --max_epochs=600 \
+  --which_direction=AtoB \
+  --save_freq=2360 \
+  --ngf=64 \
+  --ndf=64 \
+  --scale_size=572 \
+  --l1_weight=0.5 \
+  --gan_weight=1.0 \
+  --multiple_A \
+  --net_type='UNet_Attention' \
+  --upsampe_method=depth_to_space
+
+
+# infer
+CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_bce.py \
+  --batch_size=1 \
+  --mode='test' \
   --conv_type='conv2d' \
   --channel_multiplier=0 \
   --initial_lr=0.0002 \
@@ -140,33 +167,18 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_bce.py \
   --beta2=0.9 \
   --loss_type='Modified_MiniMax' \
   --n_dis=1 \
-  --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/train \
-  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_512_0 \
+  --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/val \
+  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_512_0/output_test_512 \
   --max_epochs=600 \
   --which_direction=AtoB \
   --save_freq=2360 \
   --ngf=64 \
   --ndf=64 \
   --scale_size=572 \
+  --checkpoint_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_atten_resize_512_0 \
   --l1_weight=0.05 \
   --gan_weight=1.0 \
   --multiple_A \
-  --net_type='VGG' \
-  --upsampe_method=depth_to_space
-
-
-# infer
-CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
-  --batch_size=1 \
-  --mode='test' \
-  --conv_type='conv2d' \
-  --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data/test \
-  --output_dir=../output_test_512 \
-  --which_direction=AtoB \
-  --ngf=64 \
-  --ndf=64 \
-  --scale_size=572 \
-  --checkpoint_dir=../output_train_vgg \
   --net_type='VGG' \
   --upsampe_method=depth_to_space
 

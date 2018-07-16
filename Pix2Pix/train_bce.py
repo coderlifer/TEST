@@ -289,6 +289,7 @@ def create_model(inputs, targets, max_steps):
                                   padding='SAME',
                                   net_type=args.net_type, reuse=False,
                                   upsampe_method=args.upsampe_method)
+    outputs = deprocess(outputs)
 
     # 2x [batch, height, width, channels] => [batch, 30, 30, 1]
     predict_real = model.get_discriminator(inputs, targets, ndf=args.ndf,
@@ -338,7 +339,8 @@ def create_model(inputs, targets, max_steps):
         # gen_loss = gen_loss_GAN * args.gan_weight + gen_loss_L1 * args.l1_weight
 
         gen_loss_bce = -tf.reduce_mean(
-            targets * tf.log(outputs + 1e-10) + (1 - targets) * tf.log(1 - outputs + 1e-10))
+            targets * tf.log(tf.clip_by_value(outputs, 1e-10, 1.0)) +
+            (1 - targets) * tf.log(tf.clip_by_value(1 - outputs, 1e-10, 1.0)))
         gen_loss = gen_loss_GAN * args.gan_weight + gen_loss_bce * args.l1_weight
 
     with tf.name_scope('global_step'):
@@ -359,15 +361,15 @@ def create_model(inputs, targets, max_steps):
 
     with tf.name_scope("d_train"):
         discrim_tvars = [var for var in tf.trainable_variables() if var.name.startswith("d_net")]
-        # discrim_optim = tf.train.AdamOptimizer(0.0004, beta1=args.beta1, beta2=args.beta2)
-        discrim_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
+        discrim_optim = tf.train.AdamOptimizer(0.0004, beta1=args.beta1, beta2=args.beta2)
+        # discrim_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
         discrim_grads_and_vars = discrim_optim.compute_gradients(discrim_loss, var_list=discrim_tvars)
         discrim_train = discrim_optim.apply_gradients(discrim_grads_and_vars)
 
     with tf.name_scope("g_train"):
         gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("g_net")]
-        # gen_optim = tf.train.AdamOptimizer(0.0001, beta1=args.beta1, beta2=args.beta2)
-        gen_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
+        gen_optim = tf.train.AdamOptimizer(0.0001, beta1=args.beta1, beta2=args.beta2)
+        # gen_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
         gen_grads_and_vars = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
         gen_train = gen_optim.apply_gradients(gen_grads_and_vars, global_step=global_step)
 

@@ -610,7 +610,7 @@ def unet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, channel
 
             output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
 
-            if decoder_layer in [5, 6]:
+            if decoder_layer in [6]:
                 output, attn_score = Self_Atten(output)  # attention module
                 print('Self_Atten.G: {}'.format(output.shape.as_list()))
 
@@ -702,7 +702,7 @@ def unet_d(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collect
             normalized = convolved
             rectified = nonlinearity(normalized, 'lrelu', 0.2)
 
-            if i in [0, 1]:
+            if i in [0]:
                 rectified, attn_score = Self_Atten(rectified)  # attention module
                 print('Self_Atten.D: {}'.format(rectified.shape.as_list()))
 
@@ -786,8 +786,9 @@ def unet_d_(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collec
             # normalized = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
             rectified = nonlinearity(convolved, 'lrelu', 0.2)
 
-            if i in [2, 3]:
+            if i in [0, 1]:
                 rectified, attn_score = Self_Atten(rectified)  # attention module
+                print('Self_Atten.D: {}'.format(rectified.shape.as_list()))
 
             layers.append(rectified)
 

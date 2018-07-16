@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../CNN_LSTM_CTC_Tensorflow/.idea/CNN_LSTM_CTC_Tensorflow.iml" filepath="$PROJECT_DIR$/../CNN_LSTM_CTC_Tensorflow/.idea/CNN_LSTM_CTC_Tensorflow.iml" />
       <module fileurl="file://$PROJECT_DIR$/../DeRaindrop/.idea/DeRaindrop.iml" filepath="$PROJECT_DIR$/../DeRaindrop/.idea/DeRaindrop.iml" />
       <module fileurl="file://$PROJECT_DIR$/../GAN_Lib_Tensorflow/.idea/GAN_Lib_Tensorflow.iml" filepath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/.idea/GAN_Lib_Tensorflow.iml" />
       <module fileurl="file://$PROJECT_DIR$/../ImageCaption_Tensorflow/.idea/ImageCaption_Tensorflow.iml" filepath="$PROJECT_DIR$/../ImageCaption_Tensorflow/.idea/ImageCaption_Tensorflow.iml" />
