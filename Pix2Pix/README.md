@@ -1,13 +1,4 @@
-# Pix2Pix
-
-Code for paper: [Conditional Image Synthesis With Auxiliary Classifier GANs](https://openreview.net/forum?id=BkDDM04Ke)
-
-Heavily based on code (affinelayer/pix2pix-tensorflow)[https://github.com/affinelayer/pix2pix-tensorflow]
-
-
-## Results
-
-![sample](https://github.com/watsonyanghx/GAN_Lib_Tensorflow/blob/master/ACGAN/img/samples_98999.png)
+# TEST
 
 
 ## How to run:
@@ -15,7 +6,7 @@ Heavily based on code (affinelayer/pix2pix-tensorflow)[https://github.com/affine
 ``` python
 # train
 # cd to `Pix2Pix` folder and run command bellow
----- webpage, 2A ----
+# webpage, 2A
 CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='train' \
@@ -71,7 +62,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --upsampe_method=depth_to_space
 
 
-#### attention
+# attention
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='train' \
@@ -128,7 +119,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --upsampe_method=depth_to_space
 
 
----- VGG ----
+# VGG
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_bce.py \
   --batch_size=1 \
   --mode='train' \
@@ -187,7 +178,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_bce.py \
 
 
 
------ depth_to_space -----
+# depth_to_space
 # 512
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --batch_size=1 \
@@ -260,9 +251,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --upsampe_method=resize
 
 
-
-
------ depth_to_space, 512, attention -----
+# depth_to_space, 512, attention -----
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='train' \
@@ -288,9 +277,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --upsampe_method=resize
 
 
-
-
----- facades 400, cityscapes 2795 ----
+# facades 400, cityscapes 2795 ----
 CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='train' \
@@ -323,7 +310,6 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --which_direction=BtoA \
   --scale_size=286 \
   --checkpoint_dir=/home/yhx/webpageSaliency/tmp/facades/output_train_256
-
 
 ```
 
