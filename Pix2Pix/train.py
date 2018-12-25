@@ -503,8 +503,8 @@ def train():
         sess.run(tf.global_variables_initializer())
         print("parameter_count =", sess.run(parameter_count))
 
-        coord = tf.train.Coordinator()
-        threads = tf.train.start_queue_runners(sess=sess, coord=coord)
+        # coord = tf.train.Coordinator()
+        # threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
         if args.checkpoint_dir is not None:
             print("loading model from checkpoint")
@@ -592,8 +592,8 @@ def train():
 
                 lib.plot.tick()
 
-        coord.request_stop()
-        coord.join(threads)
+        # coord.request_stop()
+        # coord.join(threads)
 
 
 if __name__ == '__main__':
