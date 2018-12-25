@@ -46,7 +46,7 @@ parser.add_argument('--checkpoint_dir', type=str, default=None,
                     help='Directory to stroe checkpoints and summaries.')
 parser.add_argument("--which_direction", type=str, default="AtoB", choices=["AtoB", "BtoA"])
 parser.add_argument("--seed", type=int)
-parser.add_argument("--max_steps", type=int, help="number of training steps (0 to disable)")
+parser.add_argument("--max_steps", type=int, default=None, help="number of training steps (0 to disable)")
 parser.add_argument("--max_epochs", type=int, default=200, help="number of training epochs")
 parser.add_argument("--summary_freq", type=int, default=100, help="update summaries every summary_freq steps")
 parser.add_argument("--progress_freq", type=int, default=50, help="display progress every progress_freq steps")
@@ -180,8 +180,8 @@ def load_examples():
     input_paths = get_input_paths(args.input_dir)
     cnt = len(input_paths)
 
-    # synchronize seed for image operations so that we do the same operations to both
-    # input and output images
+    # synchronize seed for image operations so that we do the same operations to
+    # both input and output images
     seed = random.randint(0, 2 ** 31 - 1)
 
     def transform(image):
@@ -331,13 +331,13 @@ def create_model(inputs, targets, max_steps):
     # with tf.name_scope("global_step_summary"):
     #     tf.summary.scalar("global_step", global_step)
 
-    with tf.name_scope('lr_decay'):
-        learning_rate = tf.train.polynomial_decay(
-            learning_rate=args.initial_lr,
-            global_step=global_step,
-            decay_steps=max_steps,
-            end_learning_rate=args.end_lr
-        )
+    # with tf.name_scope('lr_decay'):
+    #     learning_rate = tf.train.polynomial_decay(
+    #         learning_rate=args.initial_lr,
+    #         global_step=global_step,
+    #         decay_steps=max_steps,
+    #         end_learning_rate=args.end_lr
+    #     )
 
     # with tf.name_scope("lr_summary"):
     #     tf.summary.scalar("lr", learning_rate)
@@ -597,6 +597,7 @@ def train():
                     lib.plot.tick()
                     step = step + 1
                 except tf.errors.OutOfRangeError:
+                    print('tf.errors.OutOfRangeError occured!')
                     break
         # coord.request_stop()
         # coord.join(threads)
