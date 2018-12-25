@@ -7,7 +7,7 @@
 # train
 # cd to `Pix2Pix` folder and run command bellow
 # webpage, 2A
-CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
+CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='train' \
   --conv_type='conv2d' \
@@ -18,8 +18,8 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --beta2=0.9 \
   --loss_type='HINGE' \
   --n_dis=5 \
-  --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/train \
-  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_resize_512 \
+  --input_dir=/home/tellhow-iot/tem/webpagesaliency/pix2pix_data_2A/train \
+  --output_dir=/home/tellhow-iot/tem/webpagesaliency/output_resize_512 \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=2360 \
@@ -62,7 +62,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --upsampe_method=depth_to_space
 
 
-# attention
+# ---------- attention ----------
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='train' \
@@ -89,7 +89,6 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --upsampe_method=depth_to_space
 
   --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/val
-
 
 # infer
 CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
@@ -119,7 +118,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --upsampe_method=depth_to_space
 
 
-# VGG
+# ---------- VGG ----------
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_bce.py \
   --batch_size=1 \
   --mode='train' \
@@ -144,7 +143,6 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_bce.py \
   --multiple_A \
   --net_type='UNet_Attention' \
   --upsampe_method=depth_to_space
-
 
 # infer
 CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_bce.py \
@@ -174,11 +172,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_bce.py \
   --upsampe_method=depth_to_space
 
 
-
-
-
-
-# depth_to_space
+# ---------- depth_to_space ----------
 # 512
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --batch_size=1 \
@@ -251,7 +245,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --upsampe_method=resize
 
 
-# depth_to_space, 512, attention -----
+# ---------- depth_to_space, 512, attention ----------
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='train' \
@@ -277,7 +271,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --upsampe_method=resize
 
 
-# facades 400, cityscapes 2795 ----
+# facades 400, cityscapes 2795 ----------
 CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='train' \
@@ -299,7 +293,6 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --scale_size=286 \
   --l1_weight=10.0 \
   --gan_weight=1.0
-
 
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --batch_size=1 \

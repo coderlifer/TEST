@@ -91,29 +91,6 @@ Model = collections.namedtuple("Model",
                                "global_step")
 
 
-def get_input_paths(input_dir):
-    input_paths = glob.glob(os.path.join(input_dir, "*.jpg"))
-    # decode = tf.image.decode_jpeg
-    if len(input_paths) == 0:
-        input_paths = glob.glob(os.path.join(input_dir, "*.png"))
-        # decode = tf.image.decode_png
-    if len(input_paths) == 0:
-        raise Exception("input_dir contains no image files.")
-
-    def get_name(path):
-        name, _ = os.path.splitext(os.path.basename(path))
-        return name
-
-    # if the image names are numbers, sort by the value rather than asciibetically
-    # having sorted inputs means that the outputs are sorted in test mode
-    if all(get_name(path).isdigit() for path in input_paths):
-        input_paths = sorted(input_paths, key=lambda path: int(get_name(path)))
-    else:
-        input_paths = sorted(input_paths)
-
-    return input_paths
-
-
 def preprocess(image):
     with tf.name_scope("preprocess"):
         # [0, 1] => [-1, 1]
@@ -177,95 +154,125 @@ def load_examples():
     if args.input_dir is None or not os.path.exists(args.input_dir):
         raise Exception("input_dir does not exist!")
 
-    input_paths = get_input_paths(args.input_dir)
-    cnt = len(input_paths)
+    input_paths = glob.glob(os.path.join(args.input_dir, "*.jpg"))
+    decode = tf.image.decode_jpeg
+    if len(input_paths) == 0:
+        input_paths = glob.glob(os.path.join(args.input_dir, "*.png"))
+        decode = tf.image.decode_png
+
+    if len(input_paths) == 0:
+        raise Exception("input_dir contains no image files")
+
+    def get_name(path):
+        name, _ = os.path.splitext(os.path.basename(path))
+        return name
+
+    # if the image names are numbers, sort by the value rather than asciibetically
+    # having sorted inputs means that the outputs are sorted in test mode
+    if all(get_name(path).isdigit() for path in input_paths):
+        input_paths = sorted(input_paths, key=lambda path: int(get_name(path)))
+    else:
+        input_paths = sorted(input_paths)
+
+    with tf.name_scope("load_images"):
+        path_queue = tf.train.string_input_producer(input_paths, shuffle=args.mode == "train")
+        reader = tf.WholeFileReader()
+        paths, contents = reader.read(path_queue)
+        raw_input = decode(contents)
+        raw_input = tf.image.convert_image_dtype(raw_input, dtype=tf.float32)
+
+        assertion = tf.assert_equal(tf.shape(raw_input)[2], 3, message="image does not have 3 channels")
+        with tf.control_dependencies([assertion]):
+            raw_input = tf.identity(raw_input)
+
+        raw_input.set_shape([None, None, 3])
+
+        # break apart image pair and move to range [-1, 1]
+        width = tf.shape(raw_input)[1]  # [height, width, channels]
+
+        if args.multiple_A:
+            # for concat features
+            a_images_edge = preprocess(raw_input[:, :width // 3, :])
+            a_images = preprocess(raw_input[:, width // 3:(2 * width) // 3, :])
+            a_images = tf.concat(values=[a_images_edge, a_images], axis=2)
+            # print('\na_images.shape: {}\n'.format(a_images.shape.as_list()))
+
+            b_images = preprocess(raw_input[:, (2 * width) // 3:, :])
+        else:
+            a_images = preprocess(raw_input[:, :width // 2, :])
+            b_images = preprocess(raw_input[:, width // 2:, :])
+
+    if args.which_direction == "AtoB":
+        inputs, targets = [a_images, b_images]
+    elif args.which_direction == "BtoA":
+        inputs, targets = [b_images, a_images]
+    else:
+        raise Exception("invalid direction")
 
     # synchronize seed for image operations so that we do the same operations to both
     # input and output images
     seed = random.randint(0, 2 ** 31 - 1)
 
     def transform(image):
-        # r = image
+        r = image
         if args.flip:
-            image = tf.image.random_flip_left_right(image, seed=seed)
+            r = tf.image.random_flip_left_right(r, seed=seed)
 
-            # image = tf.image.random_flip_up_down(image, seed=seed)
+            # r = tf.image.random_flip_up_down(r, seed=seed)
 
             # k = np.random.choice([1, 2, 3, 4], 1, replace=False)[0]
-            # image = tf.image.rot90(image=image, k=k)
+            # r = tf.image.rot90(image=r, k=k)
             #
             # if k > 2:
-            #     image = tf.image.transpose_image(image)
+            #     r = tf.image.transpose_image(r)
 
         # area produces a nice downscaling, but does nearest neighbor for upscaling
         # assume we're going to be doing downscaling here
-        image = tf.image.resize_images(image, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
+        r = tf.image.resize_images(r, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
 
         offset = tf.cast(
             tf.floor(tf.random_uniform([2], 0, args.scale_size - CROP_SIZE + 1, seed=seed)), dtype=tf.int32)
-
         if args.scale_size > CROP_SIZE:
-            image = tf.image.crop_to_bounding_box(image, offset[0], offset[1], CROP_SIZE, CROP_SIZE)
+            r = tf.image.crop_to_bounding_box(r, offset[0], offset[1], CROP_SIZE, CROP_SIZE)
         elif args.scale_size < CROP_SIZE:
             raise Exception("scale size cannot be less than crop size")
+        return r
 
-        return image
+    # with tf.name_scope("transform_images"):
+    #     print('\ninputs.shape: {}'.format(inputs.shape.as_list()))
+    #     print('targets.shape: {}'.format(targets.shape.as_list()))
+    #
+    #     it = tf.concat(values=[inputs, targets], axis=2)
+    #     print('it.shape: {}'.format(it.shape.as_list()))
+    #
+    #     it_transformed = transform(it)
+    #     print('it_transformed.shape: {}'.format(it_transformed.shape.as_list()))
+    #
+    #     if args.multiple_A:
+    #         a_edge, a, target_images = tf.split(it_transformed, 3, 2)
+    #         input_images = tf.concat(values=[a_edge, a], axis=2)
+    #     else:
+    #         input_images, target_images = tf.split(it_transformed, 2, 2)
+    #
+    #     print('input_images.shape: {}'.format(input_images.shape.as_list()))
+    #     print('target_images.shape: {}'.format(target_images.shape.as_list()))
 
-    def _parse_function(input_path, input_path_):
-        raw_input = tf.read_file(input_path)
+    with tf.name_scope("input_images"):
+        input_images = transform(inputs)
 
-        image_decoded = tf.image.decode_png(contents=raw_input, channels=3)
-        image_decoded = tf.image.convert_image_dtype(image_decoded, tf.float32)
+    with tf.name_scope("target_images"):
+        target_images = transform(targets)
 
-        assertion = tf.assert_equal(tf.shape(image_decoded)[2], 3, message="image does not have 3 channels")
-        with tf.control_dependencies([assertion]):
-            image_decoded = tf.identity(image_decoded)
-        image_decoded.set_shape([None, None, 3])
-
-        # break apart image pair and move to range [-1, 1]
-        width = tf.shape(image_decoded)[1]  # [height, width, channels]
-        if args.multiple_A:
-            # for concat features
-            a_images_edge = preprocess(image_decoded[:, :width // 3, :])
-            a_images = preprocess(image_decoded[:, width // 3:(2 * width) // 3, :])
-            a_images = tf.concat(values=[a_images_edge, a_images], axis=2)
-            # print('\na_images.shape: {}\n'.format(a_images.shape.as_list()))
-
-            b_images = preprocess(image_decoded[:, (2 * width) // 3:, :])
-        else:
-            a_images = preprocess(image_decoded[:, :width // 2, :])
-            b_images = preprocess(image_decoded[:, width // 2:, :])
-
-        if args.which_direction == "AtoB":
-            inputs, targets = [a_images, b_images]
-        elif args.which_direction == "BtoA":
-            inputs, targets = [b_images, a_images]
-        else:
-            raise Exception("invalid direction")
-
-        input_image = transform(inputs)
-        target_image = transform(targets)
-
-        return input_path_, input_image, target_image
-
-    with tf.name_scope("load_images"):
-        input_paths = tf.convert_to_tensor(input_paths, dtype=tf.string)
-        dataset = tf.data.Dataset.from_tensor_slices((input_paths, input_paths))
-        dataset = dataset.map(_parse_function, num_parallel_calls=None)
-        dataset = dataset.shuffle(buffer_size=1000, seed=None, reshuffle_each_iteration=True)  # big than num_train
-        dataset = dataset.repeat(count=args.max_epochs)
-        dataset = dataset.batch(batch_size=args.batch_size)
-        dataset = dataset.prefetch(buffer_size=args.batch_size)
-
-        iterator = dataset.make_one_shot_iterator()
-        paths_batch, inputs_batch, targets_batch = iterator.get_next()
+    paths_batch, inputs_batch, targets_batch = tf.train.batch([paths, input_images, target_images],
+                                                              batch_size=args.batch_size)
+    steps_per_epoch = int(math.ceil(len(input_paths) / args.batch_size))
 
     return Examples(
         paths=paths_batch,
         inputs=inputs_batch,
         targets=targets_batch,
-        count=cnt,
-        steps_per_epoch=int(math.ceil(cnt / args.batch_size)),
+        count=len(input_paths),
+        steps_per_epoch=steps_per_epoch,
     )
 
 

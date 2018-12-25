@@ -2,107 +2,212 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="46c59c96-ba5d-4cee-9911-55e756ea0e4a" name="Default" comment="Update.">
-      <change afterPath="$PROJECT_DIR$/../Python-Scripts/.idea/Python-Scripts.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Python-Scripts/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Python-Scripts/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Python-Scripts/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Python-Scripts/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Python-Scripts/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/Self-Attention-GAN-Tensorflow.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/common/data/tfdata.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pix2Pix/train_.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/tfdata.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../self-critical.pytorch/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../self-critical.pytorch/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../self-critical.pytorch/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../self-critical.pytorch/.idea/self-critical.pytorch.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../self-critical.pytorch/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DQN-tensorflow/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../DQN-tensorflow/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DeepLearning_tutorials/CNNs/ResNet50.py" beforeDir="false" afterPath="$PROJECT_DIR$/../DeepLearning_tutorials/CNNs/ResNet50.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/SSD/ssd_300_vgg.py" beforeDir="false" afterPath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/SSD/ssd_300_vgg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/SSD/ssd_anchors.py" beforeDir="false" afterPath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/SSD/ssd_anchors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/SSD/ssd_layers.py" beforeDir="false" afterPath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/SSD/ssd_layers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/SSD/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/SSD/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/SSD/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/SSD/visualization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/yolo/yolo_tf.py" beforeDir="false" afterPath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/yolo/yolo_tf.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/yolo2/detect_ops.py" beforeDir="false" afterPath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/yolo2/detect_ops.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/yolo2/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/yolo2/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/yolo2/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../DeepLearning_tutorials/ObjectDetections/yolo2/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DeepLearning_tutorials/examples/lstm_time_series_regression/lstm_regression.py" beforeDir="false" afterPath="$PROJECT_DIR$/../DeepLearning_tutorials/examples/lstm_time_series_regression/lstm_regression.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/common/misc.py" beforeDir="false" afterPath="$PROJECT_DIR$/../GAN_Lib_Tensorflow/common/misc.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../OpenSALICON/Readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/../OpenSALICON/Readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../OpenSALICON/Salicon.py" beforeDir="false" afterPath="$PROJECT_DIR$/../OpenSALICON/Salicon.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Python-Scripts/Clustering/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Python-Scripts/Clustering/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Python-Scripts/DecisionTree/treepredict.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Python-Scripts/DecisionTree/treepredict.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/SAGAN.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/SAGAN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Self-Attention-GAN/sagan_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Self-Attention-GAN/sagan_models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Self-Attention-GAN/spectral.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Self-Attention-GAN/spectral.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/02_manual_gradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/02_manual_gradient.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/03_auto_gradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/03_auto_gradient.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/05_linear_regression.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/05_linear_regression.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/06_logistic_regression.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/06_logistic_regression.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/07_diabets_logistic.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/07_diabets_logistic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/08_1_dataset_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/08_1_dataset_loader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/08_2_dataset_loade_logistic.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/08_2_dataset_loade_logistic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/09_01_softmax_loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/09_01_softmax_loss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/09_2_softmax_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/09_2_softmax_mnist.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/10_1_cnn_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/10_1_cnn_mnist.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/11_1_toy_inception_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/11_1_toy_inception_mnist.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/12_1_rnn_basics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/12_1_rnn_basics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/12_3_hello_rnn_seq.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/12_3_hello_rnn_seq.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/12_4_hello_rnn_emb.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/12_4_hello_rnn_emb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/13_1_rnn_classification_basics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/13_1_rnn_classification_basics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PyTorchZeroToAll/13_2_rnn_classification.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PyTorchZeroToAll/13_2_rnn_classification.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/TEST.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TEST.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pix2Pix/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pix2Pix/networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/networks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pix2Pix/train_bce.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/train_bce.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../show-attend-and-tell/core/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/../show-attend-and-tell/core/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../show-attend-and-tell/core/vggnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/../show-attend-and-tell/core/vggnet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pix2Pix/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pix2Pix/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/misc.py" beforeDir="false" afterPath="$PROJECT_DIR$/common/misc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../darkflow/darkflow/net/yolo/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/../darkflow/darkflow/net/yolo/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/datasets/imdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/datasets/imdb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/faster_rcnn/faster_rcnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/faster_rcnn/faster_rcnn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/faster_rcnn/resnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/faster_rcnn/resnet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/faster_rcnn/vgg16.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/faster_rcnn/vgg16.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/nms/nms_cpu.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/nms/nms_cpu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/nms/nms_gpu.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/nms/nms_gpu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/anchor_target_layer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/anchor_target_layer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/bbox_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/bbox_transform.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/generate_anchors.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/generate_anchors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/proposal_layer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/proposal_layer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/rpn.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/rpn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/roi_data_layer/roidb.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/roi_data_layer/roidb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/test_net.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/test_net.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../faster-rcnn.pytorch/trainval_net.py" beforeDir="false" afterPath="$PROJECT_DIR$/../faster-rcnn.pytorch/trainval_net.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/01-basics/feedforward_neural_network/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/01-basics/feedforward_neural_network/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/01-basics/logistic_regression/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/01-basics/logistic_regression/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/01-basics/pytorch_basics/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/01-basics/pytorch_basics/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/02-intermediate/convolutional_neural_network/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/02-intermediate/convolutional_neural_network/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/02-intermediate/deep_residual_network/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/02-intermediate/deep_residual_network/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/02-intermediate/language_model/data_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/02-intermediate/language_model/data_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/02-intermediate/language_model/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/02-intermediate/language_model/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/02-intermediate/recurrent_neural_network/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/02-intermediate/recurrent_neural_network/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/03-advanced/generative_adversarial_network/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/03-advanced/generative_adversarial_network/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/03-advanced/variational_autoencoder/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-tutorial/tutorials/03-advanced/variational_autoencoder/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-yolo-v3/bbox.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-yolo-v3/bbox.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-yolo-v3/cam_demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-yolo-v3/cam_demo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-yolo-v3/darknet.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-yolo-v3/darknet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-yolo-v3/detect.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-yolo-v3/detect.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pytorch-yolo-v3/preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pytorch-yolo-v3/preprocess.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/dataloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/dataloader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/dataloaderraw.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/dataloaderraw.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/eval.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/eval_ensemble.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/eval_ensemble.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/eval_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/eval_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/misc/resnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/misc/resnet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/misc/resnet_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/misc/resnet_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/misc/rewards.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/misc/rewards.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/misc/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/misc/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/models/AttEnsemble.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/models/AttEnsemble.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/models/AttModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/models/AttModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/models/CaptionModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/models/CaptionModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/models/FCModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/models/FCModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/models/OldModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/models/OldModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/models/ShowTellModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/models/ShowTellModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/opts.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/opts.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../self-critical.pytorch/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/../self-critical.pytorch/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tensorflow-yolo/demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tensorflow-yolo/demo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tensorflow-yolo/tools/preprocess_pascal_voc.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tensorflow-yolo/tools/preprocess_pascal_voc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tensorflow-yolo/tools/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tensorflow-yolo/tools/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tensorflow-yolo/yolo/dataset/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tensorflow-yolo/yolo/dataset/dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tensorflow-yolo/yolo/dataset/text_dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tensorflow-yolo/yolo/dataset/text_dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tensorflow-yolo/yolo/net/net.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tensorflow-yolo/yolo/net/net.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tensorflow-yolo/yolo/net/yolo_net.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tensorflow-yolo/yolo/net/yolo_net.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tensorflow-yolo/yolo/net/yolo_tiny_net.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tensorflow-yolo/yolo/net/yolo_tiny_net.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tensorflow-yolo/yolo/solver/solver.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tensorflow-yolo/yolo/solver/solver.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tensorflow-yolo/yolo/solver/yolo_solver.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tensorflow-yolo/yolo/solver/yolo_solver.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tensorflow-yolo/yolo/utils/process_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../tensorflow-yolo/yolo/utils/process_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/.idea/TEST.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../wp/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../wp/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/.idea/other.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../wp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/ACGAN/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/ACGAN/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/ACGAN/img/dev_cost.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/ACGAN/img/inception_50k.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/ACGAN/img/inception_50k_std.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/ACGAN/img/samples.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/ACGAN/model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/ACGAN/model_.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/ACGAN/train.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/PGGAN/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/PGGAN/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/PGGAN/model_nvidia.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/PGGAN/model_resnet.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/PGGAN/train.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/Pix2Pix/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../wp/Pix2Pix/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/Pix2Pix/train_bce.py" beforeDir="false" afterPath="$PROJECT_DIR$/../wp/Pix2Pix/infer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/Pix2Pix/train_official.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/Pix2Pix/train_trainval.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/SNGAN/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/SNGAN/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/SNGAN/gan_cifar_resnet.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/SNGAN/gan_imagNet_resnet.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/SNGAN/img/d_cost.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/SNGAN/img/g_cost.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/SNGAN/img/inception_50k.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/SNGAN/img/inception_50k_std.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/SNGAN/img/samples_99999.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/pix2pix/cyclegan.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/pix2pix/cyclegan_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/pix2pix/launch_jobs.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/pix2pix/networks.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/pix2pix/networks_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/pix2pix/pix2pix.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/pix2pix/pix2pix_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/pix2pix/train.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wp/pix2pix/train_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../youtube-8m/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../youtube-8m/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../youtube-8m/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/../youtube-8m/train.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
-    <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/TEST$helper.coverage" NAME="helper Coverage Results" MODIFIED="1529981036956" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Pix2Pix" />
+    <SUITE FILE_PATH="coverage/TEST$05_linear_regression.coverage" NAME="05_linear_regression Coverage Results" MODIFIED="1532413346281" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../PyTorchZeroToAll" />
     <SUITE FILE_PATH="coverage/TEST$kmeans.coverage" NAME="kmeans Coverage Results" MODIFIED="1530202614691" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Python-Scripts/KMeans" />
     <SUITE FILE_PATH="coverage/TEST$train12.coverage" NAME="train12 Coverage Results" MODIFIED="1530242063496" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Pix2Pix" />
-    <SUITE FILE_PATH="coverage/TEST$scikit_dbscan_example.coverage" NAME="scikit-dbscan-example Coverage Results" MODIFIED="1530695168588" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Python-Scripts/DBSCAN" />
-    <SUITE FILE_PATH="coverage/TEST$dbscan_.coverage" NAME="dbscan_ Coverage Results" MODIFIED="1530695090784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Python-Scripts/DBSCAN" />
+    <SUITE FILE_PATH="coverage/TEST$infer.coverage" NAME="infer Coverage Results" MODIFIED="1544005546538" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../wp/Pix2Pix" />
+    <SUITE FILE_PATH="coverage/TEST$06_logistic_regression.coverage" NAME="06_logistic_regression Coverage Results" MODIFIED="1532413681890" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../PyTorchZeroToAll" />
+    <SUITE FILE_PATH="coverage/TEST$02_manual_gradient.coverage" NAME="02_manual_gradient Coverage Results" MODIFIED="1543570155050" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../PyTorchZeroToAll" />
+    <SUITE FILE_PATH="coverage/TEST$yolo_solver.coverage" NAME="yolo_solver Coverage Results" MODIFIED="1542334836463" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../tensorflow-yolo/yolo/solver" />
+    <SUITE FILE_PATH="coverage/TEST$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1532422092456" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../pytorch-tutorial/tutorials/03-advanced/variational_autoencoder" />
+    <SUITE FILE_PATH="coverage/TEST$03_auto_gradient.coverage" NAME="03_auto_gradient Coverage Results" MODIFIED="1543570225943" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../PyTorchZeroToAll" />
+    <SUITE FILE_PATH="coverage/TEST$pg_pong.coverage" NAME="pg-pong Coverage Results" MODIFIED="1536584432525" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Python-Scripts" />
     <SUITE FILE_PATH="coverage/TEST$tmp.coverage" NAME="tmp Coverage Results" MODIFIED="1530720368861" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Python-Scripts" />
-    <SUITE FILE_PATH="coverage/TEST$helper.coverage" NAME="helper Coverage Results" MODIFIED="1529981036956" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Pix2Pix" />
+    <SUITE FILE_PATH="coverage/TEST$08_2_dataset_loade_logistic.coverage" NAME="08_2_dataset_loade_logistic Coverage Results" MODIFIED="1532414356459" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../PyTorchZeroToAll" />
+    <SUITE FILE_PATH="coverage/TEST$01_basics.coverage" NAME="01_basics Coverage Results" MODIFIED="1543570102132" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../PyTorchZeroToAll" />
+    <SUITE FILE_PATH="coverage/TEST$scikit_dbscan_example.coverage" NAME="scikit-dbscan-example Coverage Results" MODIFIED="1530695168588" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Python-Scripts/DBSCAN" />
+    <SUITE FILE_PATH="coverage/TEST$tfdata.coverage" NAME="tfdata Coverage Results" MODIFIED="1544240841032" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../wi/lib" />
+    <SUITE FILE_PATH="coverage/TEST$main.coverage" NAME="main Coverage Results" MODIFIED="1532419904890" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../pytorch-tutorial/tutorials/01-basics/linear_regression" />
     <SUITE FILE_PATH="coverage/TEST$treepredict.coverage" NAME="treepredict Coverage Results" MODIFIED="1530778418101" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Python-Scripts/DecisionTree" />
-    <SUITE FILE_PATH="coverage/TEST$main.coverage" NAME="main Coverage Results" MODIFIED="1530970050357" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Python-Scripts" />
+    <SUITE FILE_PATH="coverage/TEST$dbscan_.coverage" NAME="dbscan_ Coverage Results" MODIFIED="1530695090784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Python-Scripts/DBSCAN" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="TEST" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="train_bce.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Pix2Pix/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-312">
-              <caret line="318" column="40" selection-start-line="318" selection-start-column="40" selection-end-line="318" selection-end-column="40" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="networks.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="612" column="22" selection-start-line="612" selection-start-column="22" selection-end-line="612" selection-end-column="22" />
+            <state relative-caret-position="618">
+              <caret line="267" column="41" selection-start-line="267" selection-start-column="41" selection-end-line="267" selection-end-column="41" />
               <folding>
-                <element signature="e#526#1179#0" />
-                <element signature="e#1227#3796#0" />
-                <element signature="e#4017#8840#0" />
-                <element signature="e#8995#12931#0" />
-                <element signature="e#13088#18809#0" />
-                <element signature="e#19044#24685#0" />
-                <element signature="e#36368#40848#0" />
-                <element signature="e#41079#47764#0" />
-                <element signature="e#47932#51353#0" />
-                <element signature="e#51641#65780#0" />
-                <element signature="e#65946#71026#0" />
-                <element signature="e#71466#71808#0" />
-                <element signature="e#71894#72138#0" />
-                <element signature="e#72241#72650#0" />
-                <element signature="e#72730#73101#0" />
-                <element signature="e#73189#73940#0" />
-                <element signature="e#73942#73992#0" />
+                <element signature="e#112#130#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="812">
-              <caret line="155" selection-start-line="131" selection-end-line="155" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cnn_lstm_otc_ocr.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../CNN_LSTM_CTC_Tensorflow/cnn_lstm_otc_ocr.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="67" column="56" selection-start-line="67" selection-start-column="56" selection-end-line="67" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -118,81 +223,103 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>padding</find>
-      <find>get_discriminator</find>
-      <find>Self_Attn</find>
-      <find>Normalize</find>
-      <find>UNet_Attention</find>
-      <find>nonlinearity</find>
-      <find>activation_fn</find>
-      <find>which_model_netD</find>
-      <find>tf.pad</find>
-      <find>SpectralNorm</find>
-      <find>vc</find>
-      <find>ConvLayer</find>
-      <find>deprocess</find>
-      <find>gen_loss_GAN</find>
+      <find>check_num_anchors</find>
+      <find>num_anchors_per_location</find>
+      <find>USE_E2E_TF</find>
+      <find>anchors</find>
+      <find>num_anchors</find>
+      <find>rpn_cls_prob</find>
+      <find>rpn_bbox_pred</find>
+      <find>RPN_PRE_NMS_TOP_N</find>
+      <find>RPN_NMS_THRESH</find>
+      <find>checkpoint_dir</find>
+      <find>TrainEvalPipelineConfig</find>
+      <find>inputs</find>
+      <find>create_model</find>
+      <find>second</find>
+      <find>FasterRCNNFeatureExtractor</find>
       <find>norm_layer</find>
-      <find>spectral_normed</find>
-      <find>vgg_generator</find>
-      <find>output_atten_resize_512_0</find>
-      <find>Self_Atten</find>
+      <find>loss_type</find>
+      <find>USE_TF_IMP</find>
+      <find>non_max_suppression</find>
+      <find>first_stage_target_assigner</find>
+      <find>RPN_BBOX_INSIDE_WEIGHTS</find>
+      <find>top_scores</find>
+      <find>clip_boxes_tf</find>
+      <find>ANCHOR_RATIOS</find>
+      <find>ANCHOR_STRIDE</find>
+      <find>self._proposal_target_assigner</find>
+      <find>_loss_rpn</find>
+      <find>self._box_coder</find>
+      <find>create_target_assigner</find>
+      <find>paths</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../CNN_LSTM_CTC_Tensorflow" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$APPLICATION_CONFIG_DIR$/pycharm64.vmoptions" />
-        <option value="$PROJECT_DIR$/Pix2Pix/helper.py" />
-        <option value="$PROJECT_DIR$/../Python-Scripts/KMeans/tmp.py" />
-        <option value="$PROJECT_DIR$/../GAN_Lib_Tensorflow/README.md" />
-        <option value="$PROJECT_DIR$/../Python-Scripts/tmp.py" />
-        <option value="$PROJECT_DIR$/../Python-Scripts/Clustering/tmp.py" />
-        <option value="$PROJECT_DIR$/Pix2Pix/train12.py" />
-        <option value="$PROJECT_DIR$/../GAN_Lib_Tensorflow/common/resnet_block.py" />
-        <option value="$PROJECT_DIR$/Pix2Pix/networks12.py" />
-        <option value="$PROJECT_DIR$/../GAN_Lib_Tensorflow/Pix2Pix/README.md" />
-        <option value="$PROJECT_DIR$/../Python-Scripts/DBSCAN/dbscan.py" />
-        <option value="$PROJECT_DIR$/../Python-Scripts/DBSCAN/scikit-dbscan-example.py" />
-        <option value="$USER_HOME$/Downloads/code/Mask_RCNN/object_detection/train.py" />
-        <option value="$USER_HOME$/Downloads/code/Mask_RCNN/object_detection/trainer.py" />
-        <option value="$PROJECT_DIR$/../Python-Scripts/DBSCAN/dbscan_.py" />
-        <option value="$PROJECT_DIR$/../Python-Scripts/Clustering/main.py" />
-        <option value="$PROJECT_DIR$/common/resnet_block.py" />
-        <option value="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/SAGAN.py" />
-        <option value="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow/utils.py" />
-        <option value="$PROJECT_DIR$/../Self-Attention-GAN/sagan_models.py" />
-        <option value="$PROJECT_DIR$/../Self-Attention-GAN/spectral.py" />
-        <option value="$PROJECT_DIR$/../pytorch-CycleGAN-and-pix2pix/models/networks.py" />
-        <option value="$PROJECT_DIR$/Pix2Pix/model.py" />
-        <option value="$PROJECT_DIR$/../Python-Scripts/DecisionTree/treepredict.py" />
-        <option value="$USER_HOME$/Downloads/code/saliency-salgan-2017/scripts/02-train.py" />
-        <option value="$USER_HOME$/Downloads/code/saliency-salgan-2017/scripts/models/generator.py" />
-        <option value="$PROJECT_DIR$/Pix2Pix/train.py" />
-        <option value="$PROJECT_DIR$/../Python-Scripts/main.py" />
-        <option value="$PROJECT_DIR$/Pix2Pix/train_bce.py" />
-        <option value="$PROJECT_DIR$/Pix2Pix/networks.py" />
+        <option value="$PROJECT_DIR$/../object_detection/utils/test_case.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/anchor_generators/grid_anchor_generator_test.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/nets/vgg16.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/nets/mobilenet_v1.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/nets/resnet_v1.py" />
+        <option value="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/rpn.py" />
+        <option value="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/anchor_target_layer.py" />
+        <option value="$PROJECT_DIR$/../object_detection/box_coders/keypoint_box_coder.py" />
+        <option value="$PROJECT_DIR$/../object_detection/box_coders/square_box_coder.py" />
+        <option value="$PROJECT_DIR$/../object_detection/builders/box_coder_builder.py" />
+        <option value="$PROJECT_DIR$/../object_detection/builders/dataset_builder.py" />
+        <option value="$PROJECT_DIR$/../object_detection/builders/preprocessor_builder.py" />
+        <option value="$PROJECT_DIR$/../object_detection/builders/post_processing_builder.py" />
+        <option value="$PROJECT_DIR$/../object_detection/predictors/convolutional_box_predictor.py" />
+        <option value="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/proposal_layer.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/anchor_generators/generate_anchors.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/anchor_generators/snippets.py" />
+        <option value="$PROJECT_DIR$/../faster-rcnn.pytorch/lib/model/rpn/bbox_transform.py" />
+        <option value="$PROJECT_DIR$/../object_detection/box_coders/faster_rcnn_box_coder_test.py" />
+        <option value="$PROJECT_DIR$/../object_detection/model_main.py" />
+        <option value="$PROJECT_DIR$/../object_detection/model_hparams.py" />
+        <option value="$PROJECT_DIR$/../object_detection/utils/config_util.py" />
+        <option value="$PROJECT_DIR$/../object_detection/model_lib.py" />
+        <option value="$PROJECT_DIR$/../object_detection/inputs.py" />
+        <option value="$PROJECT_DIR$/../object_detection/builders/image_resizer_builder.py" />
+        <option value="$PROJECT_DIR$/../object_detection/core/preprocessor.py" />
+        <option value="$PROJECT_DIR$/../TEST_1/Pix2Pix/networks.py" />
+        <option value="$PROJECT_DIR$/../object_detection/core/region_similarity_calculator.py" />
+        <option value="$PROJECT_DIR$/../object_detection/core/box_list_ops.py" />
+        <option value="$PROJECT_DIR$/../object_detection/matchers/argmax_matcher.py" />
+        <option value="$PROJECT_DIR$/../object_detection/core/model.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/model/config.py" />
         <option value="$PROJECT_DIR$/Pix2Pix/README.md" />
+        <option value="$PROJECT_DIR$/../object_detection/core/post_processing.py" />
+        <option value="$PROJECT_DIR$/../object_detection/box_coders/faster_rcnn_box_coder.py" />
+        <option value="$PROJECT_DIR$/../object_detection/core/box_list.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/anchor_generators/grid_anchor_generator.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/box_coders/box_coder.py" />
+        <option value="$PROJECT_DIR$/../object_detection/builders/box_predictor_builder.py" />
+        <option value="$PROJECT_DIR$/../object_detection/core/balanced_positive_negative_sampler.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/model/bbox_transform.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/box_coders/faster_rcnn_box_coder_test.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/box_coders/faster_rcnn_box_coder.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/anchor_generators/anchor_target_layer.py" />
+        <option value="$PROJECT_DIR$/../object_detection/core/target_assigner.py" />
+        <option value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/nets/network.py" />
+        <option value="$PROJECT_DIR$/../object_detection/core/box_predictor.py" />
+        <option value="$PROJECT_DIR$/../object_detection/builders/model_builder.py" />
+        <option value="$PROJECT_DIR$/common/misc.py" />
+        <option value="$PROJECT_DIR$/../GAN_Lib_Tensorflow/common/data/tfdata.py" />
+        <option value="$PROJECT_DIR$/Pix2Pix/train.py" />
       </list>
     </option>
   </component>
-  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsGulpfileManager">
-    <detection-done>true</detection-done>
-    <sorting>DEFINITION_ORDER</sorting>
-  </component>
-  <component name="NodePackageJsonFileManager">
-    <packageJsonPaths />
-  </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="300" />
-    <option name="y" value="17" />
-    <option name="width" value="1400" />
-    <option name="height" value="1038" />
+    <option name="y" value="-8" />
+    <option name="width" value="1398" />
+    <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -213,19 +340,57 @@
             <path>
               <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
               <item name="TEST" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TEST" type="462c0819:PsiDirectoryNode" />
               <item name="Pix2Pix" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CNN_LSTM_CTC_Tensorflow" type="462c0819:PsiDirectoryNode" />
+              <item name="FasterRCNN_Tensorflow" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pix2pix-tensorflow" type="462c0819:PsiDirectoryNode" />
+              <item name="FasterRCNN_Tensorflow" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Python-Scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="FasterRCNN_Tensorflow" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
+              <item name="anchor_generators" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FasterRCNN_Tensorflow" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
+              <item name="box_coders" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="object_detection" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="object_detection" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wi" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wi" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TEST" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wi" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -235,17 +400,20 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/code/saliency-salgan-2017" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../TEST_1" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/Pix2Pix" />
-      <recent name="$PROJECT_DIR$/../Python-Scripts" />
-      <recent name="$PROJECT_DIR$/../Python-Scripts/DBSCAN" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/../FasterRCNN_Tensorflow/" />
       <recent name="$PROJECT_DIR$/../Python-Scripts/Clustering" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/common" />
+      <recent name="$PROJECT_DIR$/Pix2Pix" />
+      <recent name="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/box_coders" />
+      <recent name="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/utils" />
+      <recent name="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -260,116 +428,154 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main">
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Python-Scripts" />
+  <component name="RunManager" selected="Python.anchor_target_layer">
+    <configuration name="03_auto_gradient" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="PyTorchZeroToAll" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../Python-Scripts" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../PyTorchZeroToAll" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../Python-Scripts/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../PyTorchZeroToAll/03_auto_gradient.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
-    <configuration name="networks" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="TEST" />
+    <configuration name="anchor_target_layer" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="tf-faster-rcnn" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Pix2Pix" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/anchor_generators" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Pix2Pix/networks.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/anchor_generators/anchor_target_layer.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
-    <configuration name="scikit-dbscan-example" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Python-Scripts" />
+    <configuration name="infer" type="PythonConfigurationType" factoryName="Python">
+      <module name="wp" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../Python-Scripts/DBSCAN" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../wp/Pix2Pix" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../Python-Scripts/DBSCAN/scikit-dbscan-example.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../wp/Pix2Pix/infer.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
-    <configuration name="tmp" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Python-Scripts" />
+    <configuration name="misc" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="wi" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../Python-Scripts" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../wi/common" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../Python-Scripts/Clustering/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../wi/common/misc.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
-    <configuration name="treepredict" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Python-Scripts" />
+    <configuration name="tfdata" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="wi" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../Python-Scripts/DecisionTree" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../wi/lib" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../Python-Scripts/DecisionTree/treepredict.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../wi/lib/tfdata.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="train" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="wp" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../wp/Pix2Pix" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../wp/Pix2Pix/train.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.tmp" />
-      <item itemvalue="Python.scikit-dbscan-example" />
-      <item itemvalue="Python.treepredict" />
-      <item itemvalue="Python.networks" />
-      <item itemvalue="Python.main" />
+      <item itemvalue="Python.infer" />
+      <item itemvalue="Python.03_auto_gradient" />
+      <item itemvalue="Python.misc" />
+      <item itemvalue="Python.tfdata" />
+      <item itemvalue="Python.train" />
+      <item itemvalue="Python.anchor_target_layer" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main" />
-        <item itemvalue="Python.networks" />
-        <item itemvalue="Python.treepredict" />
-        <item itemvalue="Python.tmp" />
-        <item itemvalue="Python.scikit-dbscan-example" />
+        <item itemvalue="Python.anchor_target_layer" />
+        <item itemvalue="Python.misc" />
+        <item itemvalue="Python.tfdata" />
+        <item itemvalue="Python.train" />
+        <item itemvalue="Python.03_auto_gradient" />
       </list>
     </recent_temporary>
   </component>
@@ -383,6 +589,55 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1529977320986</updated>
+      <workItem from="1542814970379" duration="2230000" />
+      <workItem from="1543158819928" duration="1809000" />
+      <workItem from="1543366808266" duration="1210000" />
+      <workItem from="1543452888720" duration="11000" />
+      <workItem from="1543452927902" duration="32000" />
+      <workItem from="1543452978166" duration="4000" />
+      <workItem from="1543453036904" duration="781000" />
+      <workItem from="1543506447128" duration="2798000" />
+      <workItem from="1543715736310" duration="11000" />
+      <workItem from="1543715764756" duration="8000" />
+      <workItem from="1543715810078" duration="3000" />
+      <workItem from="1543715831360" duration="11000" />
+      <workItem from="1543715861213" duration="1000" />
+      <workItem from="1543715886911" duration="10000" />
+      <workItem from="1543715916647" duration="17000" />
+      <workItem from="1543715951094" duration="12000" />
+      <workItem from="1543716000804" duration="27000" />
+      <workItem from="1543716043187" duration="2000" />
+      <workItem from="1543716078843" duration="23000" />
+      <workItem from="1543716282550" duration="4000" />
+      <workItem from="1543716333042" duration="1000" />
+      <workItem from="1543716387249" duration="1000" />
+      <workItem from="1543716409380" duration="11000" />
+      <workItem from="1543716484319" duration="31000" />
+      <workItem from="1543716655206" duration="214000" />
+      <workItem from="1543716902517" duration="460000" />
+      <workItem from="1543717406753" duration="3000" />
+      <workItem from="1543717459927" duration="24000" />
+      <workItem from="1543717511038" duration="40176000" />
+      <workItem from="1544237458901" duration="9040000" />
+      <workItem from="1544403826788" duration="30000" />
+      <workItem from="1544404283507" duration="17782000" />
+      <workItem from="1544457264981" duration="13000" />
+      <workItem from="1544457362743" duration="26199000" />
+      <workItem from="1544618264150" duration="93000" />
+      <workItem from="1544618381814" duration="56054000" />
+      <workItem from="1544845156940" duration="71065000" />
+      <workItem from="1545235385606" duration="29228000" />
+      <workItem from="1545320679891" duration="3000" />
+      <workItem from="1545320766988" duration="19000" />
+      <workItem from="1545320892933" duration="17377000" />
+      <workItem from="1545445013245" duration="29000" />
+      <workItem from="1545445058090" duration="45000" />
+      <workItem from="1545445117961" duration="10000" />
+      <workItem from="1545445142520" duration="14645000" />
+      <workItem from="1545533136647" duration="17874000" />
+      <workItem from="1545613760258" duration="26965000" />
+      <workItem from="1545664546300" duration="6000" />
+      <workItem from="1545664567927" duration="10444000" />
     </task>
     <task id="LOCAL-00001" summary="Add implementation of resnet_d.">
       <created>1529993918163</created>
@@ -594,34 +849,59 @@
       <option name="project" value="LOCAL" />
       <updated>1531207096579</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Update.">
+      <created>1531710659335</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1531710659335</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Add `infer.py`.">
+      <created>1545621746893</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1545621746893</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Update.">
+      <created>1545622033728</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1545622033728</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="346846000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="80" y="-5" width="1841" height="1086" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5002719" side_tool="true" weight="0.21533613" />
-      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32983193" />
-      <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4997281" weight="0.21533613" />
-      <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19738989" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="right" x="612" y="175" width="898" height="646" id="SciView" order="3" weight="0.35562807" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.30147058" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49624062" visible="true" weight="0.1805945" />
+      <window_info id="Structure" order="1" sideWeight="0.5037594" side_tool="true" weight="0.18452047" />
+      <window_info id="Favorites" order="2" sideWeight="0.5037594" side_tool="true" weight="0.18452047" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32975295" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4997281" weight="0.21374866" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.30139935" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.32975295" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Python Console" order="10" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32938644" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5002719" side_tool="true" weight="0.21482277" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32983193" />
-      <window_info anchor="right" id="Coverage" order="3" side_tool="true" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" x="673" y="257" width="898" height="646" id="SciView" order="3" weight="0.35558048" />
+      <window_info anchor="right" id="Coverage" order="4" side_tool="true" />
+      <window_info anchor="right" id="Database" order="5" weight="0.32978126" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -630,12 +910,28 @@
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.md" />
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
-  </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
       <path value="$PROJECT_DIR$/../AttnGAN" />
+      <path value="$PROJECT_DIR$/../Self-Attention-GAN" />
+      <path value="$PROJECT_DIR$/../Self-Attention-GAN-Tensorflow" />
+      <path value="$PROJECT_DIR$/../practical-pytorch" />
+      <path value="$PROJECT_DIR$/../basic_reinforcement_learning" />
+      <path value="$PROJECT_DIR$/../Practical_RL" />
+      <path value="$PROJECT_DIR$/../Image_Captioning_AI_Challenger" />
+      <path value="$PROJECT_DIR$/../Optimization_of_image_description_metrics_using_policy_gradient_methods" />
+      <path value="$PROJECT_DIR$/../ImageCaption_Tensorflow" />
+      <path value="$PROJECT_DIR$/../tensorflow-fcn" />
+      <path value="$PROJECT_DIR$/../Python-Scripts" />
+      <path value="$PROJECT_DIR$/../DeRaindrop" />
+      <path value="$PROJECT_DIR$/../CNN_LSTM_CTC_Tensorflow" />
+      <path value="$PROJECT_DIR$/../show-attend-and-tell" />
+      <path value="$PROJECT_DIR$/../YOLO_tensorflow" />
+      <path value="$PROJECT_DIR$/../tf-faster-rcnn" />
+      <path value="$PROJECT_DIR$/../FCN.tensorflow" />
+      <path value="$PROJECT_DIR$/../ResNet" />
+      <path value="$PROJECT_DIR$/../tensorflow-vgg" />
+      <path value="$PROJECT_DIR$/../TensorFlow-Examples" />
     </ignored-roots>
     <MESSAGE value="Add implementation of resnet_d." />
     <MESSAGE value="512_attention_nss1.4477." />
@@ -652,255 +948,435 @@
     <MESSAGE value="Self atten in UNet with [1, 128, 128, C] in both G and D." />
     <MESSAGE value="Change g loss to BCE." />
     <MESSAGE value="Modify vgg architecture." />
+    <MESSAGE value="Add `infer.py`." />
     <MESSAGE value="Update." />
     <option name="LAST_COMMIT_MESSAGE" value="Update." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../TEST_/common/misc.py</url>
+          <line>4</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+    <entry file="file://$PROJECT_DIR$/../object_detection/core/box_list.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9312">
-          <caret line="388" column="13" lean-forward="true" selection-start-line="388" selection-start-column="13" selection-end-line="388" selection-end-column="13" />
+        <state relative-caret-position="706">
+          <caret line="174" column="12" lean-forward="true" selection-start-line="174" selection-start-column="12" selection-end-line="174" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+    <entry file="file://$PROJECT_DIR$/../object_detection/core/box_list_ops.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3072">
-          <caret line="128" selection-start-line="103" selection-end-line="128" />
+        <state relative-caret-position="418">
+          <caret line="265" column="37" lean-forward="true" selection-start-line="265" selection-start-column="37" selection-end-line="265" selection-end-column="37" />
+          <folding>
+            <element signature="e#1041#1064#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+    <entry file="file://$PROJECT_DIR$/../object_detection/core/region_similarity_calculator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9192">
-          <caret line="383" column="12" selection-start-line="383" selection-start-column="12" selection-end-line="383" selection-end-column="12" />
+        <state relative-caret-position="466">
+          <caret line="74" column="30" selection-start-line="74" selection-start-column="30" selection-end-line="74" selection-end-column="30" />
+          <folding>
+            <element signature="e#848#871#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+    <entry file="file://$PROJECT_DIR$/../object_detection/matchers/argmax_matcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3072">
-          <caret line="128" selection-start-line="103" selection-end-line="128" />
+        <state relative-caret-position="-3358">
+          <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+          <folding>
+            <element signature="e#1248#1271#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/utils/box_list.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../object_detection/core/box_coder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9192">
-          <caret line="383" column="12" selection-start-line="383" selection-start-column="12" selection-end-line="383" selection-end-column="12" />
+        <state relative-caret-position="-216">
+          <folding>
+            <element signature="e#1258#1281#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/python/ops/array_ops.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3072">
-          <caret line="128" selection-start-line="103" selection-end-line="128" />
+        <state relative-caret-position="226">
+          <caret line="985" column="50" selection-start-line="985" selection-start-column="50" selection-end-line="985" selection-end-column="50" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+    <entry file="file://$PROJECT_DIR$/../object_detection/core/balanced_positive_negative_sampler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9168">
-          <caret line="382" column="31" lean-forward="true" selection-start-line="382" selection-start-column="31" selection-end-line="382" selection-end-column="31" />
+        <state relative-caret-position="-4822">
+          <caret line="15" column="71" selection-start-line="15" selection-start-column="71" selection-end-line="15" selection-end-column="71" />
+          <folding>
+            <element signature="e#1571#1594#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/box_coders/faster_rcnn_box_coder_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3072">
-          <caret line="128" selection-start-line="103" selection-end-line="128" />
+        <state relative-caret-position="-763">
+          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+          <folding>
+            <element signature="e#757#780#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/box_coders/box_coder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8952">
-          <caret line="373" selection-start-line="373" selection-end-line="373" />
+        <state relative-caret-position="290">
+          <caret line="110" column="11" lean-forward="true" selection-start-line="110" selection-start-column="11" selection-end-line="110" selection-end-column="11" />
+          <folding>
+            <element signature="e#1258#1281#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/nms/cpu_nms.pyx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3072">
-          <caret line="128" selection-start-line="103" selection-end-line="128" />
+        <state relative-caret-position="-886" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../object_detection/builders/box_predictor_builder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1646">
+          <caret line="425" column="4" selection-start-line="425" selection-start-column="4" selection-end-line="425" selection-end-column="4" />
+          <folding>
+            <element signature="e#749#767#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../Python-Scripts/main.py">
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/python/ops/script_ops.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        <state relative-caret-position="-134">
+          <caret line="390" column="4" selection-start-line="390" selection-start-column="4" selection-end-line="390" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/python/ops/gen_array_ops.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8952">
-          <caret line="373" selection-start-line="373" selection-end-line="373" />
+        <state relative-caret-position="322">
+          <caret line="8784" column="51" lean-forward="true" selection-start-line="8784" selection-start-column="51" selection-end-line="8784" selection-end-column="51" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/python_stubs/113372707/numpy/core/multiarray.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3072">
-          <caret line="128" selection-start-line="103" selection-end-line="128" />
+        <state relative-caret-position="178">
+          <caret line="962" column="81" lean-forward="true" selection-start-line="962" selection-start-column="81" selection-end-line="962" selection-end-column="81" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../Python-Scripts/main.py">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/anchor_generators/anchor_target_layer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="20" column="24" lean-forward="true" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="24" />
+        <state relative-caret-position="298">
+          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
+          <folding>
+            <element signature="e#277#309#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+    <entry file="file://$PROJECT_DIR$/../object_detection/core/post_processing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8952">
-          <caret line="373" selection-start-line="373" selection-end-line="373" />
+        <state relative-caret-position="4968">
+          <caret line="247" lean-forward="true" selection-start-line="247" selection-end-line="247" />
+          <folding>
+            <element signature="e#743#761#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/contrib/layers/python/layers/layers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3072">
-          <caret line="128" selection-start-line="103" selection-end-line="128" />
+        <state relative-caret-position="490">
+          <caret line="2398" column="28" lean-forward="true" selection-start-line="2398" selection-start-column="28" selection-end-line="2398" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../Python-Scripts/main.py">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/roi_data_layer/layer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+        <state relative-caret-position="-1246" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/contrib/slim/python/slim/nets/resnet_v1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="209" column="78" lean-forward="true" selection-start-line="209" selection-start-column="78" selection-end-line="209" selection-end-column="78" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/nets/resnet_v1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8952">
-          <caret line="373" selection-start-line="373" selection-end-line="373" />
+        <state relative-caret-position="540">
+          <caret line="149" column="57" lean-forward="true" selection-start-line="149" selection-start-column="57" selection-end-line="149" selection-end-column="57" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/proposal_generators/proposal_top_layer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3072">
-          <caret line="128" selection-start-line="103" selection-end-line="128" />
+        <state relative-caret-position="-862">
+          <caret line="20" column="36" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
+          <folding>
+            <element signature="e#217#255#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../Python-Scripts/main.py">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/model/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+        <state relative-caret-position="275">
+          <caret line="300" column="17" selection-start-line="300" selection-start-column="4" selection-end-line="300" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/anchor_generators/grid_anchor_generator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8952">
-          <caret line="373" selection-start-line="373" selection-end-line="373" />
+        <state relative-caret-position="312">
+          <caret line="33" column="19" lean-forward="true" selection-start-line="33" selection-start-column="19" selection-end-line="33" selection-end-column="19" />
+          <folding>
+            <element signature="e#944#967#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/model/bbox_transform.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3072">
-          <caret line="128" selection-start-line="103" selection-end-line="128" />
+        <state relative-caret-position="10">
+          <caret line="84" column="4" selection-start-line="84" selection-start-column="4" selection-end-line="84" selection-end-column="4" />
+          <folding>
+            <element signature="e#364#382#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../Python-Scripts/main.py">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/anchor_generators/anchor_generator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+        <state relative-caret-position="946">
+          <caret line="109" column="25" selection-start-line="109" selection-start-column="25" selection-end-line="109" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
+    <entry file="file://$PROJECT_DIR$/../object_detection/core/box_predictor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8952">
-          <caret line="373" selection-start-line="373" selection-end-line="373" />
+        <state relative-caret-position="-3505">
+          <caret line="17" column="49" lean-forward="true" selection-start-line="17" selection-start-column="49" selection-end-line="17" selection-end-column="49" />
+          <folding>
+            <element signature="e#1133#1163#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/box_coders/faster_rcnn_box_coder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3072">
-          <caret line="128" selection-start-line="103" selection-end-line="128" />
+        <state relative-caret-position="362">
+          <caret line="91" column="36" selection-start-line="91" selection-start-column="36" selection-end-line="91" selection-end-column="36" />
+          <folding>
+            <element signature="e#1179#1202#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../Python-Scripts/main.py">
+    <entry file="file://$PROJECT_DIR$/../object_detection/model_main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../Python-Scripts/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="23" selection-start-line="23" selection-end-line="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_bce.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-312">
-          <caret line="318" column="40" selection-start-line="318" selection-start-column="40" selection-end-line="318" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="37" column="38" selection-start-line="37" selection-start-column="38" selection-end-line="37" selection-end-column="38" />
+        <state relative-caret-position="432">
+          <caret line="56" column="50" selection-start-line="56" selection-start-column="50" selection-end-line="56" selection-end-column="50" />
+          <folding>
+            <element signature="e#758#796#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Pix2Pix/networks.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="612" column="22" selection-start-line="612" selection-start-column="22" selection-end-line="612" selection-end-column="22" />
+        <state relative-caret-position="818">
+          <caret line="932" column="31" selection-start-line="932" selection-start-column="31" selection-end-line="932" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../object_detection/builders/anchor_generator_builder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
           <folding>
-            <element signature="e#526#1179#0" />
-            <element signature="e#1227#3796#0" />
-            <element signature="e#4017#8840#0" />
-            <element signature="e#8995#12931#0" />
-            <element signature="e#13088#18809#0" />
-            <element signature="e#19044#24685#0" />
-            <element signature="e#36368#40848#0" />
-            <element signature="e#41079#47764#0" />
-            <element signature="e#47932#51353#0" />
-            <element signature="e#51641#65780#0" />
-            <element signature="e#65946#71026#0" />
-            <element signature="e#71466#71808#0" />
-            <element signature="e#71894#72138#0" />
-            <element signature="e#72241#72650#0" />
-            <element signature="e#72730#73101#0" />
-            <element signature="e#73189#73940#0" />
-            <element signature="e#73942#73992#0" />
+            <element signature="e#767#818#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pix2Pix/README.md">
+    <entry file="file://$PROJECT_DIR$/../object_detection/model_lib.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="812">
-          <caret line="155" selection-start-line="131" selection-end-line="155" />
+        <state relative-caret-position="183">
+          <caret line="598" lean-forward="true" selection-start-line="598" selection-end-line="598" />
+          <folding>
+            <element signature="e#749#787#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../CNN_LSTM_CTC_Tensorflow/cnn_lstm_otc_ocr.py">
+    <entry file="file://$PROJECT_DIR$/../object_detection/utils/shape_utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="67" column="56" selection-start-line="67" selection-start-column="56" selection-end-line="67" selection-end-column="56" />
+        <state relative-caret-position="-1382">
+          <caret line="178" column="43" selection-start-line="178" selection-start-column="43" selection-end-line="178" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../object_detection/builders/model_builder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="382" column="63" lean-forward="true" selection-start-line="382" selection-start-column="63" selection-end-line="382" selection-end-column="63" />
+          <folding>
+            <element signature="e#754#770#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../FasterRCNN_Tensorflow/lib/nets/network.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-144">
+          <caret line="202" column="8" selection-start-line="202" selection-start-column="8" selection-end-line="202" selection-end-column="8" />
+          <folding>
+            <element signature="e#126#149#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../object_detection/meta_architectures/faster_rcnn_meta_arch.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-269">
+          <caret line="1764" column="50" lean-forward="true" selection-start-line="1764" selection-start-column="50" selection-end-line="1764" selection-end-column="50" />
+          <folding>
+            <element signature="e#5266#5296#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../object_detection/core/target_assigner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="386" column="48" lean-forward="true" selection-start-line="386" selection-start-column="48" selection-end-line="386" selection-end-column="48" />
+          <folding>
+            <element signature="e#1632#1655#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../object_detection/box_coders/faster_rcnn_box_coder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-72">
+          <caret line="41" column="8" selection-start-line="41" selection-start-column="8" selection-end-line="41" selection-end-column="8" />
+          <folding>
+            <element signature="e#1179#1202#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/train_.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../GAN_Lib_Tensorflow/common/misc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="34" lean-forward="true" selection-start-line="34" selection-end-line="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/misc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7112">
+          <caret line="573" lean-forward="true" selection-start-line="573" selection-end-line="573" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../wi/common/data/tfdata.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="27" column="49" lean-forward="true" selection-end-line="250" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../GAN_Lib_Tensorflow/common/data/tfdata.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="818">
+          <caret line="250" lean-forward="true" selection-start-line="250" selection-end-line="250" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/python/ops/gen_image_ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="1028" column="4" selection-start-line="1028" selection-start-column="4" selection-end-line="1028" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/python/ops/image_ops_impl.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="1400" column="4" selection-start-line="1400" selection-start-column="4" selection-end-line="1400" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/python/framework/ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-422">
+          <caret line="995" column="62" selection-start-line="995" selection-start-column="62" selection-end-line="995" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/python/data/ops/iterator_ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="466">
+          <caret line="616" column="48" lean-forward="true" selection-start-line="616" selection-start-column="48" selection-end-line="616" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/tfdata.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="608">
+          <caret line="231" column="45" selection-start-line="231" selection-start-column="45" selection-end-line="231" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/python/ops/gen_io_ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="519" lean-forward="true" selection-start-line="519" selection-end-line="519" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/python/data/ops/dataset_ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="178">
+          <caret line="176" column="47" selection-start-line="176" selection-start-column="47" selection-end-line="176" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pix2Pix/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="618">
+          <caret line="267" column="41" selection-start-line="267" selection-start-column="41" selection-end-line="267" selection-end-column="41" />
+          <folding>
+            <element signature="e#112#130#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

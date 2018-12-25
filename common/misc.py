@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 
 # from mincepie import mapreducer, launcher
-# import cv2
+import cv2
 from PIL import Image
 import numpy as np
 import tensorflow as tf
@@ -12,6 +12,13 @@ import imageio
 import errno
 import scipy.misc
 from scipy.misc import imsave
+from six.moves import urllib
+import tarfile
+import zipfile
+
+import scipy.ndimage
+import scipy.misc
+import shutil
 
 
 # from https://github.com/chainer/chainerrl/blob/f119a1fe210dd31ea123d244258d9b5edc21fba4/chainerrl/misc/copy_param.py
@@ -25,6 +32,70 @@ def record_setting(out):
     with open(out + "/command.txt", "w") as f:
         f.write(" ".join(sys.argv) + "\n")
 
+
+def maybe_download_and_extract(dir_path, url_name, is_tarfile=False, is_zipfile=False):
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+    filename = url_name.split('/')[-1]
+    filepath = os.path.join(dir_path, filename)
+    if not os.path.exists(filepath):
+        def _progress(count, block_size, total_size):
+            sys.stdout.write(
+                '\r>> Downloading %s %.1f%%' % (filename, float(count * block_size) / float(total_size) * 100.0))
+            sys.stdout.flush()
+
+        filepath, _ = urllib.request.urlretrieve(url_name, filepath, reporthook=_progress)
+        print()
+        statinfo = os.stat(filepath)
+        print('Succesfully downloaded', filename, statinfo.st_size, 'bytes.')
+        if is_tarfile:
+            tarfile.open(filepath, 'r:gz').extractall(dir_path)
+        elif is_zipfile:
+            with zipfile.ZipFile(filepath) as zf:
+                zip_dir = zf.namelist()[0]
+                zf.extractall(dir_path)
+
+
+def mkval(root_dir, train_dir):
+    """
+    Args:
+      root_dir: '/home/thinkpad/Downloads/DT/pix2pix_data/stimuli'
+      train_dir: 'text'
+    Return:
+    """
+    input_dir = os.path.join(root_dir, train_dir)
+    print('input_dir: {}\n'.format(input_dir))
+    # names_A = os.listdir(input_dir)
+    # print(len(names_A))
+
+    out_dir = os.path.join(root_dir, 'validation')
+    print('out_dir: {}\n'.format(out_dir))
+    if not os.path.exists(out_dir):
+        os.mkdir(out_dir)
+
+    train_csv = np.genfromtxt(os.path.join(root_dir, 'train.csv'), dtype=str,
+                              comments=None, delimiter=',', skip_header=1)
+    # print(train_csv)
+
+    validation_idx = np.random.choice(len(train_csv), 200, replace=False)
+    validation = train_csv[validation_idx]
+    print(validation.shape)
+    np.savetxt(os.path.join(root_dir, 'validation.csv'), validation, fmt='%s',
+               delimiter=',', newline='\n', header='Image,Id', footer='', comments='# ', encoding=None)
+
+    a = np.arange(len(train_csv))
+    b = [i for i in a if i not in validation_idx]
+    b = np.asarray(b)
+    train_csv = train_csv[b]
+    print(train_csv.shape)
+    np.savetxt(os.path.join(root_dir, 'train_new.csv'), train_csv, fmt='%s',
+               delimiter=',', newline='\n', header='Image,Id', footer='', comments='# ', encoding=None)
+
+    for name, label in validation:
+        shutil.move(os.path.join(input_dir, name), os.path.join(out_dir, name))
+
+
+######################################################################
 
 # https://github.com/BVLC/caffe/blob/master/tools/extra/resize_and_crop_images.py
 FLAGS = tf.app.flags.FLAGS
@@ -43,7 +114,9 @@ class OpenCVResizeCrop:
     def resize_and_crop_image(self, input_file, output_file, output_side_length=256):
         """Takes an image name, resize it and crop the center square
         """
-        img = cv2.imread(input_file)
+        img = cv2.imread(input_file, cv2.IMREAD_COLOR)
+        # img = cv2.imread(input_file, cv2.IMREAD_GRAYSCALE)
+        # img = cv2.imread(input_file, cv2.IMREAD_UNCHANGED)
         height, width, depth = img.shape
         new_height = output_side_length
         new_width = output_side_length
@@ -51,7 +124,8 @@ class OpenCVResizeCrop:
             new_height = output_side_length * height / width
         else:
             new_width = output_side_length * width / height
-        resized_img = cv2.resize(img, (new_width, new_height))
+        resized_img = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_AREA)
+        # resized_img = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_NEAREST)
         height_offset = (new_height - output_side_length) / 2
         width_offset = (new_width - output_side_length) / 2
         cropped_img = resized_img[height_offset:height_offset + output_side_length,
@@ -132,8 +206,56 @@ class PILResizeCrop:
 # mapreducer.REGISTER_DEFAULT_READER(mapreducer.FileReader)
 # mapreducer.REGISTER_DEFAULT_WRITER(mapreducer.FileWriter)
 
+def resize_img(root_dir, subfolder, img_size):
+    """
+    Args:
+      root_dir: '/home/thinkpad/Downloads/DT/pix2pix_data/A'
+      subfolder: 'train', 'val'
+    Return:
+    """
+    output_dir = os.path.join(root_dir, '{0}_resized'.format(subfolder))
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
 
-# ------
+    input_dir = os.path.join(root_dir, subfolder)
+    imgs = os.listdir(input_dir)
+    print(imgs)
+    for img in imgs:
+        # try:
+        # im = np.array(Image.open(os.path.join(input_dir, img)), dtype=np.float32)
+        # print(im.shape)
+        # coarse_img = \
+        #     scipy.ndimage.interpolation.zoom(
+        #         im,
+        #         tuple(RGB_SCALE / np.asarray(im.shape, dtype=np.float32)),
+        #         np.dtype(np.float32),
+        #         mode='nearest'
+        #     )
+        # im = cv2.imread(os.path.join(input_dir, img), cv2.IMREAD_COLOR)
+        im = cv2.imread(os.path.join(input_dir, img), cv2.IMREAD_GRAYSCALE)
+        # im = cv2.imread(os.path.join(input_dir, img), cv2.IMREAD_UNCHANGED)
+        print(im.shape)
+
+        # coarse_img = cv2.resize(im, tuple(img_size), interpolation=cv2.INTER_AREA)
+        coarse_img = cv2.resize(im, tuple(img_size), interpolation=cv2.INTER_NEAREST)
+
+        prefix = os.path.splitext(img)[0] + '.png'
+        cv2.imwrite(os.path.join(output_dir, prefix), coarse_img)
+        # except:
+        #     print(os.path.join(dir, 'test', img))
+
+
+######################################################################
+
+
+def preprocess(image):
+    # [0, 1] => [-1, 1]
+    return image * 2 - 1
+
+
+def deprocess(image):
+    # [-1, 1] => [0, 1]
+    return (image + 1) / 2
 
 
 # Some codes from https://github.com/openai/improved-gan/blob/master/imagenet/utils.py
@@ -258,7 +380,7 @@ def get_z(batchsize, n_hidden=128):
     return z
 
 
-# ------
+######################################################################
 
 
 def scope_has_variables(scope):
@@ -285,6 +407,12 @@ def optimistic_restore(session, save_file):
     saved_shapes = reader.get_variable_to_shape_map()
     var_names = sorted([(var.name, var.name.split(':')[0]) for var in tf.global_variables()
                         if var.name.split(':')[0] in saved_shapes])
+
+    # # variable: dtype
+    # vars = reader.get_variable_to_dtype_map()
+    # for k in sorted(vars):
+    #     print(k, vars[k])
+
     restore_vars = []
 
     name2var = dict(zip(map(lambda x: x.name.split(':')[0], tf.global_variables()), tf.global_variables()))
@@ -305,6 +433,53 @@ def optimistic_restore(session, save_file):
     print('\n--------variables to restore:--------')
     for var in restore_vars:
         print(var)
+
+
+def optimistic_restore_vars(save_file):
+    """
+
+    Args:
+      session:
+      save_file:
+
+    Returns:
+    """
+    reader = tf.train.NewCheckpointReader(save_file)
+    saved_shapes = reader.get_variable_to_shape_map()
+    var_names = sorted([(var.name, var.name.split(':')[0]) for var in tf.global_variables()
+                        if var.name.split(':')[0] in saved_shapes])
+
+    # # variable: dtype
+    # vars = reader.get_variable_to_dtype_map()
+    # for k in sorted(vars):
+    #     print(k, vars[k])
+
+    restore_vars = []
+
+    name2var = dict(zip(map(lambda x: x.name.split(':')[0], tf.global_variables()), tf.global_variables()))
+
+    with tf.variable_scope('', reuse=True):
+        for var_name, saved_var_name in var_names:
+            curr_var = name2var[saved_var_name]
+            var_shape = curr_var.get_shape().as_list()
+            if var_shape == saved_shapes[saved_var_name] and 'global_step' not in saved_var_name:
+                restore_vars.append(curr_var)
+    # saver = tf.train.Saver(restore_vars)
+    # saver.restore(session, save_file)
+
+    # print('\n--------variables stored:--------')
+    # for var_name, saved_var_name in var_names:
+    #     print(var_name)
+
+    print('\n--------variables to restore:--------')
+    for var in restore_vars:
+        print(var)
+
+    # print('\n--------tf.global_variables():--------')
+    # for var in tf.global_variables():
+    #     print(var)
+
+    return restore_vars
 
 
 def get_loss(disc_real, disc_fake, loss_type='HINGE'):

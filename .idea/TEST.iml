@@ -18,6 +18,7 @@
     <orderEntry type="module" module-name="Self-Attention-GAN-Tensorflow" />
     <orderEntry type="module" module-name="Self-Attention-GAN" />
     <orderEntry type="module" module-name="CNN_LSTM_CTC_Tensorflow" />
+    <orderEntry type="module" module-name="TEST_1" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="Twisted Trial" />
