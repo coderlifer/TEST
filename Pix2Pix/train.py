@@ -49,7 +49,7 @@ parser.add_argument("--seed", type=int)
 parser.add_argument("--max_steps", type=int, default=None, help="number of training steps (0 to disable)")
 parser.add_argument("--max_epochs", type=int, default=200, help="number of training epochs")
 parser.add_argument("--summary_freq", type=int, default=100, help="update summaries every summary_freq steps")
-parser.add_argument("--progress_freq", type=int, default=50, help="display progress every progress_freq steps")
+parser.add_argument("--progress_freq", type=int, default=10, help="display progress every progress_freq steps")
 parser.add_argument("--trace_freq", type=int, default=0, help="trace execution every trace_freq steps")
 parser.add_argument("--display_freq", type=int, default=0,
                     help="write current training images every display_freq steps")
