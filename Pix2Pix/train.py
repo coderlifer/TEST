@@ -253,7 +253,7 @@ def load_examples():
         dataset = tf.data.Dataset.from_tensor_slices((input_paths, input_paths))
         dataset = dataset.map(_parse_function, num_parallel_calls=None)
         dataset = dataset.shuffle(buffer_size=1000, seed=None, reshuffle_each_iteration=True)  # big than num_train
-        # dataset = dataset.repeat(count=args.max_epochs)
+        dataset = dataset.repeat(count=args.max_epochs)
         dataset = dataset.batch(batch_size=args.batch_size)
         dataset = dataset.prefetch(buffer_size=args.batch_size)
 
@@ -528,73 +528,76 @@ def train():
             # training
             start = time.time()
 
-            def should(freq):
-                return freq > 0 and ((step + 1) % freq == 0 or step == max_steps - 1)
+            # for step in range(args.max_epochs):
+            step = 0
+            while True:
 
-            for step in range(args.max_epochs):
-                while True:
-                    try:
-                        for i in range(args.n_dis):
-                            sess.run(modelNamedtuple.d_train)
+                def should(freq):
+                    return freq > 0 and ((step + 1) % freq == 0 or step == max_steps - 1)
 
-                        fetches = {
-                            "g_train": modelNamedtuple.g_train,
-                            "losses": modelNamedtuple.losses,
-                            "global_step": modelNamedtuple.global_step,
-                        }
+                try:
+                    for i in range(args.n_dis):
+                        sess.run(modelNamedtuple.d_train)
 
-                        if should(args.progress_freq):
-                            fetches["discrim_loss"] = modelNamedtuple.discrim_loss
-                            fetches["gen_loss_GAN"] = modelNamedtuple.gen_loss_GAN
-                            fetches["gen_loss_L1"] = modelNamedtuple.gen_loss_L1
+                    fetches = {
+                        "g_train": modelNamedtuple.g_train,
+                        "losses": modelNamedtuple.losses,
+                        "global_step": modelNamedtuple.global_step,
+                    }
 
-                        # if should(args.summary_freq):
-                        #     fetches["summary"] = summary_op
+                    if should(args.progress_freq):
+                        fetches["discrim_loss"] = modelNamedtuple.discrim_loss
+                        fetches["gen_loss_GAN"] = modelNamedtuple.gen_loss_GAN
+                        fetches["gen_loss_L1"] = modelNamedtuple.gen_loss_L1
 
-                        if should(args.display_freq):
-                            fetches["display"] = display_fetches
+                    # if should(args.summary_freq):
+                    #     fetches["summary"] = summary_op
 
-                        # results = sess.run(fetches, options=options, run_metadata=run_metadata)
-                        results = sess.run(fetches)
+                    if should(args.display_freq):
+                        fetches["display"] = display_fetches
 
-                        # if should(args.summary_freq):
-                        #     # print("recording summary")
-                        #     summary_writer.add_summary(results["summary"], results["global_step"])
+                    # results = sess.run(fetches, options=options, run_metadata=run_metadata)
+                    results = sess.run(fetches)
 
-                        if should(args.display_freq):
-                            # print("saving display images")
-                            filesets = save_images(results["display"], step=results["global_step"])
-                            append_index(filesets, step=True)
+                    # if should(args.summary_freq):
+                    #     # print("recording summary")
+                    #     summary_writer.add_summary(results["summary"], results["global_step"])
 
-                        if should(args.progress_freq):
-                            # global_step will have the correct step count if we resume from a checkpoint
-                            train_epoch = math.ceil(results["global_step"] / examples.steps_per_epoch)
-                            train_step = (results["global_step"] - 1) % examples.steps_per_epoch + 1
-                            rate = (step + 1) * args.batch_size / (time.time() - start)
-                            remaining = (max_steps - step) * args.batch_size / rate
+                    if should(args.display_freq):
+                        # print("saving display images")
+                        filesets = save_images(results["display"], step=results["global_step"])
+                        append_index(filesets, step=True)
 
-                            print("progress  epoch %d  step %d  image/sec %0.1f  remaining %dm" % (
-                                train_epoch, train_step, rate, remaining / 60))
-                            print("discrim_loss", results["discrim_loss"])
-                            print("gen_loss_GAN", results["gen_loss_GAN"])
-                            print("gen_loss_L1", results["gen_loss_L1"])
+                    if should(args.progress_freq):
+                        # global_step will have the correct step count if we resume from a checkpoint
+                        train_epoch = math.ceil(results["global_step"] / examples.steps_per_epoch)
+                        train_step = (results["global_step"] - 1) % examples.steps_per_epoch + 1
+                        rate = (step + 1) * args.batch_size / (time.time() - start)
+                        remaining = (max_steps - step) * args.batch_size / rate
 
-                            lib.plot.plot('d_loss', results["discrim_loss"])
-                            lib.plot.plot('g_loss_GAN', results["gen_loss_GAN"])
-                            lib.plot.plot('g_loss_L1', results["gen_loss_L1"])
+                        print("progress  epoch %d  step %d  image/sec %0.1f  remaining %dm" % (
+                            train_epoch, train_step, rate, remaining / 60))
+                        print("discrim_loss", results["discrim_loss"])
+                        print("gen_loss_GAN", results["gen_loss_GAN"])
+                        print("gen_loss_L1", results["gen_loss_L1"])
 
-                        if should(args.save_freq):
-                            print("saving model...")
-                            saver.save(sess,
-                                       os.path.join(args.output_dir, "model"),
-                                       global_step=modelNamedtuple.global_step,
-                                       write_meta_graph=False)
+                        lib.plot.plot('d_loss', results["discrim_loss"])
+                        lib.plot.plot('g_loss_GAN', results["gen_loss_GAN"])
+                        lib.plot.plot('g_loss_L1', results["gen_loss_L1"])
 
-                            lib.plot.flush()
+                    if should(args.save_freq):
+                        print("saving model...")
+                        saver.save(sess,
+                                   os.path.join(args.output_dir, "model"),
+                                   global_step=modelNamedtuple.global_step,
+                                   write_meta_graph=False)
 
-                        lib.plot.tick()
-                    except tf.errors.OutOfRangeError:
-                        break
+                        lib.plot.flush()
+
+                    lib.plot.tick()
+                    step = step + 1
+                except tf.errors.OutOfRangeError:
+                    break
         # coord.request_stop()
         # coord.join(threads)
 
