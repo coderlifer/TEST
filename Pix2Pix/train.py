@@ -201,10 +201,9 @@ def load_examples():
         # assume we're going to be doing downscaling here
         image = tf.image.resize_images(image, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
 
-        offset = tf.cast(
-            tf.floor(tf.random_uniform([2], 0, args.scale_size - CROP_SIZE + 1, seed=seed)), dtype=tf.int32)
-
         if args.scale_size > CROP_SIZE:
+            offset = tf.cast(
+                tf.floor(tf.random_uniform([2], 0, args.scale_size - CROP_SIZE + 1, seed=seed)), dtype=tf.int32)
             image = tf.image.crop_to_bounding_box(image, offset[0], offset[1], CROP_SIZE, CROP_SIZE)
         elif args.scale_size < CROP_SIZE:
             raise Exception("scale size cannot be less than crop size")
@@ -225,14 +224,16 @@ def load_examples():
         # break apart image pair and move to range [-1, 1]
         width = tf.shape(image_decoded)[1]  # [height, width, channels]
         if args.multiple_A:
+            tf.logging.info('multiple_A is enabled!')
             # for concat features
             a_images_edge = preprocess(image_decoded[:, :width // 3, :])
             a_images = preprocess(image_decoded[:, width // 3:(2 * width) // 3, :])
             a_images = tf.concat(values=[a_images_edge, a_images], axis=2)
-            # print('\na_images.shape: {}\n'.format(a_images.shape.as_list()))
+            print('\na_images.shape: {}\n'.format(a_images.shape.as_list()))
 
             b_images = preprocess(image_decoded[:, (2 * width) // 3:, :])
         else:
+            tf.logging.info('multiple_A is not enabled!')
             a_images = preprocess(image_decoded[:, :width // 2, :])
             b_images = preprocess(image_decoded[:, width // 2:, :])
 
