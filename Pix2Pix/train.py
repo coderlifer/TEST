@@ -253,7 +253,7 @@ def load_examples():
         input_paths = tf.convert_to_tensor(input_paths, dtype=tf.string)
         dataset = tf.data.Dataset.from_tensor_slices((input_paths, input_paths))
         dataset = dataset.map(_parse_function, num_parallel_calls=None)
-        dataset = dataset.shuffle(buffer_size=1000, seed=None, reshuffle_each_iteration=True)  # big than num_train
+        dataset = dataset.shuffle(buffer_size=200, seed=None, reshuffle_each_iteration=True)  # big than num_train
         dataset = dataset.repeat(count=args.max_epochs)
         dataset = dataset.batch(batch_size=args.batch_size)
         dataset = dataset.prefetch(buffer_size=args.batch_size)
@@ -598,7 +598,7 @@ def train():
                     lib.plot.tick()
                     step = step + 1
                 except tf.errors.OutOfRangeError:
-                    print('tf.errors.OutOfRangeError occured!')
+                    print('\ntf.errors.OutOfRangeError occured!\n')
                     break
         # coord.request_stop()
         # coord.join(threads)
