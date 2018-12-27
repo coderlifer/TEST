@@ -591,7 +591,7 @@ def train():
                         rate = (step + 1) * args.batch_size / (time.time() - start)
                         remaining = (max_steps - step) * args.batch_size / rate
 
-                        print("progress epoch %d %d, step %d %d,  image/sec %0.1f  remaining %dm" %
+                        print("progress epoch %d, step %d,  image/sec %0.1f  remaining %dm" %
                               (train_epoch, train_step, rate, remaining / 60))
                         print("discrim_loss", results["discrim_loss"])
                         print("gen_loss_GAN", results["gen_loss_GAN"])
