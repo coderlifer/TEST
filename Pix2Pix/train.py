@@ -527,7 +527,7 @@ def train():
                 start_idx = _step * args.batch_size
                 end_idx = min(input_cnt, (_step + 1) * args.batch_size)
                 input_img = img_list[start_idx:end_idx]
-                input_path = input_paths[start_idx:end_idx]
+                input_path = path_list[start_idx:end_idx]
 
                 results = sess.run(display_fetches, feed_dict={raw_input: input_img, input_paths: input_path})
                 filesets = save_images(results)
@@ -558,7 +558,7 @@ def train():
                     start_idx = _step * args.batch_size
                     end_idx = min(input_cnt, (_step + 1) * args.batch_size)
                     input_img = img_list[start_idx:end_idx]
-                    input_path = input_paths[start_idx:end_idx]
+                    input_path = path_list[start_idx:end_idx]
 
                     for i in range(args.n_dis):
                         sess.run(modelNamedtuple.d_train,
