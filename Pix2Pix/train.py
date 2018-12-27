@@ -448,8 +448,9 @@ def train():
     with tf.name_scope("encode_images"):
         if args.multiple_A:
             # channels = converted_inputs.shape.as_list()[3]
-            converted_inputs = tf.split(converted_inputs, 2, 3)[1]
-            # print('\n----642----: {}\n'.format(converted_inputs.shape.as_list()))
+            print('\n----converted_inputs.shape----: {}\n'.format(converted_inputs.shape.as_list()))
+            converted_inputs = tf.split(converted_inputs, 2, -1)[1]
+            print('\n----converted_inputs.shape----: {}\n'.format(converted_inputs.shape.as_list()))
 
         display_fetches = {
             "inputs": tf.map_fn(tf.image.encode_png, converted_inputs, dtype=tf.string, name="input_pngs"),
