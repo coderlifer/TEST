@@ -16,7 +16,6 @@ import collections
 import random
 import json
 import time
-import cv2
 
 sys.path.append(os.getcwd())
 
@@ -174,11 +173,21 @@ def append_index(filesets, step=False):
     return index_path
 
 
-def load_examples(raw_input, input_paths):
+def load_examples():
+    if args.input_dir is None or not os.path.exists(args.input_dir):
+        raise Exception("input_dir does not exist!")
+
+    input_paths = get_input_paths(args.input_dir)
+    cnt = len(input_paths)
+
+    # synchronize seed for image operations so that we do the same operations to
+    # both input and output images
+    seed = random.randint(0, 2 ** 31 - 1)
+
     def transform(image):
         # r = image
         if args.flip:
-            image = tf.image.random_flip_left_right(image, seed=args.seed)
+            image = tf.image.random_flip_left_right(image, seed=seed)
 
             # image = tf.image.random_flip_up_down(image, seed=seed)
 
@@ -194,43 +203,39 @@ def load_examples(raw_input, input_paths):
 
         if args.scale_size > CROP_SIZE:
             offset = tf.cast(
-                tf.floor(tf.random_uniform([2], 0, args.scale_size - CROP_SIZE + 1, seed=args.seed)), dtype=tf.int32)
+                tf.floor(tf.random_uniform([2], 0, args.scale_size - CROP_SIZE + 1, seed=seed)), dtype=tf.int32)
             image = tf.image.crop_to_bounding_box(image, offset[0], offset[1], CROP_SIZE, CROP_SIZE)
         elif args.scale_size < CROP_SIZE:
             raise Exception("scale size cannot be less than crop size")
 
         return image
 
-    with tf.variable_scope("load_images"):
-        imgs = tf.image.convert_image_dtype(raw_input, dtype=tf.float32)
+    def _parse_function(input_path, input_path_):
+        raw_input = tf.read_file(input_path)
 
-        # assertion = tf.assert_equal(tf.shape(img)[-1], 3, message="image does not have 3 channels")
-        # with tf.control_dependencies([assertion]):
-        #     img = tf.identity(img)
+        image_decoded = tf.image.decode_png(contents=raw_input, channels=3)
+        image_decoded = tf.image.convert_image_dtype(image_decoded, tf.float32)
 
-        # raw_input.set_shape([None, None, None, 3])
-        # print('\nraw_input.shape: {}'.format(raw_input.shape.as_list()))  # [512, 1536, 3]
-
-        # # break apart image pair and move to range [-1, 1]
-        # height = raw_input.shape.as_list()[0]  # [height, width, channels]
-        # width = raw_input.shape.as_list()[1]  # [height, width, channels]
-        # channels = raw_input.shape.as_list()[2]  # [height, width, channels]
+        assertion = tf.assert_equal(tf.shape(image_decoded)[2], 3, message="image does not have 3 channels")
+        with tf.control_dependencies([assertion]):
+            image_decoded = tf.identity(image_decoded)
+        image_decoded.set_shape([None, None, 3])
 
         # break apart image pair and move to range [-1, 1]
-        width = tf.shape(imgs)[1]  # [height, width, channels]
+        width = tf.shape(image_decoded)[1]  # [height, width, channels]
         if args.multiple_A:
             tf.logging.info('multiple_A is enabled!')
             # for concat features
-            a_images_edge = preprocess(imgs[:, :, :width // 3, :])
-            a_images = preprocess(imgs[:, :, width // 3:(2 * width) // 3, :])
+            a_images_edge = preprocess(image_decoded[:, :width // 3, :])
+            a_images = preprocess(image_decoded[:, width // 3:(2 * width) // 3, :])
             a_images = tf.concat(values=[a_images_edge, a_images], axis=2)
             print('\na_images.shape: {}\n'.format(a_images.shape.as_list()))
 
-            b_images = preprocess(imgs[:, :, (2 * width) // 3:, :])
+            b_images = preprocess(image_decoded[:, (2 * width) // 3:, :])
         else:
             tf.logging.info('multiple_A is not enabled!')
-            a_images = preprocess(imgs[:, :, :width // 2, :])
-            b_images = preprocess(imgs[:, :, width // 2:, :])
+            a_images = preprocess(image_decoded[:, :width // 2, :])
+            b_images = preprocess(image_decoded[:, width // 2:, :])
 
         if args.which_direction == "AtoB":
             inputs, targets = [a_images, b_images]
@@ -239,19 +244,33 @@ def load_examples(raw_input, input_paths):
         else:
             raise Exception("invalid direction")
 
-        inputs_batch = transform(inputs)
-        targets_batch = transform(targets)
+        input_image = transform(inputs)
+        target_image = transform(targets)
+
+        return input_path_, input_image, target_image
+
+    with tf.name_scope("load_images"):
+        input_paths = tf.convert_to_tensor(input_paths, dtype=tf.string)
+        dataset = tf.data.Dataset.from_tensor_slices((input_paths, input_paths))
+        dataset = dataset.map(_parse_function, num_parallel_calls=None)
+        dataset = dataset.shuffle(buffer_size=200, seed=None, reshuffle_each_iteration=True)  # big than num_train
+        dataset = dataset.repeat(count=args.max_epochs)
+        dataset = dataset.batch(batch_size=args.batch_size)
+        dataset = dataset.prefetch(buffer_size=args.batch_size)
+
+        iterator = dataset.make_one_shot_iterator()
+        paths_batch, inputs_batch, targets_batch = iterator.get_next()
 
     return Examples(
-        paths=input_paths,
+        paths=paths_batch,
         inputs=inputs_batch,
         targets=targets_batch,
-        count=1,
-        steps_per_epoch=1
+        count=cnt,
+        steps_per_epoch=int(math.ceil(cnt / args.batch_size)),
     )
 
 
-def create_model(inputs, targets):
+def create_model(inputs, targets, max_steps):
     model = Pix2Pix()
 
     out_channels = int(targets.get_shape()[-1])
@@ -361,21 +380,9 @@ def create_model(inputs, targets):
 
 
 def train():
-    if args.input_dir is None or not os.path.exists(args.input_dir):
-        raise Exception("input_dir does not exist!")
-
-    path_list = get_input_paths(args.input_dir)
-    input_cnt = len(path_list)
-    steps_per_epoch = math.ceil(len(path_list) / args.batch_size)
-    img_list = list()
-    for input_path in path_list:
-        img = cv2.imread(input_path, )
-        img_list.append(img)
-    path_list = np.asarray(path_list)
-    img_list = np.asarray(img_list)
-
     if args.seed is None:
         args.seed = random.randint(0, 2 ** 31 - 1)
+
     tf.set_random_seed(args.seed)
     np.random.seed(args.seed)
     random.seed(args.seed)
@@ -404,20 +411,16 @@ def train():
     with open(os.path.join(args.output_dir, "options.json"), "w") as f:
         f.write(json.dumps(vars(args), sort_keys=True, indent=4))
 
-    raw_input = tf.placeholder(shape=[args.batch_size, None, None, 3], name='raw_input', dtype=tf.uint8)
-    input_paths = tf.placeholder(shape=None, name='input_paths', dtype=tf.string)
-
-    examples = load_examples(raw_input, input_paths)
-    # print("examples count = %d" % examples.count)
+    examples = load_examples()
+    print("examples count = %d" % examples.count)
 
     max_steps = 2 ** 32
     if args.max_epochs is not None:
-        max_steps = steps_per_epoch * args.max_epochs
+        max_steps = examples.steps_per_epoch * args.max_epochs
     if args.max_steps is not None:
         max_steps = args.max_steps
-
     # inputs and targets are [batch_size, height, width, channels]
-    modelNamedtuple = create_model(examples.inputs, examples.targets)
+    modelNamedtuple = create_model(examples.inputs, examples.targets, max_steps)
 
     # undo colorization splitting on images that we use for display/output
     inputs = deprocess(examples.inputs)
@@ -449,6 +452,7 @@ def train():
             # print('\n----642----: {}\n'.format(converted_inputs.shape.as_list()))
 
         display_fetches = {
+            "paths": examples.paths,
             "inputs": tf.map_fn(tf.image.encode_png, converted_inputs, dtype=tf.string, name="input_pngs"),
             "targets": tf.map_fn(tf.image.encode_png, converted_targets, dtype=tf.string, name="target_pngs"),
             "outputs": tf.map_fn(tf.image.encode_png, converted_outputs, dtype=tf.string, name="output_pngs"),
@@ -492,12 +496,16 @@ def train():
 
     # summary_op = tf.summary.merge_all()
     saver = tf.train.Saver(max_to_keep=20)
+
     config = tf.ConfigProto(allow_soft_placement=True)
     config.gpu_options.allow_growth = True
     with tf.Session(config=config) as sess:
         # summary_writer = tf.summary.FileWriter(args.output_dir, sess.graph)
         sess.run(tf.global_variables_initializer())
         print("parameter_count =", sess.run(parameter_count))
+
+        # coord = tf.train.Coordinator()
+        # threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
         if args.checkpoint_dir is not None:
             print("loading model from checkpoint")
@@ -508,14 +516,9 @@ def train():
             # testing
             # at most, process the test data once
             start = time.time()
-            max_steps = min(steps_per_epoch, max_steps)
-            for _step in range(max_steps):
-                start_idx = _step * args.batch_size
-                end_idx = min(input_cnt, (_step + 1) * args.batch_size)
-                input_img = img_list[start_idx:end_idx]
-                input_path = input_paths[start_idx:end_idx]
-
-                results = sess.run(display_fetches, feed_dict={raw_input: input_img, input_paths: input_path})
+            max_steps = min(examples.steps_per_epoch, max_steps)
+            for step in range(max_steps):
+                results = sess.run(display_fetches)
                 filesets = save_images(results)
                 for i, f in enumerate(filesets):
                     print("evaluated image", f["name"])
@@ -523,27 +526,19 @@ def train():
             print("wrote index at", index_path)
             print("rate", (time.time() - start) / max_steps)
         else:
-            step = 0
-
-            def should(freq):
-                return freq > 0 and ((step + 1) % freq == 0 or step == max_steps - 1)
-
             # training
             start = time.time()
-            for _epoch in range(args.max_epochs):
-                shuffle_indices = np.random.permutation(np.arange(len(img_list)))
-                img_list = img_list[shuffle_indices]
-                path_list = path_list[shuffle_indices]
 
-                for _step in range(steps_per_epoch):
-                    start_idx = _step * args.batch_size
-                    end_idx = min(input_cnt, (_step + 1) * args.batch_size)
-                    input_img = img_list[start_idx:end_idx]
-                    input_path = input_paths[start_idx:end_idx]
+            # for step in range(args.max_epochs):
+            step = 0
+            while True:
 
+                def should(freq):
+                    return freq > 0 and ((step + 1) % freq == 0 or step == max_steps - 1)
+
+                try:
                     for i in range(args.n_dis):
-                        sess.run(modelNamedtuple.d_train,
-                                 feed_dict={raw_input: input_img, input_paths: input_path})
+                        sess.run(modelNamedtuple.d_train)
 
                     fetches = {
                         "g_train": modelNamedtuple.g_train,
@@ -559,30 +554,30 @@ def train():
                     # if should(args.summary_freq):
                     #     fetches["summary"] = summary_op
 
-                    # if should(args.display_freq):
-                    #     fetches["display"] = display_fetches
+                    if should(args.display_freq):
+                        fetches["display"] = display_fetches
 
                     # results = sess.run(fetches, options=options, run_metadata=run_metadata)
-                    results = sess.run(fetches, feed_dict={raw_input: input_img, input_paths: input_path})
+                    results = sess.run(fetches)
 
                     # if should(args.summary_freq):
                     #     # print("recording summary")
                     #     summary_writer.add_summary(results["summary"], results["global_step"])
 
-                    # if should(args.display_freq):
-                    #     # print("saving display images")
-                    #     filesets = save_images(results["display"], step=results["global_step"])
-                    #     append_index(filesets, step=True)
+                    if should(args.display_freq):
+                        # print("saving display images")
+                        filesets = save_images(results["display"], step=results["global_step"])
+                        append_index(filesets, step=True)
 
                     if should(args.progress_freq):
                         # global_step will have the correct step count if we resume from a checkpoint
-                        train_epoch = math.ceil(results["global_step"] / steps_per_epoch)
-                        train_step = (results["global_step"] - 1) % steps_per_epoch + 1
+                        train_epoch = math.ceil(results["global_step"] / examples.steps_per_epoch)
+                        train_step = (results["global_step"] - 1) % examples.steps_per_epoch + 1
                         rate = (step + 1) * args.batch_size / (time.time() - start)
                         remaining = (max_steps - step) * args.batch_size / rate
 
                         print("progress  epoch %d  step %d  image/sec %0.1f  remaining %dm" % (
-                            _epoch, _step, rate, remaining / 60))
+                            train_epoch, train_step, rate, remaining / 60))
                         print("discrim_loss", results["discrim_loss"])
                         print("gen_loss_GAN", results["gen_loss_GAN"])
                         print("gen_loss_L1", results["gen_loss_L1"])
@@ -590,16 +585,23 @@ def train():
                         lib.plot.plot('d_loss', results["discrim_loss"])
                         lib.plot.plot('g_loss_GAN', results["gen_loss_GAN"])
                         lib.plot.plot('g_loss_L1', results["gen_loss_L1"])
-                        lib.plot.flush()
 
                     if should(args.save_freq):
                         print("saving model...")
-                        saver.save(sess, os.path.join(args.output_dir, "model"),
-                                   global_step=modelNamedtuple.global_step, write_meta_graph=False)
-                        # lib.plot.flush()
+                        saver.save(sess,
+                                   os.path.join(args.output_dir, "model"),
+                                   global_step=modelNamedtuple.global_step,
+                                   write_meta_graph=False)
+
+                        lib.plot.flush()
 
                     lib.plot.tick()
                     step = step + 1
+                except tf.errors.OutOfRangeError:
+                    print('\ntf.errors.OutOfRangeError occured!\n')
+                    break
+        # coord.request_stop()
+        # coord.join(threads)
 
 
 if __name__ == '__main__':
