@@ -16,6 +16,8 @@ import collections
 import random
 import json
 import time
+import matplotlib
+matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 
 sys.path.append(os.getcwd())
@@ -544,8 +546,13 @@ def train():
             start = time.time()
             for _epoch in range(args.max_epochs):
                 shuffle_indices = np.random.permutation(np.arange(len(img_list)))
-                img_list = img_list[shuffle_indices]
-                path_list = path_list[shuffle_indices]
+                new_img_list = []
+                new_path_list = []
+                for i in shuffle_indices:
+                    new_img_list.append(img_list[i])
+                    new_path_list.append(path_list[i])
+                img_list = new_img_list
+                path_list = new_path_list
 
                 for _step in range(steps_per_epoch):
                     start_idx = _step * args.batch_size
