@@ -16,7 +16,7 @@ import collections
 import random
 import json
 import time
-import cv2
+from matplotlib import pyplot as plt
 
 sys.path.append(os.getcwd())
 
@@ -369,10 +369,13 @@ def train():
     steps_per_epoch = math.ceil(len(path_list) / args.batch_size)
     img_list = list()
     for input_path in path_list:
-        img = cv2.imread(input_path, )
+        # img = cv2.imread(input_path, cv2.IMREAD_COLOR)
+        # img = cv2.imread(input_path, cv2.IMREAD_GRAYSCALE)
+        # img = cv2.imread(input_path, cv2.IMREAD_UNCHANGED)
+        img = plt.imread(input_path)
         img_list.append(img)
-    path_list = np.asarray(path_list)
-    img_list = np.asarray(img_list)
+    # path_list = np.asarray(path_list)
+    # img_list = np.asarray(img_list)
 
     if args.seed is None:
         args.seed = random.randint(0, 2 ** 31 - 1)
@@ -404,8 +407,8 @@ def train():
     with open(os.path.join(args.output_dir, "options.json"), "w") as f:
         f.write(json.dumps(vars(args), sort_keys=True, indent=4))
 
-    raw_input = tf.placeholder(shape=[args.batch_size, None, None, 3], name='raw_input', dtype=tf.uint8)
-    input_paths = tf.placeholder(shape=None, name='input_paths', dtype=tf.string)
+    raw_input = tf.placeholder(shape=[args.batch_size, None, None, 3], dtype=tf.float32, name='raw_input')
+    input_paths = tf.placeholder(shape=None, dtype=tf.string, name='input_paths')
 
     examples = load_examples(raw_input, input_paths)
     # print("examples count = %d" % examples.count)
