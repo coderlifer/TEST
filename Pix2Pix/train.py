@@ -222,11 +222,14 @@ def load_examples(raw_input, input_paths):
             tf.logging.info('multiple_A is enabled!')
             # for concat features
             a_images_edge = preprocess(imgs[:, :, :width // 3, :])
+            print('\n--a_images.shape--: {}\n'.format(a_images_edge.shape.as_list()))
             a_images = preprocess(imgs[:, :, width // 3:(2 * width) // 3, :])
-            a_images = tf.concat(values=[a_images_edge, a_images], axis=2)
-            print('\na_images.shape: {}\n'.format(a_images.shape.as_list()))
+            print('\n--before concat a_images.shape--: {}\n'.format(a_images.shape.as_list()))
+            a_images = tf.concat(values=[a_images_edge, a_images], axis=-1)
+            print('\n--after concat a_images.shape--: {}\n'.format(a_images.shape.as_list()))
 
             b_images = preprocess(imgs[:, :, (2 * width) // 3:, :])
+            print('\n--b_images.shape--: {}\n'.format(b_images.shape.as_list()))
         else:
             tf.logging.info('multiple_A is not enabled!')
             a_images = preprocess(imgs[:, :, :width // 2, :])
@@ -241,6 +244,8 @@ def load_examples(raw_input, input_paths):
 
         inputs_batch = transform(inputs)
         targets_batch = transform(targets)
+        print('\n--inputs_batch.shape--: {}\n'.format(inputs_batch.shape.as_list()))
+        print('\n--targets_batch.shape--: {}\n'.format(targets_batch.shape.as_list()))
 
     return Examples(
         paths=input_paths,
@@ -438,19 +443,22 @@ def train():
     # reverse any processing on images so they can be written to disk or displayed to user
     with tf.name_scope("convert_inputs"):
         converted_inputs = convert(inputs)
+        print('\n--converted_inputs.shape--: {}\n'.format(converted_inputs.shape.as_list()))
 
     with tf.name_scope("convert_targets"):
         converted_targets = convert(targets)
+        print('\n--converted_targets.shape--: {}\n'.format(converted_targets.shape.as_list()))
 
     with tf.name_scope("convert_outputs"):
         converted_outputs = convert(outputs)
+        print('\n--converted_outputs.shape--: {}\n'.format(converted_outputs.shape.as_list()))
 
     with tf.name_scope("encode_images"):
         if args.multiple_A:
             # channels = converted_inputs.shape.as_list()[3]
-            print('\n----converted_inputs.shape----: {}\n'.format(converted_inputs.shape.as_list()))
+            print('\n--before converted_inputs.shape--: {}\n'.format(converted_inputs.shape.as_list()))
             converted_inputs = tf.split(converted_inputs, 2, -1)[1]
-            print('\n----converted_inputs.shape----: {}\n'.format(converted_inputs.shape.as_list()))
+            print('\n--after converted_inputs.shape--: {}\n'.format(converted_inputs.shape.as_list()))
 
         display_fetches = {
             "inputs": tf.map_fn(tf.image.encode_png, converted_inputs, dtype=tf.string, name="input_pngs"),
