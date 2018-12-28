@@ -46,10 +46,10 @@ parser.add_argument('--checkpoint_dir', type=str, default=None,
                     help='Directory to stroe checkpoints and summaries.')
 parser.add_argument("--which_direction", type=str, default="AtoB", choices=["AtoB", "BtoA"])
 parser.add_argument("--seed", type=int)
-parser.add_argument("--max_steps", type=int, help="number of training steps (0 to disable)")
+parser.add_argument("--max_steps", type=int, default=None, help="number of training steps (0 to disable)")
 parser.add_argument("--max_epochs", type=int, default=200, help="number of training epochs")
-parser.add_argument("--summary_freq", type=int, default=100, help="update summaries every summary_freq steps")
-parser.add_argument("--progress_freq", type=int, default=50, help="display progress every progress_freq steps")
+parser.add_argument("--summary_freq", type=int, default=10, help="update summaries every summary_freq steps")
+parser.add_argument("--progress_freq", type=int, default=10, help="display progress every progress_freq steps")
 parser.add_argument("--trace_freq", type=int, default=0, help="trace execution every trace_freq steps")
 parser.add_argument("--display_freq", type=int, default=0,
                     help="write current training images every display_freq steps")
@@ -502,7 +502,6 @@ def train():
 
     # summary_op = tf.summary.merge_all()
     saver = tf.train.Saver(max_to_keep=20)
-
     config = tf.ConfigProto(allow_soft_placement=True)
     config.gpu_options.allow_growth = True
     with tf.Session(config=config) as sess:
