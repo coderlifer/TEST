@@ -374,11 +374,11 @@ def train():
     input_cnt = len(path_list)
     steps_per_epoch = math.ceil(len(path_list) / args.batch_size)
     img_list = list()
-    for input_path in path_list:
-        # img = cv2.imread(input_path, cv2.IMREAD_COLOR)
-        # img = cv2.imread(input_path, cv2.IMREAD_GRAYSCALE)
-        # img = cv2.imread(input_path, cv2.IMREAD_UNCHANGED)
-        img = plt.imread(input_path)
+    for input_p in path_list:
+        # img = cv2.imread(input_p, cv2.IMREAD_COLOR)
+        # img = cv2.imread(input_p, cv2.IMREAD_GRAYSCALE)
+        # img = cv2.imread(input_p, cv2.IMREAD_UNCHANGED)
+        img = plt.imread(input_p)
         img_list.append(img)
     # path_list = np.asarray(path_list)
     # img_list = np.asarray(img_list)
@@ -413,8 +413,8 @@ def train():
     with open(os.path.join(args.output_dir, "options.json"), "w") as f:
         f.write(json.dumps(vars(args), sort_keys=True, indent=4))
 
-    raw_input = tf.placeholder(shape=[args.batch_size, None, None, 3], dtype=tf.float32, name='raw_input')
-    input_paths = tf.placeholder(shape=None, dtype=tf.string, name='input_paths')
+    raw_input = tf.placeholder(shape=[None, None, None, 3], dtype=tf.float32, name='raw_input')
+    input_paths = tf.placeholder(shape=[None,], dtype=tf.string, name='input_paths')
 
     examples = load_examples(raw_input, input_paths)
     # print("examples count = %d" % examples.count)
@@ -554,7 +554,14 @@ def train():
                     start_idx = _step * args.batch_size
                     end_idx = min(input_cnt, (_step + 1) * args.batch_size)
                     input_img = img_list[start_idx:end_idx]
+                    input_img = np.asarray(input_img)
+                    print('\ninput_img.shape: {}\n'.format(input_img.shape))
+                    # print('\ninput_img: {}\n'.format(input_img[0].shape))
+                    # print('\ninput_img: {}\n'.format(input_img[1].shape))
+                    # print('\ninput_img: {}\n'.format(input_img[2].shape))
+                    # print('\ninput_img: {}\n'.format(input_img[3].shape))
                     input_path = path_list[start_idx:end_idx]
+                    # print('\ninput_path: {}\n'.format(input_path))
 
                     for i in range(args.n_dis):
                         sess.run(modelNamedtuple.d_train,
