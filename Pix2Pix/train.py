@@ -458,6 +458,7 @@ def train():
             converted_inputs = tf.split(converted_inputs, 2, -1)[1]  # [1, None, None, 3]
 
         display_fetches = {
+            "paths": examples.paths,
             "inputs": tf.map_fn(tf.image.encode_png, converted_inputs, dtype=tf.string, name="input_pngs"),
             "targets": tf.map_fn(tf.image.encode_png, converted_targets, dtype=tf.string, name="target_pngs"),
             "outputs": tf.map_fn(tf.image.encode_png, converted_outputs, dtype=tf.string, name="output_pngs"),
