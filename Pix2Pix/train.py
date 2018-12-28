@@ -137,7 +137,7 @@ def save_images(fetches, step=None):
 
     filesets = []
     for i, in_path in enumerate(fetches["paths"]):
-        name, _ = os.path.splitext(os.path.basename(in_path.decode("utf8")))
+        name, _ = os.path.splitext(os.path.basename(in_path))
         fileset = {"name": name, "step": step}
         for kind in ["inputs", "outputs", "targets"]:
             filename = name + "-" + kind + ".png"
