@@ -573,7 +573,7 @@ def train():
                 if should(args.progress_freq):
                     # global_step will have the correct step count if we resume from a checkpoint
                     train_epoch = math.ceil(results["global_step"] / examples.steps_per_epoch)
-                    train_step = (results["global_step"] - 1) % examples.steps_per_epoch + 1
+                    train_step = (results["global_step"]) % examples.steps_per_epoch + 1
                     rate = (step + 1) * args.batch_size / (time.time() - start)
                     remaining = (max_steps - step) * args.batch_size / rate
 
