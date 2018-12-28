@@ -52,7 +52,7 @@ parser.add_argument("--which_direction", type=str, default="AtoB", choices=["Ato
 parser.add_argument("--seed", type=int)
 parser.add_argument("--max_steps", type=int, default=None, help="number of training steps (0 to disable)")
 parser.add_argument("--max_epochs", type=int, default=200, help="number of training epochs")
-parser.add_argument("--summary_freq", type=int, default=100, help="update summaries every summary_freq steps")
+parser.add_argument("--summary_freq", type=int, default=10, help="update summaries every summary_freq steps")
 parser.add_argument("--progress_freq", type=int, default=10, help="display progress every progress_freq steps")
 parser.add_argument("--trace_freq", type=int, default=0, help="trace execution every trace_freq steps")
 parser.add_argument("--display_freq", type=int, default=0,
@@ -220,9 +220,9 @@ def load_examples(raw_input, input_paths):
         # channels = raw_input.shape.as_list()[2]  # [height, width, channels]
 
         # break apart image pair and move to range [-1, 1]
-        width = tf.shape(imgs)[1]  # [height, width, channels]
+        width = tf.shape(imgs)[2]  # [args.batch_size, height, width, channels]
         if args.multiple_A:
-            tf.logging.info('multiple_A is enabled!')
+            tf.logging.info('\nmultiple_A is enabled!\n')
             # for concat features
             a_images_edge = preprocess(imgs[:, :, :width // 3, :])  # [1, None, None, 3]
             a_images = preprocess(imgs[:, :, width // 3:(2 * width) // 3, :])  # [1, None, None, 3]
@@ -230,7 +230,7 @@ def load_examples(raw_input, input_paths):
 
             b_images = preprocess(imgs[:, :, (2 * width) // 3:, :])  # [1, None, None, 3]
         else:
-            tf.logging.info('multiple_A is not enabled!')
+            tf.logging.info('\nmultiple_A is not enabled!\n')
             a_images = preprocess(imgs[:, :, :width // 2, :])
             b_images = preprocess(imgs[:, :, width // 2:, :])
 
@@ -455,7 +455,7 @@ def train():
     with tf.name_scope("encode_images"):
         if args.multiple_A:
             # channels = converted_inputs.shape.as_list()[3]
-            converted_inputs = tf.split(converted_inputs, 2, -1)[1]  # [1, None, None, 3]
+            converted_inputs = tf.split(converted_inputs, num_or_size_splits=2, axis=-1)[1]  # [1, None, None, 3]
 
         display_fetches = {
             "paths": examples.paths,
