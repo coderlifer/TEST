@@ -555,8 +555,8 @@ def train():
                 # if should(args.summary_freq):
                 #     fetches["summary"] = summary_op
 
-                if should(args.display_freq):
-                    fetches["display"] = display_fetches
+                # if should(args.display_freq):
+                #     fetches["display"] = display_fetches
 
                 # results = sess.run(fetches, options=options, run_metadata=run_metadata)
                 results = sess.run(fetches)
@@ -565,10 +565,10 @@ def train():
                 #     # print("recording summary")
                 #     summary_writer.add_summary(results["summary"], results["global_step"])
 
-                if should(args.display_freq):
-                    # print("saving display images")
-                    filesets = save_images(results["display"], step=results["global_step"])
-                    append_index(filesets, step=True)
+                # if should(args.display_freq):
+                #     # print("saving display images")
+                #     filesets = save_images(results["display"], step=results["global_step"])
+                #     append_index(filesets, step=True)
 
                 if should(args.progress_freq):
                     # global_step will have the correct step count if we resume from a checkpoint
@@ -586,15 +586,13 @@ def train():
                     lib.plot.plot('d_loss', results["discrim_loss"])
                     lib.plot.plot('g_loss_GAN', results["gen_loss_GAN"])
                     lib.plot.plot('g_loss_L1', results["gen_loss_L1"])
+                    lib.plot.flush()
 
                 if should(args.save_freq):
                     print("saving model...")
-                    saver.save(sess,
-                               os.path.join(args.output_dir, "model"),
-                               global_step=modelNamedtuple.global_step,
-                               write_meta_graph=False)
-
-                    lib.plot.flush()
+                    saver.save(sess, os.path.join(args.output_dir, "model"),
+                               global_step=modelNamedtuple.global_step, write_meta_graph=False)
+                    # lib.plot.flush()
 
                 lib.plot.tick()
 
