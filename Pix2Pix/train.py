@@ -444,13 +444,15 @@ def train():
     # reverse any processing on images so they can be written to disk or displayed to user
     with tf.name_scope("convert_inputs"):
         converted_inputs = convert(inputs)  # [None, 512, 512, 6]
-        print('\n--converted_inputs.shape--: {}\n'.format(converted_inputs.shape.as_list()))
+        # print('\n--converted_inputs.shape--: {}\n'.format(converted_inputs.shape.as_list()))
 
     with tf.name_scope("convert_targets"):
         converted_targets = convert(targets)  # [1, None, None, 3]
+        print('\n--converted_targets.shape--: {}'.format(converted_targets.shape.as_list()))
 
     with tf.name_scope("convert_outputs"):
         converted_outputs = convert(outputs)  # [1, None, None, 3]
+        print('--converted_outputs.shape--: {}\n'.format(converted_outputs.shape.as_list()))
 
     with tf.name_scope("encode_images"):
         if args.multiple_A:
@@ -592,12 +594,12 @@ def train():
                     if should(args.progress_freq):
                         # global_step will have the correct step count if we resume from a checkpoint
                         train_epoch = math.ceil(results["global_step"] / steps_per_epoch)
-                        train_step = (results["global_step"] - 1) % steps_per_epoch + 1
+                        train_step = (results["global_step"]) % steps_per_epoch + 1
                         rate = (step + 1) * args.batch_size / (time.time() - start)
                         remaining = (max_steps - step) * args.batch_size / rate
 
-                        print("progress epoch %d %d, step %d %d,  image/sec %0.1f  remaining %dm" %
-                              (train_epoch, _epoch+1, train_step, _step+1, rate, remaining / 60))
+                        print("progress epoch %d, step %d,  image/sec %0.1f  remaining %dm" %
+                              (train_epoch, train_step+1, rate, remaining / 60))
                         print("discrim_loss", results["discrim_loss"])
                         print("gen_loss_GAN", results["gen_loss_GAN"])
                         print("gen_loss_L1", results["gen_loss_L1"])
