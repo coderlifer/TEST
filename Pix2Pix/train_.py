@@ -351,14 +351,14 @@ def create_model(inputs, targets, max_steps):
 
     with tf.name_scope("d_train"):
         discrim_tvars = [var for var in tf.trainable_variables() if var.name.startswith("d_net")]
-        discrim_optim = tf.train.AdamOptimizer(0.0004, beta1=args.beta1, beta2=args.beta2)
+        discrim_optim = tf.train.AdamOptimizer(0.0002, beta1=args.beta1, beta2=args.beta2)
         # discrim_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
         discrim_grads_and_vars = discrim_optim.compute_gradients(discrim_loss, var_list=discrim_tvars)
         discrim_train = discrim_optim.apply_gradients(discrim_grads_and_vars)
 
     with tf.name_scope("g_train"):
         gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("g_net")]
-        gen_optim = tf.train.AdamOptimizer(0.0001, beta1=args.beta1, beta2=args.beta2)
+        gen_optim = tf.train.AdamOptimizer(0.0002, beta1=args.beta1, beta2=args.beta2)
         # gen_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
         gen_grads_and_vars = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
         gen_train = gen_optim.apply_gradients(gen_grads_and_vars, global_step=global_step)
