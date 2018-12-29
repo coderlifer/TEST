@@ -561,9 +561,8 @@ def train():
                     input_img = img_list[start_idx:end_idx]
                     input_path = path_list[start_idx:end_idx]
 
-                    for i in range(args.n_dis):
-                        sess.run(modelNamedtuple.d_train,
-                                 feed_dict={raw_input: input_img, input_paths: input_path})
+                    for _ in range(args.n_dis):
+                        sess.run(modelNamedtuple.d_train, feed_dict={raw_input: input_img, input_paths: input_path})
 
                     fetches = {
                         "g_train": modelNamedtuple.g_train,

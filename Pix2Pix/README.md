@@ -8,7 +8,7 @@
 # cd to `Pix2Pix` folder and run command bellow
 # webpage, 2A
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
-  --batch_size=6 \
+  --batch_size=8 \
   --mode='train' \
   --conv_type='conv2d' \
   --channel_multiplier=0 \
