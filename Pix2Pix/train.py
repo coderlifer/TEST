@@ -178,31 +178,33 @@ def append_index(filesets, step=False):
 
 
 def load_examples(raw_input, input_paths):
-    def transform(image):
-        # r = image
-        if args.flip:
-            image = tf.image.random_flip_left_right(image, seed=args.seed)
+    seed = random.randint(0, 2 ** 31 - 1)
 
-            # image = tf.image.random_flip_up_down(image, seed=seed)
+    def transform(image):
+        r = image
+        if args.flip:
+            r = tf.image.random_flip_left_right(r, seed=seed)
+
+            # r = tf.image.random_flip_up_down(r, seed=seed)
 
             # k = np.random.choice([1, 2, 3, 4], 1, replace=False)[0]
-            # image = tf.image.rot90(image=image, k=k)
+            # r = tf.image.rot90(image=r, k=k)
             #
             # if k > 2:
-            #     image = tf.image.transpose_image(image)
+            #     r = tf.image.transpose_image(r)
 
         # area produces a nice downscaling, but does nearest neighbor for upscaling
         # assume we're going to be doing downscaling here
-        image = tf.image.resize_images(image, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
+        r = tf.image.resize_images(r, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
 
         if args.scale_size > CROP_SIZE:
             offset = tf.cast(
-                tf.floor(tf.random_uniform([2], 0, args.scale_size - CROP_SIZE + 1, seed=args.seed)), dtype=tf.int32)
-            image = tf.image.crop_to_bounding_box(image, offset[0], offset[1], CROP_SIZE, CROP_SIZE)
+                tf.floor(tf.random_uniform([2], 0, args.scale_size - CROP_SIZE + 1, seed=seed)), dtype=tf.int32)
+            r = tf.image.crop_to_bounding_box(r, offset[0], offset[1], CROP_SIZE, CROP_SIZE)
         elif args.scale_size < CROP_SIZE:
             raise Exception("scale size cannot be less than crop size")
 
-        return image
+        return r
 
     with tf.variable_scope("load_images"):
         imgs = tf.image.convert_image_dtype(raw_input, dtype=tf.float32)
@@ -380,8 +382,8 @@ def train():
         # img = cv2.imread(input_p, cv2.IMREAD_UNCHANGED)
         img = plt.imread(input_p)
         img_list.append(img)
-    # path_list = np.asarray(path_list)
-    # img_list = np.asarray(img_list)
+    path_list = np.asarray(path_list)
+    img_list = np.asarray(img_list)
 
     if args.seed is None:
         args.seed = random.randint(0, 2 ** 31 - 1)
@@ -413,8 +415,8 @@ def train():
     with open(os.path.join(args.output_dir, "options.json"), "w") as f:
         f.write(json.dumps(vars(args), sort_keys=True, indent=4))
 
-    raw_input = tf.placeholder(shape=[None, None, None, 3], dtype=tf.float32, name='raw_input')
-    input_paths = tf.placeholder(shape=[None,], dtype=tf.string, name='input_paths')
+    raw_input = tf.placeholder(shape=[args.batch_size, None, None, 3], dtype=tf.float32, name='raw_input')
+    input_paths = tf.placeholder(shape=[None, ], dtype=tf.string, name='input_paths')
 
     examples = load_examples(raw_input, input_paths)
     # print("examples count = %d" % examples.count)
@@ -542,26 +544,19 @@ def train():
             start = time.time()
             for _epoch in range(args.max_epochs):
                 shuffle_indices = np.random.permutation(np.arange(len(img_list)))
-                new_img_list = []
-                new_path_list = []
-                for i in shuffle_indices:
-                    new_img_list.append(img_list[i])
-                    new_path_list.append(path_list[i])
-                img_list = new_img_list
-                path_list = new_path_list
+                # new_img_list = []
+                # new_path_list = []
+                # for i in shuffle_indices:
+                #     new_img_list.append(img_list[i])
+                #     new_path_list.append(path_list[i])
+                img_list = img_list[shuffle_indices]
+                path_list = path_list[shuffle_indices]
 
                 for _step in range(steps_per_epoch):
                     start_idx = _step * args.batch_size
                     end_idx = min(input_cnt, (_step + 1) * args.batch_size)
                     input_img = img_list[start_idx:end_idx]
-                    input_img = np.asarray(input_img)
-                    print('\ninput_img.shape: {}\n'.format(input_img.shape))
-                    # print('\ninput_img: {}\n'.format(input_img[0].shape))
-                    # print('\ninput_img: {}\n'.format(input_img[1].shape))
-                    # print('\ninput_img: {}\n'.format(input_img[2].shape))
-                    # print('\ninput_img: {}\n'.format(input_img[3].shape))
                     input_path = path_list[start_idx:end_idx]
-                    # print('\ninput_path: {}\n'.format(input_path))
 
                     for i in range(args.n_dis):
                         sess.run(modelNamedtuple.d_train,
