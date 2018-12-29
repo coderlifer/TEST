@@ -8,7 +8,7 @@
 # cd to `Pix2Pix` folder and run command bellow
 # webpage, 2A
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
-  --batch_size=1 \
+  --batch_size=6 \
   --mode='train' \
   --conv_type='conv2d' \
   --channel_multiplier=0 \
@@ -18,11 +18,11 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --beta2=0.9 \
   --loss_type='HINGE' \
   --n_dis=5 \
-  --input_dir=/home/tellhow-iot/tem/webpagesaliency/pix2pix_data_2A/train \
+  --input_dir=/home/tellhow-iot/tem/webpagesaliency/resize_1360/train \
   --output_dir=/home/tellhow-iot/tem/webpagesaliency/output_resize_512 \
   --max_epochs=400 \
   --which_direction=AtoB \
-  --save_freq=2360 \
+  --save_freq=150 \
   --ngf=64 \
   --ndf=64 \
   --scale_size=572 \
@@ -35,7 +35,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val
 
 # infer
-CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
+CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --batch_size=1 \
   --mode='test' \
   --conv_type='conv2d' \
@@ -46,17 +46,17 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train.py \
   --beta2=0.9 \
   --loss_type='HINGE' \
   --n_dis=5 \
-  --input_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/tmp/val \
-  --output_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_resize_512/output_test_512 \
+  --input_dir=/home/tellhow-iot/tem/webpagesaliency/pix2pix_data_2A/val \
+  --output_dir=/home/tellhow-iot/tem/webpagesaliency/output_resize_512/output_test_512 \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=2360 \
   --ngf=64 \
   --ndf=64 \
-  --scale_size=572 \
+  --scale_size=512 \
   --l1_weight=20.0 \
   --gan_weight=1.0 \
-  --checkpoint_dir=/mnt/data/ILSVRC2012/webpageSaliency/output_resize_512 \
+  --checkpoint_dir=/home/tellhow-iot/tem/webpagesaliency/output_resize_512 \
   --multiple_A \
   --net_type='UNet' \
   --upsampe_method=depth_to_space
