@@ -90,7 +90,7 @@ CROP_SIZE = 512  # 256, 512, 1024
 
 Examples = collections.namedtuple("Examples", "paths, inputs, targets, count, steps_per_epoch")
 Model = collections.namedtuple("Model",
-                               "outputs, predict_real, predict_fake, discrim_loss, discrim_grads_and_vars, "
+                               "lr, outputs, predict_real, predict_fake, discrim_loss, discrim_grads_and_vars, "
                                "gen_loss_GAN, gen_loss_L1, gen_grads_and_vars, d_train, g_train, losses, "
                                "global_step")
 
@@ -326,22 +326,24 @@ def create_model(inputs, targets):
     #     )
     LR = 0.0002  # 2e-4  # Initial learning rate
     # decay = 1.
+    # decay = tf.where(
+    #     tf.less(global_step, 23600), tf.maximum(0., 1. - (tf.cast(global_step, tf.float32) / 47200)), 0.5)
     decay = tf.where(
-        tf.less(global_step, 35400), tf.maximum(0., 1. - (tf.cast(global_step, tf.float32) / 47200)), 0.5)
-
+        tf.less(global_step, 23600), 1., tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - 23600) / 47200)))
+    lr = LR * decay
     # with tf.name_scope("lr_summary"):
     #     tf.summary.scalar("lr", learning_rate)
 
     with tf.name_scope("d_train"):
         discrim_tvars = [var for var in tf.trainable_variables() if var.name.startswith("d_net")]
-        discrim_optim = tf.train.AdamOptimizer(LR * decay, beta1=args.beta1, beta2=args.beta2)
+        discrim_optim = tf.train.AdamOptimizer(lr, beta1=args.beta1, beta2=args.beta2)
         # discrim_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
         discrim_grads_and_vars = discrim_optim.compute_gradients(discrim_loss, var_list=discrim_tvars)
         discrim_train = discrim_optim.apply_gradients(discrim_grads_and_vars)
 
     with tf.name_scope("g_train"):
         gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("g_net")]
-        gen_optim = tf.train.AdamOptimizer(LR * decay, beta1=args.beta1, beta2=args.beta2)
+        gen_optim = tf.train.AdamOptimizer(lr, beta1=args.beta1, beta2=args.beta2)
         # gen_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
         gen_grads_and_vars = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
         gen_train = gen_optim.apply_gradients(gen_grads_and_vars, global_step=global_step)
@@ -353,6 +355,7 @@ def create_model(inputs, targets):
     # incr_global_step = tf.assign(global_step, global_step + 1)
 
     return Model(
+        lr=lr,
         outputs=outputs,
         predict_real=predict_real,
         predict_fake=predict_fake,
@@ -569,6 +572,7 @@ def train():
                     }
 
                     if should(args.progress_freq):
+                        fetches['lr'] = modelNamedtuple.lr
                         fetches["discrim_loss"] = modelNamedtuple.discrim_loss
                         fetches["gen_loss_GAN"] = modelNamedtuple.gen_loss_GAN
                         fetches["gen_loss_L1"] = modelNamedtuple.gen_loss_L1
@@ -604,6 +608,7 @@ def train():
                         print("gen_loss_GAN", results["gen_loss_GAN"])
                         print("gen_loss_L1", results["gen_loss_L1"])
 
+                        lib.plot.plot('lr', results["lr"])
                         lib.plot.plot('d_loss', results["discrim_loss"])
                         lib.plot.plot('g_loss_GAN', results["gen_loss_GAN"])
                         lib.plot.plot('g_loss_L1', results["gen_loss_L1"])
