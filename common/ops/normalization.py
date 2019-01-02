@@ -102,22 +102,20 @@ def layer_norm(name, norm_axes, inputs):
     return result
 
 
-def instance_norm(inputs, epsilon=1e-06):
-    output = \
-        tf.contrib.layers.instance_norm(
-            inputs,
-            center=True,
-            scale=True,
-            epsilon=epsilon,
-            activation_fn=None,
-            param_initializers=None,
-            reuse=None,
-            variables_collections=None,
-            outputs_collections=None,
-            trainable=True,
-            data_format='NHWC',
-            scope=None
-        )
+def instance_norm(inputs, epsilon=1e-06, trainable=True):
+    output = tf.contrib.layers.instance_norm(
+        inputs,
+        center=True,
+        scale=True,
+        epsilon=epsilon,
+        activation_fn=None,
+        param_initializers=None,
+        reuse=None,
+        variables_collections=None,
+        outputs_collections=None,
+        trainable=trainable,
+        data_format='NHWC',
+        scope=None)
 
     return output
 
