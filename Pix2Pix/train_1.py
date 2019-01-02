@@ -50,7 +50,7 @@ parser.add_argument("--which_direction", type=str, default="AtoB", choices=["Ato
 parser.add_argument("--seed", type=int)
 parser.add_argument("--max_steps", type=int, default=None, help="number of training steps (0 to disable)")
 parser.add_argument("--max_epochs", type=int, default=200, help="number of training epochs")
-parser.add_argument("--summary_freq", type=int, default=100, help="update summaries every summary_freq steps")
+parser.add_argument("--summary_freq", type=int, default=10, help="update summaries every summary_freq steps")
 parser.add_argument("--progress_freq", type=int, default=10, help="display progress every progress_freq steps")
 parser.add_argument("--trace_freq", type=int, default=0, help="trace execution every trace_freq steps")
 parser.add_argument("--display_freq", type=int, default=0,
@@ -88,7 +88,7 @@ CROP_SIZE = 512  # 256, 512, 1024
 
 Examples = collections.namedtuple("Examples", "paths, inputs, targets, count, steps_per_epoch")
 Model = collections.namedtuple("Model",
-                               "outputs, predict_real, predict_fake, discrim_loss, discrim_grads_and_vars, "
+                               "lr, outputs, predict_real, predict_fake, discrim_loss, discrim_grads_and_vars, "
                                "gen_loss_GAN, gen_loss_L1, gen_grads_and_vars, d_train, g_train, losses, "
                                "global_step")
 
@@ -187,30 +187,30 @@ def load_examples():
     seed = random.randint(0, 2 ** 31 - 1)
 
     def transform(image):
-        # r = image
+        r = image
         if args.flip:
-            image = tf.image.random_flip_left_right(image, seed=seed)
+            r = tf.image.random_flip_left_right(r, seed=seed)
 
-            # image = tf.image.random_flip_up_down(image, seed=seed)
+            # r = tf.image.random_flip_up_down(r, seed=seed)
 
             # k = np.random.choice([1, 2, 3, 4], 1, replace=False)[0]
-            # image = tf.image.rot90(image=image, k=k)
+            # r = tf.image.rot90(image=r, k=k)
             #
             # if k > 2:
-            #     image = tf.image.transpose_image(image)
+            #     r = tf.image.transpose_image(r)
 
         # area produces a nice downscaling, but does nearest neighbor for upscaling
         # assume we're going to be doing downscaling here
-        image = tf.image.resize_images(image, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
+        r = tf.image.resize_images(r, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
 
         if args.scale_size > CROP_SIZE:
             offset = tf.cast(
                 tf.floor(tf.random_uniform([2], 0, args.scale_size - CROP_SIZE + 1, seed=seed)), dtype=tf.int32)
-            image = tf.image.crop_to_bounding_box(image, offset[0], offset[1], CROP_SIZE, CROP_SIZE)
+            r = tf.image.crop_to_bounding_box(r, offset[0], offset[1], CROP_SIZE, CROP_SIZE)
         elif args.scale_size < CROP_SIZE:
             raise Exception("scale size cannot be less than crop size")
 
-        return image
+        return r
 
     def _parse_function(input_path, input_path_):
         raw_input = tf.read_file(input_path)
@@ -344,20 +344,28 @@ def create_model(inputs, targets, max_steps):
     #         decay_steps=max_steps,
     #         end_learning_rate=args.end_lr
     #     )
-
+    LR = 0.0002  # 2e-4  # Initial learning rate
+    # decay = 1.
+    # decay = tf.where(
+    #     tf.less(global_step, 23600), tf.maximum(0., 1. - (tf.cast(global_step, tf.float32) / 47200)), 0.5)
+    decay = tf.where(
+        tf.less(global_step, max_steps * 0.5),
+        1.,
+        tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - max_steps * 0.5) / max_steps)))
+    lr = LR * decay
     # with tf.name_scope("lr_summary"):
     #     tf.summary.scalar("lr", learning_rate)
 
     with tf.name_scope("d_train"):
         discrim_tvars = [var for var in tf.trainable_variables() if var.name.startswith("d_net")]
-        discrim_optim = tf.train.AdamOptimizer(0.0004, beta1=args.beta1, beta2=args.beta2)
+        discrim_optim = tf.train.AdamOptimizer(lr, beta1=args.beta1, beta2=args.beta2)
         # discrim_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
         discrim_grads_and_vars = discrim_optim.compute_gradients(discrim_loss, var_list=discrim_tvars)
         discrim_train = discrim_optim.apply_gradients(discrim_grads_and_vars)
 
     with tf.name_scope("g_train"):
         gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("g_net")]
-        gen_optim = tf.train.AdamOptimizer(0.0001, beta1=args.beta1, beta2=args.beta2)
+        gen_optim = tf.train.AdamOptimizer(lr, beta1=args.beta1, beta2=args.beta2)
         # gen_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
         gen_grads_and_vars = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
         gen_train = gen_optim.apply_gradients(gen_grads_and_vars, global_step=global_step)
@@ -369,6 +377,7 @@ def create_model(inputs, targets, max_steps):
     # incr_global_step = tf.assign(global_step, global_step + 1)
 
     return Model(
+        lr=lr,
         outputs=outputs,
         predict_real=predict_real,
         predict_fake=predict_fake,
@@ -387,7 +396,6 @@ def create_model(inputs, targets, max_steps):
 def train():
     if args.seed is None:
         args.seed = random.randint(0, 2 ** 31 - 1)
-
     tf.set_random_seed(args.seed)
     np.random.seed(args.seed)
     random.seed(args.seed)
@@ -417,13 +425,14 @@ def train():
         f.write(json.dumps(vars(args), sort_keys=True, indent=4))
 
     examples = load_examples()
-    print("examples count = %d" % examples.count)
+    # print("examples count = %d" % examples.count)
 
     max_steps = 2 ** 32
     if args.max_epochs is not None:
         max_steps = examples.steps_per_epoch * args.max_epochs
     if args.max_steps is not None:
         max_steps = args.max_steps
+
     # inputs and targets are [batch_size, height, width, channels]
     modelNamedtuple = create_model(examples.inputs, examples.targets, max_steps)
 
@@ -454,7 +463,6 @@ def train():
         if args.multiple_A:
             # channels = converted_inputs.shape.as_list()[3]
             converted_inputs = tf.split(converted_inputs, 2, 3)[1]
-            # print('\n----642----: {}\n'.format(converted_inputs.shape.as_list()))
 
         display_fetches = {
             "paths": examples.paths,
@@ -509,9 +517,6 @@ def train():
         sess.run(tf.global_variables_initializer())
         print("parameter_count =", sess.run(parameter_count))
 
-        # coord = tf.train.Coordinator()
-        # threads = tf.train.start_queue_runners(sess=sess, coord=coord)
-
         if args.checkpoint_dir is not None:
             print("loading model from checkpoint")
             checkpoint = tf.train.latest_checkpoint(args.checkpoint_dir)
@@ -531,18 +536,16 @@ def train():
             print("wrote index at", index_path)
             print("rate", (time.time() - start) / max_steps)
         else:
+            step = 0
+
+            def should(freq):
+                return freq > 0 and ((step + 1) % freq == 0 or step == max_steps - 1)
+
             # training
             start = time.time()
-
-            # for step in range(args.max_epochs):
-            step = 0
             while True:
-
-                def should(freq):
-                    return freq > 0 and ((step + 1) % freq == 0 or step == max_steps - 1)
-
                 try:
-                    for i in range(args.n_dis):
+                    for _ in range(args.n_dis):
                         sess.run(modelNamedtuple.d_train)
 
                     fetches = {
@@ -552,6 +555,7 @@ def train():
                     }
 
                     if should(args.progress_freq):
+                        fetches['lr'] = modelNamedtuple.lr
                         fetches["discrim_loss"] = modelNamedtuple.discrim_loss
                         fetches["gen_loss_GAN"] = modelNamedtuple.gen_loss_GAN
                         fetches["gen_loss_L1"] = modelNamedtuple.gen_loss_L1
@@ -559,8 +563,8 @@ def train():
                     # if should(args.summary_freq):
                     #     fetches["summary"] = summary_op
 
-                    if should(args.display_freq):
-                        fetches["display"] = display_fetches
+                    # if should(args.display_freq):
+                    #     fetches["display"] = display_fetches
 
                     # results = sess.run(fetches, options=options, run_metadata=run_metadata)
                     results = sess.run(fetches)
@@ -569,44 +573,41 @@ def train():
                     #     # print("recording summary")
                     #     summary_writer.add_summary(results["summary"], results["global_step"])
 
-                    if should(args.display_freq):
-                        # print("saving display images")
-                        filesets = save_images(results["display"], step=results["global_step"])
-                        append_index(filesets, step=True)
+                    # if should(args.display_freq):
+                    #     # print("saving display images")
+                    #     filesets = save_images(results["display"], step=results["global_step"])
+                    #     append_index(filesets, step=True)
 
                     if should(args.progress_freq):
                         # global_step will have the correct step count if we resume from a checkpoint
                         train_epoch = math.ceil(results["global_step"] / examples.steps_per_epoch)
-                        train_step = (results["global_step"] - 1) % examples.steps_per_epoch + 1
+                        train_step = (results["global_step"]) % examples.steps_per_epoch + 1
                         rate = (step + 1) * args.batch_size / (time.time() - start)
                         remaining = (max_steps - step) * args.batch_size / rate
 
-                        print("progress  epoch %d  step %d  image/sec %0.1f  remaining %dm" % (
-                            train_epoch, train_step, rate, remaining / 60))
+                        print("progress, epoch %d, step %d,  image/sec %0.1f  remaining %dm" %
+                              (train_epoch, train_step, rate, remaining / 60))
                         print("discrim_loss", results["discrim_loss"])
                         print("gen_loss_GAN", results["gen_loss_GAN"])
                         print("gen_loss_L1", results["gen_loss_L1"])
 
+                        lib.plot.plot('lr', results["lr"])
                         lib.plot.plot('d_loss', results["discrim_loss"])
                         lib.plot.plot('g_loss_GAN', results["gen_loss_GAN"])
                         lib.plot.plot('g_loss_L1', results["gen_loss_L1"])
+                        lib.plot.flush()
 
                     if should(args.save_freq):
-                        print("saving model...")
-                        saver.save(sess,
-                                   os.path.join(args.output_dir, "model"),
-                                   global_step=modelNamedtuple.global_step,
-                                   write_meta_graph=False)
-
-                        lib.plot.flush()
+                        print("Saving model...")
+                        saver.save(sess, os.path.join(args.output_dir, "model"),
+                                   global_step=modelNamedtuple.global_step, write_meta_graph=False)
+                        # lib.plot.flush()
 
                     lib.plot.tick()
                     step = step + 1
                 except tf.errors.OutOfRangeError:
                     print('\ntf.errors.OutOfRangeError occured!\n')
                     break
-        # coord.request_stop()
-        # coord.join(threads)
 
 
 if __name__ == '__main__':
