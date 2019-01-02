@@ -329,9 +329,9 @@ def create_model(inputs, targets, max_steps):
         # decay = tf.where(
         #     tf.less(global_step, 23600), tf.maximum(0., 1. - (tf.cast(global_step, tf.float32) / 47200)), 0.5)
         decay = tf.where(
-            tf.less(global_step, max_steps * 0.5),
+            tf.less(global_step, int(max_steps * 0.5)),
             1.,
-            tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - max_steps * 0.5) / max_steps)))
+            tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - int(max_steps * 0.5)) / max_steps)))
         lr = LR * decay
     # with tf.name_scope("lr_summary"):
     #     tf.summary.scalar("lr", learning_rate)
