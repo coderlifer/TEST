@@ -317,22 +317,22 @@ def create_model(inputs, targets, max_steps):
     # with tf.name_scope("global_step_summary"):
     #     tf.summary.scalar("global_step", global_step)
 
-    # with tf.name_scope('lr_decay'):
-    #     learning_rate = tf.train.polynomial_decay(
-    #         learning_rate=args.initial_lr,
-    #         global_step=global_step,
-    #         decay_steps=max_steps,
-    #         end_learning_rate=args.end_lr
-    #     )
-    LR = 0.0002  # 2e-4  # Initial learning rate
-    # decay = 1.
-    # decay = tf.where(
-    #     tf.less(global_step, 23600), tf.maximum(0., 1. - (tf.cast(global_step, tf.float32) / 47200)), 0.5)
-    decay = tf.where(
-        tf.less(global_step, max_steps * 0.5),
-        1.,
-        tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - max_steps * 0.5) / max_steps)))
-    lr = LR * decay
+    with tf.name_scope('lr_decay'):
+        # learning_rate = tf.train.polynomial_decay(
+        #     learning_rate=args.initial_lr,
+        #     global_step=global_step,
+        #     decay_steps=max_steps,
+        #     end_learning_rate=args.end_lr
+        # )
+        LR = 0.0002  # 2e-4  # Initial learning rate
+        # decay = 1.
+        # decay = tf.where(
+        #     tf.less(global_step, 23600), tf.maximum(0., 1. - (tf.cast(global_step, tf.float32) / 47200)), 0.5)
+        decay = tf.where(
+            tf.less(global_step, max_steps * 0.5),
+            1.,
+            tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - max_steps * 0.5) / max_steps)))
+        lr = LR * decay
     # with tf.name_scope("lr_summary"):
     #     tf.summary.scalar("lr", learning_rate)
 

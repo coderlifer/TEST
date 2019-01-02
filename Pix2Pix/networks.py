@@ -27,16 +27,18 @@ def norm_layer(inputs, decay=0.9, epsilon=1e-5, is_training=True, norm_type="BN"
 
     Args:
       inputs: A batch of images to be normed. Shape is [batch, height, width, channels].
+      decay: Default value: 1e-5 for BatchNorm, 1e-6 for InstanceNorm.
       epsilon: Default value: 1e-5 for BatchNorm, 1e-6 for InstanceNorm.
+      is_training: .
       norm_type: "BN" for BatchNorm, "IN" for InstanceNorm.
 
     Returns:
-      Returns generated image batch.
+      Returns normalized image batch.
     """
     if norm_type == "BN":
         outputs = lib.ops.normalization.batch_norm(inputs, decay=decay, epsilon=epsilon, is_training=True)
     elif norm_type == "IN":
-        outputs = lib.ops.normalization.instance_norm(inputs, epsilon=epsilon)
+        outputs = lib.ops.normalization.instance_norm(inputs, epsilon=epsilon, trainable=is_training)
     else:
         raise NotImplementedError('Normalization [%s] is not implemented!' % norm_type)
 
@@ -846,7 +848,6 @@ def unet_generator(generator_inputs, generator_outputs_channels, ngf, conv_type,
         ngf * 8,  # encoder_8: [batch, 4, 4, ngf * 8] => [batch, 2, 2, ngf * 8]
         ngf * 8,  # encoder_8: [batch, 2, 2, ngf * 8] => [batch, 1, 1, ngf * 8]
     ]
-
     for out_channels in layer_specs:
         with tf.variable_scope("encoder_%d" % (len(layers) + 1)):
             rectified = nonlinearity(layers[-1], 'lrelu', 0.2)
@@ -857,8 +858,7 @@ def unet_generator(generator_inputs, generator_outputs_channels, ngf, conv_type,
                                               spectral_normed=False, update_collection=None, inputs_norm=False,
                                               he_init=True, biases=True)
 
-            output = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
-            # output = convolved
+            output = norm_layer(convolved, decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
 
             # output, attn_score = Self_Attn(output)  # attention module
 
@@ -874,7 +874,6 @@ def unet_generator(generator_inputs, generator_outputs_channels, ngf, conv_type,
         (ngf * 2, 0.0),  # decoder_3: [batch, 64, 64, ngf * 4 * 2] => [batch, 128, 128, ngf * 2 * 2]
         (ngf, 0.0),  # decoder_2: [batch, 128, 128, ngf * 2 * 2] => [batch, 256, 256, ngf * 2]
     ]
-
     num_encoder_layers = len(layers)
     for decoder_layer, (out_channels, dropout) in enumerate(layer_specs):
         skip_layer = num_encoder_layers - decoder_layer - 1
@@ -886,12 +885,12 @@ def unet_generator(generator_inputs, generator_outputs_channels, ngf, conv_type,
             else:
                 inputs = tf.concat([layers[-1], layers[skip_layer]], axis=3)
 
-            rectified = tf.nn.relu(inputs)
+            rectified = nonlinearity(inputs, 'relu')
             # [batch, in_height, in_width, in_channels] => [batch, in_height*2, in_width*2, out_channels]
-            _b, h, w, _c = rectified.shape
+            _, h, w, _ = rectified.shape
             if upsampe_method == 'resize':
-                resized_input = tf.image.resize_images(rectified, [h * 2, w * 2],
-                                                       method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+                resized_input = tf.image.resize_images(
+                    rectified, [h * 2, w * 2], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
             elif upsampe_method == 'depth_to_space':
                 resized_input = tf.concat([rectified, rectified, rectified, rectified], axis=3)
                 resized_input = tf.depth_to_space(resized_input, block_size=2)
@@ -907,21 +906,21 @@ def unet_generator(generator_inputs, generator_outputs_channels, ngf, conv_type,
             #                                     padding="same",
             #                                     kernel_initializer=tf.contrib.layers.xavier_initializer)
 
-            output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+            output = norm_layer(output, decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
 
-            if dropout > 0.0:
-                output = tf.nn.dropout(output, keep_prob=1 - dropout)
+            # if dropout > 0.0:
+            #     output = tf.nn.dropout(output, keep_prob=1 - dropout)
 
             layers.append(output)
 
     # decoder_1: [batch, 256, 256, ngf * 2] => [batch, 512, 512, generator_outputs_channels]
     with tf.variable_scope("decoder_1"):
         inputs = tf.concat([layers[-1], layers[0]], axis=3)
-        rectified = tf.nn.relu(inputs)
-        _b, h, w, _c = rectified.shape
+        rectified = nonlinearity(inputs, 'relu')
+        _, h, w, _ = rectified.shape
         if upsampe_method == 'resize':
-            resized_input = tf.image.resize_images(rectified, [h * 2, w * 2],
-                                                   method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+            resized_input = tf.image.resize_images(
+                rectified, [h * 2, w * 2], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
         elif upsampe_method == 'depth_to_space':
             resized_input = tf.concat([rectified, rectified, rectified, rectified], axis=3)
             resized_input = tf.depth_to_space(resized_input, block_size=2)
@@ -1002,6 +1001,77 @@ def unet_discriminator(discrim_inputs, discrim_targets, ndf, spectral_normed, up
         layers.append(output)
 
     return layers[-1]
+
+
+
+def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
+                       conv_type, channel_multiplier, padding):
+    """Output is: [batch, 14, 14, 1]
+    Args:
+
+    Returns:
+    """
+    n_layers = 5
+    layers = []
+
+    # 2x [batch, height, width, in_channels] => [batch, height, width, in_channels * 2]
+    inputs = tf.concat([discrim_inputs, discrim_targets], axis=3)
+
+    # layer_1: [batch, 512, 512, in_channels * 2] => [batch, 256, 256, ndf]
+    with tf.variable_scope("layer_1"):
+        padded_input = tf.pad(inputs, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
+        convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], ndf, 4, 2,
+                                          'Conv2D',
+                                          conv_type=conv_type, channel_multiplier=channel_multiplier, padding=padding,
+                                          spectral_normed=spectral_normed,
+                                          update_collection=update_collection,
+                                          inputs_norm=False,
+                                          he_init=True, biases=True)
+        rectified = nonlinearity(convolved, 'lrelu', 0.2)
+
+        layers.append(rectified)
+
+    # layer_2: [batch, 256, 256, ndf] => [batch, 128, 128, ndf * 2]
+    # layer_3: [batch, 128, 128, ndf * 2] => [batch, 64, 64, ndf * 4]
+    # layer_4: [batch, 64, 64, ndf * 4] => [batch, 32, 32, ndf * 8]
+    # layer_5: [batch, 32, 32, ndf * 4] => [batch, 16, 16, ndf * 8]
+    # layer_6: [batch, 16, 16, ndf * 4] => [batch, 15, 15, ndf * 8]
+    for i in range(n_layers):
+        with tf.variable_scope("layer_%d" % (len(layers) + 1)):
+            out_channels_ = ndf * min(2 ** (i + 1), 8)
+            stride = 1 if i == n_layers - 1 else 2  # last layer here has stride 1
+            padded_input = tf.pad(layers[-1], [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
+            convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], out_channels_, 4, stride,
+                                              'Conv2D',
+                                              conv_type=conv_type, channel_multiplier=channel_multiplier,
+                                              padding=padding,
+                                              spectral_normed=spectral_normed,
+                                              update_collection=update_collection,
+                                              inputs_norm=False,
+                                              he_init=True, biases=True)
+
+            # normalized = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+            rectified = nonlinearity(convolved, 'lrelu', 0.2)
+
+            layers.append(rectified)
+
+    # layer_7: [batch, 15, 15, ndf * 8] => [batch, 14, 14, 1]
+    with tf.variable_scope("layer_%d" % (len(layers) + 1)):
+        padded_input = tf.pad(rectified, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
+        convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], 1, 4, 1,
+                                          'Conv2D',
+                                          conv_type=conv_type, channel_multiplier=channel_multiplier, padding=padding,
+                                          spectral_normed=spectral_normed,
+                                          update_collection=update_collection,
+                                          inputs_norm=False,
+                                          he_init=True, biases=True)
+        # output = tf.sigmoid(convolved)
+        output = convolved
+
+        layers.append(output)
+
+    return layers[-1]
+
 
 
 # ######################## VGG ######################## #
