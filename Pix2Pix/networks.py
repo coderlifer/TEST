@@ -1003,9 +1003,8 @@ def unet_discriminator(discrim_inputs, discrim_targets, ndf, spectral_normed, up
     return layers[-1]
 
 
-
 def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
-                       conv_type, channel_multiplier, padding):
+                         conv_type, channel_multiplier, padding):
     """Output is: [batch, 14, 14, 1]
     Args:
 
@@ -1071,7 +1070,6 @@ def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, 
         layers.append(output)
 
     return layers[-1]
-
 
 
 # ######################## VGG ######################## #

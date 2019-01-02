@@ -249,7 +249,7 @@ def load_examples():
         input_image = transform(inputs)
         target_image = transform(targets)
 
-        return (input_path_, input_image, target_image)
+        return input_path_, input_image, target_image
 
     with tf.name_scope("load_images"):
         input_paths = tf.convert_to_tensor(input_paths, dtype=tf.string)
@@ -260,8 +260,8 @@ def load_examples():
         dataset = dataset.batch(batch_size=args.batch_size)
         dataset = dataset.prefetch(buffer_size=args.batch_size)
 
-        # make `args.n_dis + 1` repetition of current batch.
-        dataset = dataset.flat_map(lambda x: tf.data.Dataset.from_tensors(x).repeat(args.n_dis + 1))
+        # # make `args.n_dis + 1` repetition of current batch.
+        # dataset = dataset.flat_map(lambda x: tf.data.Dataset.from_tensors(x).repeat(args.n_dis + 1))
 
         iterator = dataset.make_one_shot_iterator()
         paths_batch, inputs_batch, targets_batch = iterator.get_next()
@@ -337,22 +337,22 @@ def create_model(inputs, targets, max_steps):
     # with tf.name_scope("global_step_summary"):
     #     tf.summary.scalar("global_step", global_step)
 
-    # with tf.name_scope('lr_decay'):
-    #     learning_rate = tf.train.polynomial_decay(
-    #         learning_rate=args.initial_lr,
-    #         global_step=global_step,
-    #         decay_steps=max_steps,
-    #         end_learning_rate=args.end_lr
-    #     )
-    LR = 0.0002  # 2e-4  # Initial learning rate
-    # decay = 1.
-    # decay = tf.where(
-    #     tf.less(global_step, 23600), tf.maximum(0., 1. - (tf.cast(global_step, tf.float32) / 47200)), 0.5)
-    decay = tf.where(
-        tf.less(global_step, max_steps * 0.5),
-        1.,
-        tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - max_steps * 0.5) / max_steps)))
-    lr = LR * decay
+    with tf.name_scope('lr_decay'):
+        # learning_rate = tf.train.polynomial_decay(
+        #     learning_rate=args.initial_lr,
+        #     global_step=global_step,
+        #     decay_steps=max_steps,
+        #     end_learning_rate=args.end_lr
+        # )
+        LR = 0.0002  # 2e-4  # Initial learning rate
+        # decay = 1.
+        # decay = tf.where(
+        #     tf.less(global_step, 23600), tf.maximum(0., 1. - (tf.cast(global_step, tf.float32) / 47200)), 0.5)
+        decay = tf.where(
+            tf.less(global_step, int(max_steps * 0.5)),
+            1.,
+            tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - int(max_steps * 0.5)) / max_steps)))
+        lr = LR * decay
     # with tf.name_scope("lr_summary"):
     #     tf.summary.scalar("lr", learning_rate)
 
@@ -451,13 +451,13 @@ def train():
 
     # reverse any processing on images so they can be written to disk or displayed to user
     with tf.name_scope("convert_inputs"):
-        converted_inputs = convert(inputs)
+        converted_inputs = convert(inputs)  # [None, 512, 512, 6]
 
     with tf.name_scope("convert_targets"):
-        converted_targets = convert(targets)
+        converted_targets = convert(targets)  # [None, 512,, 512,, 3]
 
     with tf.name_scope("convert_outputs"):
-        converted_outputs = convert(outputs)
+        converted_outputs = convert(outputs)  # [None, 512,, 512,, 3]
 
     with tf.name_scope("encode_images"):
         if args.multiple_A:

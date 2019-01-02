@@ -2,6 +2,8 @@
 Concat webpage features to real A image.
 
 Remove unused code in train_best.py.
+
+Use tf.placeholder
 """
 # -*- coding: utf-8 -*-
 
