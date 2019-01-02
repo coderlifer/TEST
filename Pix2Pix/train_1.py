@@ -256,7 +256,7 @@ def load_examples():
         dataset = tf.data.Dataset.from_tensor_slices((input_paths, input_paths))
         dataset = dataset.map(_parse_function, num_parallel_calls=None)
         dataset = dataset.shuffle(buffer_size=200, seed=None, reshuffle_each_iteration=True)  # big than num_train
-        dataset = dataset.repeat(count=args.max_epochs)
+        dataset = dataset.repeat(count=args.max_epochs * (args.n_dis + 1))
         dataset = dataset.batch(batch_size=args.batch_size)
         dataset = dataset.prefetch(buffer_size=args.batch_size)
 
@@ -545,8 +545,8 @@ def train():
             start = time.time()
             while True:
                 try:
-                    for _ in range(args.n_dis):
-                        sess.run(modelNamedtuple.d_train)
+                    # for _ in range(args.n_dis):
+                    #     sess.run(modelNamedtuple.d_train)
 
                     fetches = {
                         "g_train": modelNamedtuple.g_train,
@@ -568,6 +568,9 @@ def train():
 
                     # results = sess.run(fetches, options=options, run_metadata=run_metadata)
                     results = sess.run(fetches)
+
+                    for _ in range(args.n_dis):
+                        sess.run(modelNamedtuple.d_train)
 
                     # if should(args.summary_freq):
                     #     # print("recording summary")
