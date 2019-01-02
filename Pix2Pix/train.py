@@ -255,7 +255,7 @@ def load_examples(raw_input, input_paths):
     )
 
 
-def create_model(inputs, targets):
+def create_model(inputs, targets, max_steps):
     model = Pix2Pix()
 
     out_channels = int(targets.get_shape()[-1])
@@ -329,7 +329,9 @@ def create_model(inputs, targets):
     # decay = tf.where(
     #     tf.less(global_step, 23600), tf.maximum(0., 1. - (tf.cast(global_step, tf.float32) / 47200)), 0.5)
     decay = tf.where(
-        tf.less(global_step, 23600), 1., tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - 23600) / 47200)))
+        tf.less(global_step, max_steps * 0.5),
+        1.,
+        tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - max_steps * 0.5) / max_steps)))
     lr = LR * decay
     # with tf.name_scope("lr_summary"):
     #     tf.summary.scalar("lr", learning_rate)
@@ -431,7 +433,7 @@ def train():
         max_steps = args.max_steps
 
     # inputs and targets are [batch_size, height, width, channels]
-    modelNamedtuple = create_model(examples.inputs, examples.targets)
+    modelNamedtuple = create_model(examples.inputs, examples.targets, max_steps)
 
     # undo colorization splitting on images that we use for display/output
     inputs = deprocess(examples.inputs)
@@ -449,7 +451,6 @@ def train():
     # reverse any processing on images so they can be written to disk or displayed to user
     with tf.name_scope("convert_inputs"):
         converted_inputs = convert(inputs)  # [None, 512, 512, 6]
-        # print('\n--converted_inputs.shape--: {}\n'.format(converted_inputs.shape.as_list()))
 
     with tf.name_scope("convert_targets"):
         converted_targets = convert(targets)  # [None, 512,, 512,, 3]
@@ -507,6 +508,7 @@ def train():
 
     # summary_op = tf.summary.merge_all()
     saver = tf.train.Saver(max_to_keep=20)
+
     config = tf.ConfigProto(allow_soft_placement=True)
     config.gpu_options.allow_growth = True
     with tf.Session(config=config) as sess:
@@ -601,8 +603,8 @@ def train():
                         rate = (step + 1) * args.batch_size / (time.time() - start)
                         remaining = (max_steps - step) * args.batch_size / rate
 
-                        print("progress, epoch %d, step %d, _step %d,  image/sec %0.1f  remaining %dm" %
-                              (train_epoch, train_step, _step+1, rate, remaining / 60))
+                        print("progress, epoch %d, step %d,  image/sec %0.1f  remaining %dm" %
+                              (train_epoch, train_step, rate, remaining / 60))
                         print("discrim_loss", results["discrim_loss"])
                         print("gen_loss_GAN", results["gen_loss_GAN"])
                         print("gen_loss_L1", results["gen_loss_L1"])
@@ -614,7 +616,7 @@ def train():
                         lib.plot.flush()
 
                     if should(args.save_freq):
-                        print("saving model...")
+                        print("Saving model...")
                         saver.save(sess, os.path.join(args.output_dir, "model"),
                                    global_step=modelNamedtuple.global_step, write_meta_graph=False)
                         # lib.plot.flush()
