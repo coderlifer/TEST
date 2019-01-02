@@ -249,7 +249,7 @@ def load_examples():
         input_image = transform(inputs)
         target_image = transform(targets)
 
-        return input_path_, input_image, target_image
+        return (input_path_, input_image, target_image)
 
     with tf.name_scope("load_images"):
         input_paths = tf.convert_to_tensor(input_paths, dtype=tf.string)
