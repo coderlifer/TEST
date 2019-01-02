@@ -260,6 +260,9 @@ def load_examples():
         dataset = dataset.batch(batch_size=args.batch_size)
         dataset = dataset.prefetch(buffer_size=args.batch_size)
 
+        # make `args.n_dis + 1` repetition of current batch.
+        dataset = dataset.flat_map(lambda x: tf.data.Dataset.from_tensors(x).repeat(args.n_dis + 1))
+
         iterator = dataset.make_one_shot_iterator()
         paths_batch, inputs_batch, targets_batch = iterator.get_next()
 
