@@ -26,7 +26,7 @@ def nonlinearity(x, activation_fn='relu', leakiness=0.2):
         return tf.nn.relu(x)
     if activation_fn == 'lrelu':
         assert 0 < leakiness <= 1, "leakiness must be <= 1"
-        return tf.maximum(x, leakiness * x)
+        return tf.nn.leaky_relu(x, alpha=leakiness)
 
 
 def Normalize(name, inputs, labels=None, spectral_normed=True):

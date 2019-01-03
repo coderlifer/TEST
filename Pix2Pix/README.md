@@ -7,7 +7,7 @@
 # train
 # cd to `Pix2Pix` folder and run command bellow
 # webpage, 2A
-CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
+CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --batch_size=1 \
   --mode='train' \
   --conv_type='conv2d' \
@@ -47,7 +47,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --loss_type='HINGE' \
   --n_dis=5 \
   --input_dir=/home/tellhow-iot/tem/webpagesaliency/resize_1360/val \
-  --output_dir=/home/tellhow-iot/tem/webpagesaliency/output_resize_512/output_test_512 \
+  --output_dir=/data/tem/webpagesaliency/output_resize_512/output_test_512 \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=2360 \
@@ -56,7 +56,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --scale_size=512 \
   --l1_weight=20.0 \
   --gan_weight=1.0 \
-  --checkpoint_dir=/home/tellhow-iot/tem/webpagesaliency/output_resize_512 \
+  --checkpoint_dir=/data/tem/webpagesaliency/output_resize_512 \
   --multiple_A \
   --net_type='UNet' \
   --upsampe_method=depth_to_space
