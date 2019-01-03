@@ -6,20 +6,19 @@ import tensorflow as tf
 
 
 def batch_norm(inputs, decay=0.9, epsilon=1e-5, is_training=True, fused=True):
-    output = \
-        tf.contrib.layers.batch_norm(
-            inputs,
-            decay=decay,
-            center=True,
-            scale=True,
-            epsilon=epsilon,
-            updates_collections=None,
-            is_training=is_training,
-            fused=fused,
-            data_format='NHWC',
-            zero_debias_moving_mean=True,
-            scope='BatchNorm'
-        )
+    output = tf.contrib.layers.batch_norm(
+        inputs,
+        decay=decay,
+        center=True,
+        scale=True,
+        epsilon=epsilon,
+        updates_collections=None,
+        is_training=is_training,
+        fused=fused,
+        data_format='NHWC',
+        zero_debias_moving_mean=True,
+        scope='BatchNorm'
+    )
 
     return output
 
@@ -46,10 +45,10 @@ def cond_batchnorm(name, axes, inputs, is_training=None, stats_iter=None, update
 
         mean, var = tf.nn.moments(inputs, axes, keep_dims=True)
         shape = mean.get_shape().as_list()  # shape is [1, 1, 1, n]
-        offset_m = tf.get_variable(name='offset', shape=[n_labels, shape[3]], dtype=tf.float32,
-                                   initializer=tf.constant_initializer(0.))
-        scale_m = tf.get_variable(name='scale', shape=[n_labels, shape[3]], dtype=tf.float32,
-                                  initializer=tf.constant_initializer(1.))
+        offset_m = tf.get_variable(
+            name='offset', shape=[n_labels, shape[3]], dtype=tf.float32, initializer=tf.constant_initializer(0.))
+        scale_m = tf.get_variable(
+            name='scale', shape=[n_labels, shape[3]], dtype=tf.float32, initializer=tf.constant_initializer(1.))
 
         offset = tf.nn.embedding_lookup(offset_m, labels)
         scale = tf.nn.embedding_lookup(scale_m, labels)
@@ -68,18 +67,19 @@ def layer_norm(name, norm_axes, inputs):
 
     Returns:
     """
-    result = \
-        tf.contrib.layers.layer_norm(inputs,
-                                     center=True,
-                                     scale=True,
-                                     activation_fn=None,
-                                     reuse=None,
-                                     variables_collections=None,
-                                     outputs_collections=None,
-                                     trainable=True,
-                                     begin_norm_axis=1,
-                                     begin_params_axis=-1,
-                                     scope=name)
+    result = tf.contrib.layers.layer_norm(
+        inputs,
+        center=True,
+        scale=True,
+        activation_fn=None,
+        reuse=None,
+        variables_collections=None,
+        outputs_collections=None,
+        trainable=True,
+        begin_norm_axis=1,
+        begin_params_axis=-1,
+        scope=name
+    )
 
     # with tf.variable_scope('LayerNorm'):
     #     mean, var = tf.nn.moments(inputs, norm_axes, keep_dims=True)
@@ -115,7 +115,8 @@ def instance_norm(inputs, epsilon=1e-06, trainable=True):
         outputs_collections=None,
         trainable=trainable,
         data_format='NHWC',
-        scope=None)
+        scope=None
+    )
 
     return output
 

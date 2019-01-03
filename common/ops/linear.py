@@ -137,8 +137,7 @@ def Linear(inputs, input_dim, output_dim, name,
 
         weight_values *= gain
 
-        weight = tf.get_variable(name='W', dtype=tf.float32,
-                                 initializer=weight_values)
+        weight = tf.get_variable(name='W', dtype=tf.float32, initializer=weight_values)
 
         if weightnorm is None:
             weightnorm = _default_weightnorm
@@ -146,9 +145,7 @@ def Linear(inputs, input_dim, output_dim, name,
             norm_values = np.sqrt(np.sum(np.square(weight_values), axis=0))
             # norm_values = np.linalg.norm(weight_values, axis=0)
 
-            target_norms = tf.get_variable(name='g',
-                                           dtype=tf.float32,
-                                           initializer=norm_values)
+            target_norms = tf.get_variable(name='g', dtype=tf.float32, initializer=norm_values)
 
             with tf.name_scope('weightnorm'):
                 norms = tf.sqrt(tf.reduce_sum(tf.square(weight), reduction_indices=[0]))
@@ -160,23 +157,21 @@ def Linear(inputs, input_dim, output_dim, name,
 
         if inputs_.get_shape().ndims == 2:
             if spectral_normed:
-                result = tf.matmul(inputs_,
-                                   spectral_normed_weight(weight, update_collection=update_collection))
+                result = tf.matmul(inputs_, spectral_normed_weight(weight, update_collection=update_collection))
             else:
                 result = tf.matmul(inputs_, weight)
         else:
             reshaped_inputs = tf.reshape(inputs_, [-1, input_dim])
             if spectral_normed:
-                result = tf.matmul(reshaped_inputs,
-                                   spectral_normed_weight(weight, update_collection=update_collection))
+                result = tf.matmul(
+                    reshaped_inputs, spectral_normed_weight(weight, update_collection=update_collection))
             else:
                 result = tf.matmul(reshaped_inputs, weight)
             result = tf.reshape(result, tf.stack(tf.unstack(tf.shape(inputs_))[:-1] + [output_dim]))
 
         if biases:
-            _biases = tf.get_variable(name='b', shape=[output_dim, ], dtype=tf.float32,
-                                      initializer=tf.constant_initializer(0.))
-
+            _biases = tf.get_variable(
+                name='b', shape=[output_dim, ], dtype=tf.float32, initializer=tf.constant_initializer(0.))
             result = tf.nn.bias_add(result, _biases, data_format='NHWC')
 
         return result
