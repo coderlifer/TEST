@@ -46,6 +46,8 @@ parser.add_argument('--input_dir', type=str, default='./', help="path to folder 
 parser.add_argument('--output_dir', type=str, default='./output_train', help='Directory to output the result.')
 parser.add_argument('--checkpoint_dir', type=str, default=None,
                     help='Directory to stroe checkpoints and summaries.')
+parser.add_argument('--checkpoint', type=str, default=None,
+                    help='checkpoints.')
 parser.add_argument("--which_direction", type=str, default="AtoB", choices=["AtoB", "BtoA"])
 parser.add_argument("--seed", type=int)
 parser.add_argument("--max_steps", type=int, default=None, help="number of training steps (0 to disable)")
@@ -508,7 +510,7 @@ def train():
         parameter_count = tf.reduce_sum([tf.reduce_prod(tf.shape(v)) for v in tf.trainable_variables()])
 
     # summary_op = tf.summary.merge_all()
-    saver = tf.train.Saver(max_to_keep=20)
+    saver = tf.train.Saver(max_to_keep=100)
 
     config = tf.ConfigProto(allow_soft_placement=True)
     config.gpu_options.allow_growth = True
@@ -520,7 +522,7 @@ def train():
         if args.checkpoint_dir is not None:
             print("loading model from checkpoint")
             # checkpoint = tf.train.latest_checkpoint(args.checkpoint_dir)
-            saver.restore(sess, args.checkpoint_dir)
+            saver.restore(sess, args.checkpoint)
 
         if args.mode == "test":
             # testing
