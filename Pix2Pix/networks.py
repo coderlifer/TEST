@@ -1055,7 +1055,7 @@ def unet_generator(generator_inputs, generator_outputs_channels, ngf, conv_type,
         output = lib.ops.conv2d.Conv2D(
             generator_inputs, generator_inputs.shape.as_list()[-1], ngf, 4, 2, 'Conv2D',
             conv_type=conv_type, channel_multiplier=channel_multiplier,
-            padding=padding, spectral_normed=False, update_collection=None,
+            padding=padding, spectral_normed=True, update_collection=None,
             inputs_norm=False, he_init=True, biases=True)
         layers.append(output)
 
@@ -1076,7 +1076,7 @@ def unet_generator(generator_inputs, generator_outputs_channels, ngf, conv_type,
             convolved = lib.ops.conv2d.Conv2D(
                 rectified, rectified.shape.as_list()[-1], out_channels, 4, 2, 'Conv2D',
                 conv_type=conv_type, channel_multiplier=channel_multiplier,
-                padding=padding, spectral_normed=False, update_collection=None,
+                padding=padding, spectral_normed=True, update_collection=None,
                 inputs_norm=False, he_init=True, biases=True)
 
             output = norm_layer(convolved, decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
@@ -1121,7 +1121,7 @@ def unet_generator(generator_inputs, generator_outputs_channels, ngf, conv_type,
             output = lib.ops.conv2d.Conv2D(
                 resized_input, resized_input.shape.as_list()[-1], out_channels, 4, 1, 'Conv2D',
                 conv_type=conv_type, channel_multiplier=channel_multiplier,
-                padding=padding, spectral_normed=False, update_collection=None,
+                padding=padding, spectral_normed=True, update_collection=None,
                 inputs_norm=False, he_init=True, biases=True)
             # output = tf.layers.conv2d_transpose(rectified, out_channels, kernel_size=4, strides=(2, 2),
             #                                     padding="same",
@@ -1151,7 +1151,7 @@ def unet_generator(generator_inputs, generator_outputs_channels, ngf, conv_type,
         output = lib.ops.conv2d.Conv2D(
             resized_input, resized_input.shape.as_list()[-1], generator_outputs_channels, 4, 1, 'Conv2D',
             conv_type=conv_type, channel_multiplier=channel_multiplier,
-            padding=padding, spectral_normed=False, update_collection=None,
+            padding=padding, spectral_normed=True, update_collection=None,
             inputs_norm=False, he_init=True, biases=True)
         output = tf.nn.tanh(output)
 

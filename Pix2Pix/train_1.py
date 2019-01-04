@@ -346,7 +346,8 @@ def create_model(inputs, targets, max_steps):
         #     decay_steps=max_steps,
         #     end_learning_rate=args.end_lr
         # )
-        LR = 0.0002  # 2e-4  # Initial learning rate
+        LR_D = 0.0004  # 2e-4  # Initial learning rate
+        LR_G = 0.0001 # 2e-4  # Initial learning rate
         # decay = 1.
         # decay = tf.where(
         #     tf.less(global_step, 23600), tf.maximum(0., 1. - (tf.cast(global_step, tf.float32) / 47200)), 0.5)
@@ -354,20 +355,21 @@ def create_model(inputs, targets, max_steps):
             tf.less(global_step, int(max_steps * 0.5)),
             1.,
             tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - int(max_steps * 0.5)) / max_steps)))
-        lr = LR * decay
+        lr_d = LR_D * decay
+        lr_g = LR_G * decay
     # with tf.name_scope("lr_summary"):
     #     tf.summary.scalar("lr", learning_rate)
 
     with tf.name_scope("d_train"):
         discrim_tvars = [var for var in tf.trainable_variables() if var.name.startswith("d_net")]
-        discrim_optim = tf.train.AdamOptimizer(lr, beta1=args.beta1, beta2=args.beta2)
+        discrim_optim = tf.train.AdamOptimizer(lr_d, beta1=args.beta1, beta2=args.beta2)
         # discrim_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
         discrim_grads_and_vars = discrim_optim.compute_gradients(discrim_loss, var_list=discrim_tvars)
         discrim_train = discrim_optim.apply_gradients(discrim_grads_and_vars)
 
     with tf.name_scope("g_train"):
         gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("g_net")]
-        gen_optim = tf.train.AdamOptimizer(lr, beta1=args.beta1, beta2=args.beta2)
+        gen_optim = tf.train.AdamOptimizer(lr_g, beta1=args.beta1, beta2=args.beta2)
         # gen_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
         gen_grads_and_vars = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
         gen_train = gen_optim.apply_gradients(gen_grads_and_vars, global_step=global_step)
