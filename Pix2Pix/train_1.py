@@ -381,7 +381,7 @@ def create_model(inputs, targets, max_steps):
     # incr_global_step = tf.assign(global_step, global_step + 1)
 
     return Model(
-        lr=lr,
+        lr=lr_d,
         outputs=outputs,
         predict_real=predict_real,
         predict_fake=predict_fake,
