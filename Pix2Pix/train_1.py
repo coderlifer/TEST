@@ -519,8 +519,8 @@ def train():
 
         if args.checkpoint_dir is not None:
             print("loading model from checkpoint")
-            checkpoint = tf.train.latest_checkpoint(args.checkpoint_dir)
-            saver.restore(sess, checkpoint)
+            # checkpoint = tf.train.latest_checkpoint(args.checkpoint_dir)
+            saver.restore(sess, args.checkpoint_dir)
 
         if args.mode == "test":
             # testing
