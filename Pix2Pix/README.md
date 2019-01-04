@@ -35,7 +35,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val
 
 # infer
-CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
+CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --batch_size=1 \
   --mode='test' \
   --conv_type='conv2d' \
@@ -47,16 +47,17 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train.py \
   --loss_type='HINGE' \
   --n_dis=5 \
   --input_dir=/home/tellhow-iot/tem/webpagesaliency/pix2pix_data_2A/val \
-  --output_dir=/data/tem/webpagesaliency/output_resize_512/output_test_512 \
+  --output_dir=/data/tem/webpagesaliency/output_resize_512/tem/47200 \
   --max_epochs=400 \
   --which_direction=AtoB \
-  --save_freq=2360 \
+  --save_freq=1180 \
   --ngf=64 \
   --ndf=64 \
   --scale_size=512 \
   --l1_weight=20.0 \
   --gan_weight=1.0 \
-  --checkpoint_dir=/data/tem/webpagesaliency/output_resize_512 \
+  --checkpoint_dir=/data/tem/webpagesaliency/output_resize_512/ \
+  --checkpoint=/data/tem/webpagesaliency/output_resize_512/model-47200 \
   --multiple_A \
   --net_type='UNet' \
   --upsampe_method=depth_to_space
