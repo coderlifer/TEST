@@ -67,6 +67,7 @@ parser.add_argument("--ndf", type=int, default=64, help="number of discriminator
 parser.add_argument("--scale_size", type=int, default=286,
                     help="scale images to this size before cropping to 256x256")
 parser.add_argument("--flip", dest="flip", action="store_true", help="flip images horizontally")
+parser.add_argument("--TTUR", dest="TTUR", action="store_true", help="")
 parser.add_argument("--no_flip", dest="flip", action="store_false", help="don't flip images horizontally")
 parser.set_defaults(flip=True)
 parser.add_argument("--l1_weight", type=float, default=100.0, help="weight on L1 term for generator gradient")
@@ -346,17 +347,26 @@ def create_model(inputs, targets, max_steps):
         #     decay_steps=max_steps,
         #     end_learning_rate=args.end_lr
         # )
-        LR_D = 0.0004  # 2e-4  # Initial learning rate
-        LR_G = 0.0001 # 2e-4  # Initial learning rate
-        # decay = 1.
+        decay = 1.
         # decay = tf.where(
         #     tf.less(global_step, 23600), tf.maximum(0., 1. - (tf.cast(global_step, tf.float32) / 47200)), 0.5)
-        decay = tf.where(
-            tf.less(global_step, int(max_steps * 0.5)),
-            1.,
-            tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - int(max_steps * 0.5)) / max_steps)))
-        lr_d = LR_D * decay
-        lr_g = LR_G * decay
+        # decay = tf.where(
+        #     tf.less(global_step, int(max_steps * 0.5)),
+        #     1.,
+        #     tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - int(max_steps * 0.5)) / max_steps)))
+        if args.TTUR:
+            print('\nUsing TTUR!\n')
+            LR_D = 0.0004  # 2e-4  # Initial learning rate
+            LR_G = 0.0001  # 2e-4  # Initial learning rate
+            lr_d = LR_D * decay
+            lr_g = LR_G * decay
+        else:
+            print('\nNot using TTUR!\n')
+            LR_D = 0.0002  # 2e-4  # Initial learning rate
+            LR_G = 0.0002  # 2e-4  # Initial learning rate
+            lr_d = LR_D * decay
+            lr_g = LR_G * decay
+
     # with tf.name_scope("lr_summary"):
     #     tf.summary.scalar("lr", learning_rate)
 
@@ -381,7 +391,7 @@ def create_model(inputs, targets, max_steps):
     # incr_global_step = tf.assign(global_step, global_step + 1)
 
     return Model(
-        lr=lr_d,
+        lr=lr_d + lr_g,
         outputs=outputs,
         predict_real=predict_real,
         predict_fake=predict_fake,
