@@ -48,11 +48,15 @@ def Conv2D(inputs, input_dim, output_dim, filter_size=3, stride=1, name='Conv2D'
             inputs_ = inputs
 
         if he_init:
-            initializer = tf.initializers.he_uniform()
-            # initializer = tf.initializers.he_normal()
+            # initializer = tf.initializers.he_uniform()
+            initializer = tf.initializers.he_normal()
+            # initializer = tf.variance_scaling_initializer(
+            #     scale=2., mode="fan_in", distribution="truncated_normal", seed=None)
         else:  # Normalized init (Glorot & Bengio)
-            initializer = tf.glorot_uniform_initializer()
-            # initializer = tf.glorot_normal_initializer()
+            # initializer = tf.glorot_uniform_initializer()
+            initializer = tf.glorot_normal_initializer()
+            # initializer = tf.variance_scaling_initializer(
+            #     scale=1., mode="fan_avg", distribution="truncated_normal", seed=None)
 
         filters = tf.get_variable(
             name='Filters', shape=[filter_size, filter_size, input_dim, output_dim], dtype=tf.float32,
