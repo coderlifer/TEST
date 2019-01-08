@@ -79,7 +79,7 @@ def Self_Atten(x, spectral_normed=True):
                                   spectral_normed=spectral_normed,
                                   update_collection=None,
                                   inputs_norm=False,
-                                  he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+                                  he_init=True, biases=True)
         g_ready = tf.reshape(g, [N, H * W, -1])  # [N, H*W, in_dim // 8]
 
         energy = tf.matmul(g_ready, f_ready, transpose_b=True)  # [N, H*W, H*W]
@@ -92,7 +92,7 @@ def Self_Atten(x, spectral_normed=True):
                                   spectral_normed=spectral_normed,
                                   update_collection=None,
                                   inputs_norm=False,
-                                  he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+                                  he_init=True, biases=True)
         h = tf.reshape(h, [N, H * W, -1])  # [N, H*W, in_dim]
 
         out = tf.matmul(attention, h)  # [N, H*W, in_dim]
@@ -124,7 +124,7 @@ def resnet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, chann
             inputs, inputs.shape.as_list()[-1], ngf, 7, 1, 'Conv2D',
             conv_type='conv2d', channel_multiplier=0,
             padding='VALID', spectral_normed=True, update_collection=None,
-            inputs_norm=False, he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+            inputs_norm=False, he_init=True, biases=True)
         output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
         output = nonlinearity(output, 'lrelu', 0.2)
 
@@ -139,7 +139,7 @@ def resnet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, chann
                 layers[-1], layers[-1].shape.as_list()[-1], ngf * mult, 3, 2, 'Conv2D',
                 conv_type='conv2d', channel_multiplier=0,
                 padding='SAME', spectral_normed=True, update_collection=None,
-                inputs_norm=False, he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+                inputs_norm=False, he_init=True, biases=True)
             output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
             output = nonlinearity(output, 'lrelu', 0.2)
 
@@ -171,7 +171,7 @@ def resnet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, chann
             output = lib.ops.conv2d.Conv2D(inputs, inputs.shape.as_list()[-1], ngf * mult, 3, 1,
                                            name='Conv2D', conv_type='conv2d', channel_multiplier=0, padding='SAME',
                                            spectral_normed=True, update_collection=None, inputs_norm=False,
-                                           he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+                                           he_init=True, biases=True)
             output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
             output = nonlinearity(output, 'relu', 0.2)
 
@@ -188,7 +188,7 @@ def resnet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, chann
         output = lib.ops.conv2d.Conv2D(inputs, inputs.shape.as_list()[-1], generator_outputs_channels, 7, 1,
                                        name='Conv2D', conv_type='conv2d', channel_multiplier=0, padding='VALID',
                                        spectral_normed=True, update_collection=None, inputs_norm=False,
-                                       he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+                                       he_init=True, biases=True)
         # output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
         output = tf.nn.tanh(output)
 
