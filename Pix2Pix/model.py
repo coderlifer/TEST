@@ -29,11 +29,11 @@ class Pix2Pix(object):
         """
         with tf.variable_scope('g_net', reuse=reuse):
             if net_type == 'UNet':
-                output = networks.resnet_g_1(inputs, outputs_channels, ngf,
-                                             conv_type=conv_type,
-                                             channel_multiplier=channel_multiplier,
-                                             padding=padding,
-                                             upsampe_method=upsampe_method)
+                output = networks.unet_generator_1(inputs, outputs_channels, ngf,
+                                                   conv_type=conv_type,
+                                                   channel_multiplier=channel_multiplier,
+                                                   padding=padding,
+                                                   upsampe_method=upsampe_method)
             elif net_type == 'UNet_Attention':
                 output = networks.unet_g(inputs, outputs_channels, ngf,
                                          conv_type=conv_type,
@@ -41,10 +41,10 @@ class Pix2Pix(object):
                                          padding=padding,
                                          upsampe_method=upsampe_method)
             elif net_type == 'ResNet':
-                output = networks.resnet_g(inputs, outputs_channels, ngf,
-                                           conv_type=conv_type,
-                                           channel_multiplier=channel_multiplier,
-                                           padding=padding)
+                output = networks.resnet_g_1(inputs, outputs_channels, ngf,
+                                             conv_type=conv_type,
+                                             channel_multiplier=channel_multiplier,
+                                             padding=padding)
             elif net_type == 'VGG':
                 output = networks.vgg_generator(inputs, outputs_channels, ngf,
                                                 conv_type=conv_type,
@@ -77,10 +77,10 @@ class Pix2Pix(object):
         """
         with tf.variable_scope('d_net', reuse=reuse):
             if net_type == 'UNet':
-                output = networks.resnet_d_1(inputs, targets, ndf, spectral_normed, update_collection,
-                                             conv_type=conv_type,
-                                             channel_multiplier=channel_multiplier,
-                                             padding=padding)
+                output = networks.unet_discriminator_1(inputs, targets, ndf, spectral_normed, update_collection,
+                                                       conv_type=conv_type,
+                                                       channel_multiplier=channel_multiplier,
+                                                       padding=padding)
 
             elif net_type == 'UNet_Attention':
                 output = networks.unet_d(inputs, targets, ndf, spectral_normed, update_collection,
@@ -88,10 +88,10 @@ class Pix2Pix(object):
                                          channel_multiplier=channel_multiplier,
                                          padding=padding)
             elif net_type == 'ResNet':
-                output = networks.resnet_d(inputs, targets, ndf, spectral_normed, update_collection,
-                                           conv_type=conv_type,
-                                           channel_multiplier=channel_multiplier,
-                                           padding=padding)
+                output = networks.resnet_d_1(inputs, targets, ndf, spectral_normed, update_collection,
+                                             conv_type=conv_type,
+                                             channel_multiplier=channel_multiplier,
+                                             padding=padding)
             elif net_type == 'VGG':
                 output = networks.vgg_discriminator(inputs, targets, ndf, spectral_normed, update_collection,
                                                     conv_type=conv_type,

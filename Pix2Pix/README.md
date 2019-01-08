@@ -30,7 +30,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --l1_weight=20.0 \
   --gan_weight=1.0 \
   --multiple_A \
-  --net_type='UNet' \
+  --net_type='ResNet' \
   --upsampe_method='depth_to_space'
 
   --val_dir=/home/yhx/webpageSaliency/train_data/pix2pix_data_2A/val
