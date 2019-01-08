@@ -249,7 +249,7 @@ def load_examples():
             raise Exception("invalid direction")
 
         input_image = transform(inputs)
-        input_image.set_shape([CROP_SIZE, CROP_SIZE, 3])
+        input_image.set_shape([CROP_SIZE, CROP_SIZE, 6 if args.multiple_A else 3])
         target_image = transform(targets)
         target_image.set_shape([CROP_SIZE, CROP_SIZE, 3])
 
