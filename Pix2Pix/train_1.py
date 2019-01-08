@@ -234,7 +234,6 @@ def load_examples():
             a_images_edge = preprocess(image_decoded[:, :width // 3, :])
             a_images = preprocess(image_decoded[:, width // 3:(2 * width) // 3, :])
             a_images = tf.concat(values=[a_images_edge, a_images], axis=2)
-            print('\na_images.shape: {}\n'.format(a_images.shape.as_list()))
 
             b_images = preprocess(image_decoded[:, (2 * width) // 3:, :])
         else:
@@ -250,7 +249,9 @@ def load_examples():
             raise Exception("invalid direction")
 
         input_image = transform(inputs)
+        input_image.set_shape([CROP_SIZE, CROP_SIZE, 3])
         target_image = transform(targets)
+        target_image.set_shape([CROP_SIZE, CROP_SIZE, 3])
 
         return input_path_, input_image, target_image
 
