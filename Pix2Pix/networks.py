@@ -233,15 +233,20 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf, conv_type, cha
     ]
     for out_channels in layer_specs:
         with tf.variable_scope("encoder_%d" % (len(layers) + 1)):
-            output = norm_layer(layers[-1], decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
-            output = nonlinearity(output, 'lrelu', 0.2)
+            output = ResidualBlock(
+                layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
+                name='G.Block.%d' % (len(layers) - len(layer_specs)),
+                spectral_normed=True, update_collection=None, inputs_norm=False,
+                resample='down', labels=None, biases=True, activation_fn='relu')
 
-            inputs = tf.pad(generator_inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
-            output = lib.ops.conv2d.Conv2D(
-                output, output.shape.as_list()[-1], out_channels, 5, 2, 'Conv2D',
-                conv_type=conv_type, channel_multiplier=channel_multiplier,
-                padding=padding, spectral_normed=True, update_collection=None,
-                inputs_norm=False, he_init=True, biases=True)
+            # output = norm_layer(layers[-1], decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
+            # output = nonlinearity(output, 'lrelu', 0.2)
+            # inputs = tf.pad(generator_inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+            # output = lib.ops.conv2d.Conv2D(
+            #     output, output.shape.as_list()[-1], out_channels, 5, 2, 'Conv2D',
+            #     conv_type=conv_type, channel_multiplier=channel_multiplier,
+            #     padding=padding, spectral_normed=True, update_collection=None,
+            #     inputs_norm=False, he_init=True, biases=True)
 
             # output, attn_score = Self_Attn(output)  # attention module
 
