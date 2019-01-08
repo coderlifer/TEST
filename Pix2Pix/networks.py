@@ -209,14 +209,18 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf, conv_type, cha
 
     # encoder_1: [batch, 512, 512, in_channels] => [batch, 256, 256, ngf]
     with tf.variable_scope("encoder_1"):
-        inputs = tf.pad(generator_inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
-        print('resnet_g.inputs: {}'.format(inputs.shape.as_list()))
-        output = lib.ops.conv2d.Conv2D(
-            inputs, inputs.shape.as_list()[-1], ngf, 5, 2, 'Conv2D',
-            conv_type='conv2d', channel_multiplier=0, padding='VALID',
-            spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
-        # output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
-        # output = nonlinearity(output, 'lrelu', 0.2)
+        output = ResidualBlock(
+            generator_inputs, generator_inputs.shape.as_list()[-1], ngf, 3,
+            name='G.Block.1',
+            spectral_normed=True, update_collection=None, inputs_norm=False,
+            resample='down', labels=None, biases=True, activation_fn='relu')
+
+        # inputs = tf.pad(generator_inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+        # print('resnet_g.inputs: {}'.format(inputs.shape.as_list()))
+        # output = lib.ops.conv2d.Conv2D(
+        #     inputs, inputs.shape.as_list()[-1], ngf, 5, 2, 'Conv2D',
+        #     conv_type='conv2d', channel_multiplier=0, padding='VALID',
+        #     spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
 
         layers.append(output)
         print('G.encoder_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
