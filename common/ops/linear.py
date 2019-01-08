@@ -36,8 +36,8 @@ def unset_weights_stdev():
 
 
 def Linear(inputs, input_dim, output_dim, name,
-           spectral_normed=False, update_collection=None, reuse=False, inputs_norm=False,
-           biases=True, initialization=None, weightnorm=None, gain=1.):
+           spectral_normed=False, update_collection=None, inputs_norm=False, biases=True, initialization=None,
+           weightnorm=None, gain=1.):
     """
     initialization: None, `lecun`, 'glorot', `he`, 'glorot_he', `orthogonal`, `("uniform", range)`
     """

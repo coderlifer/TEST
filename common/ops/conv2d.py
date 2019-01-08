@@ -10,8 +10,7 @@ from common.ops.sn import spectral_normed_weight
 
 def Conv2D(inputs, input_dim, output_dim, filter_size=3, stride=1, name='Conv2D',
            conv_type='conv2d', channel_multiplier=0, padding='SAME',
-           spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True,
-           mask_type=None, weightnorm=None, biases=True, gain=1.):
+           spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True, biases=True):
     """
     Args:
       inputs: Tensor of shape (batch size, height, width, in_channels).
@@ -27,10 +26,7 @@ def Conv2D(inputs, input_dim, output_dim, filter_size=3, stride=1, name='Conv2D'
       update_collection:
       inputs_norm: From PGGAN.
       he_init:
-      mask_type: One of None, 'a', 'b'.
-      weightnorm:
       biases:
-      gain:
 
     Returns:
       tensor of shape (batch_size, out_height, out_width, output_dim)
