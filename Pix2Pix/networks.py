@@ -69,7 +69,7 @@ def Self_Atten(x, spectral_normed=True):
                                   spectral_normed=spectral_normed,
                                   update_collection=None,
                                   inputs_norm=False,
-                                  he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+                                  he_init=True, biases=True)
         f_ready = tf.reshape(f, [N, H * W, -1])  # [N, H*W, in_dim // 8]
 
         # [N, H, W, in_dim // 8]
@@ -271,7 +271,7 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf, conv_type, cha
                 print('Self_Atten.G: {}'.format(output.shape.as_list()))
 
             layers.append(output)
-            print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs), layers[-1].shape.as_list()))
+            print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
 
     # [batch, 512, 512, ngf] ----> [batch, 512, 512, 3]
     with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
@@ -286,7 +286,7 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf, conv_type, cha
 
         output = tf.nn.tanh(output)
         layers.append(output)
-        print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs), layers[-1].shape.as_list()))
+        print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
 
     return layers[-1]
 
