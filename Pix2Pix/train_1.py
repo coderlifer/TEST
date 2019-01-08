@@ -249,9 +249,7 @@ def load_examples():
             raise Exception("invalid direction")
 
         input_image = transform(inputs)
-        input_image.set_shape([CROP_SIZE, CROP_SIZE, 6 if args.multiple_A else 3])
         target_image = transform(targets)
-        target_image.set_shape([CROP_SIZE, CROP_SIZE, 3])
 
         return input_path_, input_image, target_image
 
@@ -269,6 +267,9 @@ def load_examples():
 
         iterator = dataset.make_one_shot_iterator()
         paths_batch, inputs_batch, targets_batch = iterator.get_next()
+
+        inputs_batch.set_shape([args.batch_size, CROP_SIZE, CROP_SIZE, 6 if args.multiple_A else 3])
+        targets_batch.set_shape([CROP_SIZE, CROP_SIZE, 3])
 
     return Examples(
         paths=paths_batch,
