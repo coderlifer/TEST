@@ -208,25 +208,24 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf, conv_type, cha
     layers = []
 
     # encoder_1: [batch, 512, 512, in_channels] => [batch, 256, 256, ngf]
-    with tf.variable_scope("layer_1"):
+    with tf.variable_scope("encoder_1"):
         inputs = tf.pad(generator_inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         print('resnet_g.inputs: {}'.format(inputs.shape.as_list()))
         output = lib.ops.conv2d.Conv2D(
             inputs, inputs.shape.as_list()[-1], ngf, 5, 2, 'Conv2D',
-            conv_type='conv2d', channel_multiplier=0,
-            padding='VALID', spectral_normed=True, update_collection=None,
-            inputs_norm=False, he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
+            conv_type='conv2d', channel_multiplier=0, padding='VALID',
+            spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
         # output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
         # output = nonlinearity(output, 'lrelu', 0.2)
-        print('resnet_g.layer_1.output: {}'.format(output.shape.as_list()))
 
         layers.append(output)
+        print('G.encoder_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
 
     layer_specs = [
         ngf * 2,  # encoder_2: [batch, 256, 256, ngf] => [batch, 128, 128, ngf * 2]
         ngf * 4,  # encoder_3: [batch, 128, 128, ngf * 2] => [batch, 64, 64, ngf * 4]
         ngf * 8,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 32, 32, ngf * 8]
-        ngf * 16,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 16]
+        ngf * 8,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
         ngf * 16,  # encoder_6: [batch, 16, 16, ngf * 16] => [batch, 8, 8, ngf * 16]
         ngf * 16,  # encoder_7: [batch, 8, 8, ngf * 16] => [batch, 4, 4, ngf * 16]
         # ngf * 8,  # encoder_8: [batch, 4, 4, ngf * 8] => [batch, 2, 2, ngf * 8]
@@ -236,54 +235,58 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf, conv_type, cha
         with tf.variable_scope("encoder_%d" % (len(layers) + 1)):
             output = norm_layer(layers[-1], decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
             output = nonlinearity(output, 'lrelu', 0.2)
-            # [batch, in_height, in_width, in_channels] => [batch, in_height/2, in_width/2, out_channels]
-            output = lib.ops.conv2d.Conv2D(
-                output, output.shape.as_list()[-1], out_channels, 4, 2, 'Conv2D',
-                conv_type=conv_type, channel_multiplier=channel_multiplier,
-                padding=padding, spectral_normed=False, update_collection=None,
-                inputs_norm=False, he_init=True, biases=True)
 
-            # output = norm_layer(convolved, decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
+            inputs = tf.pad(generator_inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+            output = lib.ops.conv2d.Conv2D(
+                output, output.shape.as_list()[-1], out_channels, 5, 2, 'Conv2D',
+                conv_type=conv_type, channel_multiplier=channel_multiplier,
+                padding=padding, spectral_normed=True, update_collection=None,
+                inputs_norm=False, he_init=True, biases=True)
 
             # output, attn_score = Self_Attn(output)  # attention module
 
             layers.append(output)
-
-    print('resnet_g.layer_7.output: {}'.format(layers[-1].shape.as_list()))
+            print('G.encoder_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
 
     # [batch, 4, 4, ngf * 16] ----> [batch, 512, 512, ngf]
-    n_block = 7
-    for i in range(n_block):
-        with tf.variable_scope('layer_{}'.format(len(layers) + 1)):
-            out_c = ngf * min(16, 2 ** (n_block - i - 1))
+    layer_specs_ = [
+        ngf * 16,  # encoder_7: [batch, 4, 4, ngf * 16] => [batch, 8, 8, ngf * 16]
+        ngf * 8,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 8]
+        ngf * 8,  # encoder_5: [batch, 16, 16, ngf * 8] => [batch, 32, 32, ngf * 8]
+        ngf * 4,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 64, 64, ngf * 4]
+        ngf * 2,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 128, 128, ngf * 2]
+        ngf * 1,  # encoder_2: [batch, 128, 128, ngf * 2] => [batch, 256, 256, ngf]
+        ngf * 1,  # encoder_1: [batch, 256, 256, ngf] => [batch, 512, 512, ngf]
+    ]
+    for out_channels in layer_specs_:
+        with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
             output = ResidualBlock(
-                layers[-1], layers[-1].shape.as_list()[-1], out_c, 3, name='G.Block.%d' % (len(layers) + 1),
-                spectral_normed=False, update_collection=None, inputs_norm=False,
+                layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
+                name='G.Block.%d' % (len(layers) - len(layer_specs)),
+                spectral_normed=True, update_collection=None, inputs_norm=False,
                 resample='up', labels=None, biases=True, activation_fn='relu')
 
-            # if i in [1]:
-            #     output, attn_score = Self_Atten(output)  # attention module
-            #     print('Self_Atten.D: {}'.format(output.shape.as_list()))
+            if out_channels == ngf * 4:
+                output, attn_score = Self_Atten(output, spectral_normed=True)  # attention module
+                print('Self_Atten.G: {}'.format(output.shape.as_list()))
 
             layers.append(output)
-            print('G.Block: {}'.format(layers[-1].shape.as_list()))
+            print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs), layers[-1].shape.as_list()))
 
     # [batch, 512, 512, ngf] ----> [batch, 512, 512, 3]
-    with tf.variable_scope('layer_{}'.format(len(layers) + 1)):
+    with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
         output = norm_layer(layers[-1], decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
         output = nonlinearity(output)
 
-        output = tf.pad(output, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+        # output = tf.pad(output, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         output = lib.ops.conv2d.Conv2D(
-            output, inputs.shape.as_list()[-1], generator_outputs_channels, 5, 1, 'Conv2D',
-            conv_type='conv2d', channel_multiplier=0,
-            padding='VALID', spectral_normed=True, update_collection=None,
-            inputs_norm=False, he_init=True, mask_type=None, weightnorm=None, biases=True, gain=1.)
-        # output = norm_layer(output, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+            output, inputs.shape.as_list()[-1], generator_outputs_channels, 3, 1, 'Conv2D',
+            conv_type='conv2d', channel_multiplier=0, padding='SAME',
+            spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
 
         output = tf.nn.tanh(output)
         layers.append(output)
-        print('resnet_g: {}'.format(layers[-1].shape.as_list()))
+        print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs), layers[-1].shape.as_list()))
 
     return layers[-1]
 
@@ -504,10 +507,7 @@ def resnet_d_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_col
     Returns:
       [N, 30, 30, ndf]
     """
-
     layers = []
-
-    # 2x [batch, height, width, in_channels] => [batch, height, width, in_channels * 2]
     inputs = tf.concat([discrim_inputs, discrim_targets], axis=3)
 
     # layer_1: [batch, 512, 512, in_channels * 2] => [batch, 256, 256, ndf]
@@ -517,41 +517,37 @@ def resnet_d_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_col
                                         update_collection=None,
                                         inputs_norm=False,
                                         biases=True)
-        # output = nonlinearity(output, 'lrelu', 0.2)
-        layers.append(output)
 
-    # layer_2: [batch, 256, 256, ndf] => [batch, 128, 128, ndf * 2]
-    # layer_3: [batch, 128, 128, ndf * 2] => [batch, 64, 64, ndf * 4]
-    # layer_4: [batch, 64, 64, ndf * 4] => [batch, 32, 32, ndf * 8]
-    # layer_4: [batch, 32, 32, ndf * 8] => [batch, 16, 16, ndf * 4]
-    # layer_4: [batch, 16, 16, ndf * 4] => [batch, 8, 8, ndf * 2]
+        layers.append(output)
+        print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
+
     layer_specs = [
-        ndf * 2,  # encoder_2: [batch, 256, 256, ngf] => [batch, 128, 128, ngf * 2]
-        ndf * 4,  # encoder_3: [batch, 128, 128, ngf * 2] => [batch, 64, 64, ngf * 4]
-        ndf * 8,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 32, 32, ngf * 8]
-        ndf * 4,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 16]
-        ndf * 2,  # encoder_6: [batch, 16, 16, ngf * 16] => [batch, 8, 8, ngf * 16]
+        ndf * 1,  # encoder_2: [batch, 256, 256, ndf] => [batch, 128, 128, ndf]
+        ndf * 2,  # encoder_3: [batch, 128, 128, ndf] => [batch, 64, 64, ndf * 2]
+        ndf * 4,  # encoder_3: [batch, 64, 64, ndf * 2] => [batch, 32, 32, ndf * 4]
+        ndf * 8,  # encoder_4: [batch, 32, 32, ndf * 4] => [batch, 16, 16, ndf * 8]
+        ndf * 8,  # encoder_5: [batch, 16, 16, ndf * 8] => [batch, 8, 8, ndf * 8]
+        ndf * 16,  # encoder_6: [batch, 8, 8, ndf * 8] => [batch, 4, 4, ndf * 16]
     ]
-    n_layers = 5
-    for i in range(n_layers):
+    for out_channels in layer_specs:
         with tf.variable_scope("layer_%d" % (len(layers) + 1)):
-            output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], layer_specs[i], 3,
+            output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
                                    name='D.Block.%d' % (len(layers) + 1),
                                    spectral_normed=spectral_normed,
                                    update_collection=update_collection,
                                    inputs_norm=False,
                                    resample='down', labels=None, biases=True, activation_fn='lrelu')
 
-            # if i == 2:
-            #     output = nonlinearity(output, 'lrelu', 0.2)
-            #     output, attn_score = Self_Attn(output)  # attention module
+            if out_channels == ndf * 2:
+                output, attn_score = Self_Atten(output, spectral_normed=spectral_normed)  # attention module
+                print('Self_Atten.D: {}'.format(output.shape.as_list()))
 
             layers.append(output)
-    print('1.shape: {}'.format(layers[-1].shape.as_list()))
+            print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
 
-    # layer_5: [batch, 32, 32, ndf * 2] => [batch, 32, 32, ndf]
+    # layer_7: [batch, 4, 4, ngf * 16] => [batch, 4, 4, ngf * 16]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
-        output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], ndf, 3,
+        output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], ndf * 16, 3,
                                name='D.Block.%d' % (len(layers) + 1),
                                spectral_normed=spectral_normed,
                                update_collection=update_collection,
@@ -559,65 +555,32 @@ def resnet_d_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_col
                                resample=None, labels=None, biases=True, activation_fn='lrelu')
 
         layers.append(output)
-        print('2.shape: {}'.format(layers[-1].shape.as_list()))
+        print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
 
-    # layer_6: [batch, 32, 32, ndf] => [batch, 32, 32, ndf]
+    # layer_8: [batch, 4, 4, ndf * 16] => [batch, 4, 4, ndf * 16]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
-        output = ResidualBlock(layers[-1], layers[-1].shape.as_list()[-1], ndf * 2, 3,
-                               name='D.Block.%d' % (len(layers) + 1),
-                               spectral_normed=spectral_normed,
-                               update_collection=update_collection,
-                               inputs_norm=False,
-                               resample=None, labels=None, biases=True, activation_fn='lrelu')
+        output = norm_layer(layers[-1], decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+        output = nonlinearity(output, 'relu')
 
-        output = nonlinearity(output, 'lrelu', 0.2)
+        # padded_input = tf.pad(layers[-1], [[0, 0], [1, 1], [1, 1], [0, 0]], mode="REFLECT")
+        # convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], ndf * 8, 4, 1,
+        #                                   name='Conv2D',
+        #                                   conv_type=conv_type,
+        #                                   channel_multiplier=channel_multiplier,
+        #                                   padding=padding,
+        #                                   spectral_normed=spectral_normed,
+        #                                   update_collection=update_collection,
+        #                                   inputs_norm=False,
+        #                                   he_init=True, biases=True)
 
-        output, attn_score = Self_Atten(output)  # attention module
+        output = tf.reduce_mean(output, axis=[1, 2])
+        output = lib.ops.linear.Linear(
+            output, ndf * 16, 1, 'D.Output',
+            spectral_normed=True, update_collection=update_collection, biases=True, initialization='he')
+        output = tf.reshape(output, [-1])
 
         layers.append(output)
-
-        print('2.shape: {}'.format(layers[-1].shape.as_list()))
-
-    # layer_7: [batch, 32, 32, ndf * 8] => [batch, 31, 31, ndf * 8]
-    with tf.variable_scope("layer_%d" % (len(layers) + 1)):
-        # output = nonlinearity(layers[-1], 'lrelu', 0.2)
-        padded_input = tf.pad(layers[-1], [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
-        convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], ndf * 8, 4, 1,
-                                          name='Conv2D',
-                                          conv_type=conv_type,
-                                          channel_multiplier=channel_multiplier,
-                                          padding=padding,
-                                          spectral_normed=spectral_normed,
-                                          update_collection=update_collection,
-                                          inputs_norm=False,
-                                          he_init=True, biases=True)
-
-        # normalized = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
-        rectified = nonlinearity(convolved, 'lrelu', 0.2)
-
-        rectified, attn_score = Self_Atten(rectified)  # attention module
-
-        layers.append(rectified)
-
-    print('2.shape: {}'.format(layers[-1].shape.as_list()))
-
-    # layer_8: [batch, 31, 31, ndf * 8] => [batch, 30, 30, 1]
-    with tf.variable_scope("layer_%d" % (len(layers) + 1)):
-        padded_input = tf.pad(layers[-1], [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
-        convolved = lib.ops.conv2d.Conv2D(padded_input, padded_input.shape.as_list()[-1], 1, 4, 1,
-                                          name='Conv2D',
-                                          conv_type=conv_type,
-                                          channel_multiplier=channel_multiplier,
-                                          padding=padding,
-                                          spectral_normed=spectral_normed,
-                                          update_collection=update_collection,
-                                          inputs_norm=False,
-                                          he_init=True, biases=True)
-        # output = tf.sigmoid(convolved)
-
-        layers.append(convolved)
-
-    print('3.shape: {}'.format(layers[-1].shape.as_list()))
+        print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
 
     return layers[-1]
 
@@ -1173,16 +1136,15 @@ def unet_generator_1(generator_inputs, generator_outputs_channels, ngf, conv_typ
     with tf.variable_scope("encoder_1"):
         output = lib.ops.conv2d.Conv2D(
             generator_inputs, generator_inputs.shape.as_list()[-1], ngf, 5, 2, 'Conv2D',
-            conv_type=conv_type, channel_multiplier=channel_multiplier,
-            padding=padding, spectral_normed=True, update_collection=None,
-            inputs_norm=False, he_init=True, biases=True)
+            conv_type=conv_type, channel_multiplier=channel_multiplier, padding=padding,
+            spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
         layers.append(output)
 
     layer_specs = [
         ngf * 2,  # encoder_2: [batch, 256, 256, ngf] => [batch, 128, 128, ngf * 2]
         ngf * 4,  # encoder_3: [batch, 128, 128, ngf * 2] => [batch, 64, 64, ngf * 4]
         ngf * 8,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 32, 32, ngf * 8]
-        ngf * 16,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
+        ngf * 8,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
         ngf * 16,  # encoder_6: [batch, 16, 16, ngf * 8] => [batch, 8, 8, ngf * 8]
         ngf * 16,  # encoder_7: [batch, 8, 8, ngf * 8] => [batch, 4, 4, ngf * 8]
         # ngf * 8,  # encoder_8: [batch, 4, 4, ngf * 8] => [batch, 2, 2, ngf * 8]
@@ -1190,15 +1152,14 @@ def unet_generator_1(generator_inputs, generator_outputs_channels, ngf, conv_typ
     ]
     for out_channels in layer_specs:
         with tf.variable_scope("encoder_%d" % (len(layers) + 1)):
-            rectified = nonlinearity(layers[-1], 'lrelu', 0.2)
             # [batch, in_height, in_width, in_channels] => [batch, in_height/2, in_width/2, out_channels]
-            convolved = lib.ops.conv2d.Conv2D(
-                rectified, rectified.shape.as_list()[-1], out_channels, 5, 2, 'Conv2D',
-                conv_type=conv_type, channel_multiplier=channel_multiplier,
-                padding=padding, spectral_normed=True, update_collection=None,
-                inputs_norm=False, he_init=True, biases=True)
+            output = lib.ops.conv2d.Conv2D(
+                layers[-1], layers[-1].shape.as_list()[-1], out_channels, 5, 2, 'Conv2D',
+                conv_type=conv_type, channel_multiplier=channel_multiplier, padding=padding,
+                spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
 
-            output = norm_layer(convolved, decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
+            output = norm_layer(output, decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
+            output = nonlinearity(output, 'lrelu', 0.2)
 
             # output, attn_score = Self_Attn(output)  # attention module
 
@@ -1208,7 +1169,7 @@ def unet_generator_1(generator_inputs, generator_outputs_channels, ngf, conv_typ
         # (ngf * 8, 0.5),  # decoder_8: [batch, 1, 1, ngf * 8] => [batch, 2, 2, ngf * 8 * 2]
         # (ngf * 8, 0.5),  # decoder_7: [batch, 2, 2, ngf * 8 * 2] => [batch, 4, 4, ngf * 8 * 2]
         (ngf * 16, 0.5),  # decoder_6: [batch, 4, 4, ngf * 8 * 2] => [batch, 8, 8, ngf * 8 * 2]
-        (ngf * 16, 0.0),  # decoder_5: [batch, 8, 8, ngf * 8 * 2] => [batch, 16, 16, ngf * 8 * 2]
+        (ngf * 8, 0.0),  # decoder_5: [batch, 8, 8, ngf * 8 * 2] => [batch, 16, 16, ngf * 8 * 2]
         (ngf * 8, 0.0),  # decoder_5: [batch, 16, 16, ngf * 8 * 2] => [batch, 32, 32, ngf * 8 * 2]
         (ngf * 4, 0.0),  # decoder_4: [batch, 32, 32, ngf * 8 * 2] => [batch, 64, 64, ngf * 4 * 2]
         (ngf * 2, 0.0),  # decoder_3: [batch, 64, 64, ngf * 4 * 2] => [batch, 128, 128, ngf * 2 * 2]
@@ -1225,28 +1186,27 @@ def unet_generator_1(generator_inputs, generator_outputs_channels, ngf, conv_typ
             else:
                 inputs = tf.concat([layers[-1], layers[skip_layer]], axis=3)
 
-            rectified = nonlinearity(inputs, 'relu')
             # [batch, in_height, in_width, in_channels] => [batch, in_height*2, in_width*2, out_channels]
-            _, h, w, _ = rectified.shape
+            _, h, w, _ = inputs.shape
             if upsampe_method == 'resize':
-                resized_input = tf.image.resize_images(
-                    rectified, [h * 2, w * 2], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+                inputs = tf.image.resize_images(
+                    inputs, [h * 2, w * 2], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
             elif upsampe_method == 'depth_to_space':
-                resized_input = tf.concat([rectified, rectified, rectified, rectified], axis=3)
-                resized_input = tf.depth_to_space(resized_input, block_size=2)
-            else:
-                raise NotImplementedError('upsampe_method [%s] is not recognized' % upsampe_method)
+                inputs = tf.concat([inputs, inputs, inputs, inputs], axis=3)
+                inputs = tf.depth_to_space(inputs, block_size=2)
+            # else:
+            #     raise NotImplementedError('upsampe_method [%s] is not recognized' % upsampe_method)
 
             output = lib.ops.conv2d.Conv2D(
-                resized_input, resized_input.shape.as_list()[-1], out_channels, 5, 1, 'Conv2D',
-                conv_type=conv_type, channel_multiplier=channel_multiplier,
-                padding=padding, spectral_normed=True, update_collection=None,
-                inputs_norm=False, he_init=True, biases=True)
-            # output = tf.layers.conv2d_transpose(rectified, out_channels, kernel_size=4, strides=(2, 2),
-            #                                     padding="same",
-            #                                     kernel_initializer=tf.contrib.layers.xavier_initializer)
+                inputs, inputs.shape.as_list()[-1], out_channels, 5, 1, 'Conv2D',
+                conv_type=conv_type, channel_multiplier=channel_multiplier, padding=padding,
+                spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
+            # resized_input = tf.layers.conv2d_transpose(
+            #     inputs, out_channels, kernel_size=4, strides=(2, 2), padding="same",
+            #     kernel_initializer=tf.initializers.he_normal())
 
             output = norm_layer(output, decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
+            output = nonlinearity(output, 'relu')
 
             # if dropout > 0.0:
             #     output = tf.nn.dropout(output, keep_prob=1 - dropout)
@@ -1256,22 +1216,21 @@ def unet_generator_1(generator_inputs, generator_outputs_channels, ngf, conv_typ
     # decoder_1: [batch, 256, 256, ngf * 2] => [batch, 512, 512, generator_outputs_channels]
     with tf.variable_scope("decoder_1"):
         inputs = tf.concat([layers[-1], layers[0]], axis=3)
-        rectified = nonlinearity(inputs, 'relu')
-        _, h, w, _ = rectified.shape
+        # rectified = nonlinearity(inputs, 'relu')
+        _, h, w, _ = inputs.shape
         if upsampe_method == 'resize':
-            resized_input = tf.image.resize_images(
-                rectified, [h * 2, w * 2], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+            inputs = tf.image.resize_images(
+                inputs, [h * 2, w * 2], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
         elif upsampe_method == 'depth_to_space':
-            resized_input = tf.concat([rectified, rectified, rectified, rectified], axis=3)
-            resized_input = tf.depth_to_space(resized_input, block_size=2)
-        else:
-            raise NotImplementedError('upsampe_method [%s] is not recognized' % upsampe_method)
+            inputs = tf.concat([inputs, inputs, inputs, inputs], axis=3)
+            inputs = tf.depth_to_space(inputs, block_size=2)
+        # else:
+        #     raise NotImplementedError('upsampe_method [%s] is not recognized' % upsampe_method)
 
         output = lib.ops.conv2d.Conv2D(
-            resized_input, resized_input.shape.as_list()[-1], generator_outputs_channels, 5, 1, 'Conv2D',
-            conv_type=conv_type, channel_multiplier=channel_multiplier,
-            padding=padding, spectral_normed=True, update_collection=None,
-            inputs_norm=False, he_init=True, biases=True)
+            inputs, inputs.shape.as_list()[-1], generator_outputs_channels, 5, 1, 'Conv2D',
+            conv_type=conv_type, channel_multiplier=channel_multiplier, padding=padding,
+            spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
         output = tf.nn.tanh(output)
 
         layers.append(output)
@@ -1289,7 +1248,7 @@ def unet_discriminator(discrim_inputs, discrim_targets, ndf, spectral_normed, up
 
     # layer_1: [batch, 512, 512, in_channels * 2] => [batch, 256, 256, ndf]
     with tf.variable_scope("layer_1"):
-        padded_input = tf.pad(inputs, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
+        padded_input = tf.pad(inputs, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="REFLECT")
         convolved = lib.ops.conv2d.Conv2D(
             padded_input, padded_input.shape.as_list()[-1], ndf, 4, 2, 'Conv2D',
             conv_type=conv_type, channel_multiplier=channel_multiplier,
@@ -1307,7 +1266,7 @@ def unet_discriminator(discrim_inputs, discrim_targets, ndf, spectral_normed, up
         with tf.variable_scope("layer_%d" % (len(layers) + 1)):
             out_channels_ = ndf * min(2 ** (i + 1), 8)
             stride = 1 if i == n_layers - 1 else 2  # last layer here has stride 1
-            padded_input = tf.pad(layers[-1], [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
+            padded_input = tf.pad(layers[-1], [[0, 0], [1, 1], [1, 1], [0, 0]], mode="REFLECT")
             convolved = lib.ops.conv2d.Conv2D(
                 padded_input, padded_input.shape.as_list()[-1], out_channels_, 4, stride, 'Conv2D',
                 conv_type=conv_type, channel_multiplier=channel_multiplier,
@@ -1321,7 +1280,7 @@ def unet_discriminator(discrim_inputs, discrim_targets, ndf, spectral_normed, up
 
     # layer_6: [batch, 31, 31, ndf * 8] => [batch, 30, 30, 1]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
-        padded_input = tf.pad(rectified, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="CONSTANT")
+        padded_input = tf.pad(rectified, [[0, 0], [1, 1], [1, 1], [0, 0]], mode="REFLECT")
         convolved = lib.ops.conv2d.Conv2D(
             padded_input, padded_input.shape.as_list()[-1], 1, 4, 1, 'Conv2D', conv_type, channel_multiplier,
             padding=padding, spectral_normed=spectral_normed, update_collection=update_collection,
@@ -1348,7 +1307,7 @@ def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, 
 
     # layer_1: [batch, 512, 512, in_channels * 2] => [batch, 256, 256, ndf]
     with tf.variable_scope("layer_1"):
-        padded_input = tf.pad(inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="CONSTANT")
+        padded_input = tf.pad(inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         convolved = lib.ops.conv2d.Conv2D(
             padded_input, padded_input.shape.as_list()[-1], ndf, 5, 2, 'Conv2D',
             conv_type=conv_type, channel_multiplier=channel_multiplier,
@@ -1366,7 +1325,7 @@ def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, 
         with tf.variable_scope("layer_%d" % (len(layers) + 1)):
             out_channels_ = ndf * (2 ** (i + 1))
             stride = 1 if i == n_layers - 1 else 2  # last layer here has stride 1
-            padded_input = tf.pad(layers[-1], [[0, 0], [2, 2], [2, 2], [0, 0]], mode="CONSTANT")
+            padded_input = tf.pad(layers[-1], [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
             convolved = lib.ops.conv2d.Conv2D(
                 padded_input, padded_input.shape.as_list()[-1], out_channels_, 5, stride, 'Conv2D',
                 conv_type=conv_type, channel_multiplier=channel_multiplier,
@@ -1380,7 +1339,7 @@ def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, 
 
     # layer_6: [batch, 31, 31, ndf * 16] => [batch, 30, 30, 1]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
-        padded_input = tf.pad(rectified, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="CONSTANT")
+        padded_input = tf.pad(rectified, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         convolved = lib.ops.conv2d.Conv2D(
             padded_input, padded_input.shape.as_list()[-1], 1, 5, 1, 'Conv2D', conv_type, channel_multiplier,
             padding=padding, spectral_normed=spectral_normed, update_collection=update_collection,
