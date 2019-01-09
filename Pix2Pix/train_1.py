@@ -303,7 +303,7 @@ def create_model(inputs, targets, max_steps):
     # 2x [batch, height, width, channels] => [batch, 30, 30, 1]
     predict_fake = model.get_discriminator(inputs, outputs, ndf=args.ndf,
                                            spectral_normed=True,
-                                           update_collection=None,
+                                           update_collection='NO_OPS',
                                            conv_type=args.conv_type,
                                            channel_multiplier=args.channel_multiplier,
                                            padding='VALID',

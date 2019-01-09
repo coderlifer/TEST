@@ -12,7 +12,7 @@ def _l2normalize(v, eps=1e-12):
     return v / (tf.reduce_sum(v ** 2) ** 0.5 + eps)
 
 
-def spectral_normed_weight(W, u=None, num_iters=1, update_collection=None, with_sigma=False, reuse=False):
+def spectral_normed_weight(W, u=None, num_iters=1, update_collection=None, with_sigma=False):
     """
     Args:
       W:
@@ -20,7 +20,6 @@ def spectral_normed_weight(W, u=None, num_iters=1, update_collection=None, with_
       num_iters: Usually num_iters = 1 will be enough.
       update_collection:
       with_sigma:
-      reuse:
 
     Returns:
     """
