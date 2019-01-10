@@ -36,6 +36,7 @@ def Normalize(name, inputs, labels=None, spectral_normed=True):
                 return inputs
             else:
                 # return lib.ops.layernorm.Layernorm(name, [1, 2, 3], inputs)
+                print('D.instance_norm')
                 return lib.ops.normalization.batch_norm(inputs, fused=True)
         elif ('G.' in name) and NORMALIZATION_G:
             if labels is not None:
@@ -44,8 +45,9 @@ def Normalize(name, inputs, labels=None, spectral_normed=True):
                 return outputs
             else:
                 # print('Batchnorm')
-                outputs = lib.ops.normalization.batch_norm(inputs, fused=True)
-                # outputs = lib.ops.normalization.instance_norm(inputs, epsilon=1e-5)
+                # outputs = lib.ops.normalization.batch_norm(inputs, fused=True)
+                print('G.instance_norm')
+                outputs = lib.ops.normalization.instance_norm(inputs, epsilon=1e-6)
                 return outputs
         else:
             return inputs
