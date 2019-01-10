@@ -28,7 +28,7 @@ def spectral_normed_weight(W, u=None, num_iters=1, update_collection=None, is_tr
         if u is None:
             u = tf.get_variable("u", [1, W_shape[-1]], initializer=tf.truncated_normal_initializer(), trainable=False)
 
-        def power_iteration(i, u_i):
+        def power_iteration(i, u_i, v_i):
             _v = _l2_normalize(tf.matmul(u_i, W_reshaped, transpose_b=True))
             _u = _l2_normalize(tf.matmul(_v, W_reshaped))
             return i + 1, _u, _v
