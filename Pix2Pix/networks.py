@@ -239,7 +239,7 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf, conv_type, cha
         with tf.variable_scope("encoder_%d" % (len(layers) + 1)):
             output = ResidualBlock(
                 layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
-                name='G.Block.%d' % (len(layers) - len(layer_specs)),
+                name='G.Block.%d' % (len(layers) + 1),
                 spectral_normed=True, update_collection=None, inputs_norm=False,
                 resample='down', labels=None, biases=True, activation_fn='relu')
 
