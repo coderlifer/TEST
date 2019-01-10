@@ -11,6 +11,9 @@ import numpy as np
 import tensorflow as tf
 import argparse
 import os
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+
 import sys
 import glob
 import math
@@ -81,6 +84,7 @@ parser.add_argument("--multiple_A", dest="multiple_A", action="store_true",
 parser.add_argument('--net_type', dest="net_type", type=str, default="UNet", help='')
 parser.add_argument('--upsampe_method', dest="upsampe_method", type=str, default="depth_to_space",
                     help='depth_to_space, resize')
+parser.add_argument("--g_bce", dest="g_bce", action="store_true", help="whether ")
 
 args = parser.parse_args()
 
@@ -334,7 +338,18 @@ def create_model(inputs, targets, max_steps):
     with tf.name_scope("g_loss"):
         # gen_loss_GAN = tf.reduce_mean(-tf.log(predict_fake + EPS))
         _, gen_loss_GAN = lib.misc.get_loss(predict_real, predict_fake, loss_type=args.loss_type)
-        gen_loss_L1 = tf.reduce_mean(tf.abs(targets - outputs))
+
+        if args.g_bce:
+            outputs_ = deprocess(outputs)
+            targets_ = deprocess(targets)
+            gen_loss_L1 = -tf.reduce_mean(
+                targets_ * tf.log(outputs_) + (1.0 - targets_) * tf.log(1.0 - outputs_))
+            # gen_loss_L1 = -tf.reduce_mean(
+            #     targets * tf.log(tf.clip_by_value(outputs, 1e-10, 1.0)) +
+            #     (1.0 - targets) * tf.log(tf.clip_by_value(1.0 - outputs, 1e-10, 1.0)))
+        else:
+            gen_loss_L1 = tf.reduce_mean(tf.abs(targets - outputs))
+
         gen_loss = gen_loss_GAN * args.gan_weight + gen_loss_L1 * args.l1_weight
 
     with tf.name_scope('global_step'):
