@@ -43,6 +43,7 @@ parser.add_argument("--beta1", type=float, default=0., help="momentum term of ad
 parser.add_argument("--beta2", type=float, default=0.9, help="momentum term of adam")
 parser.add_argument("--loss_type", type=str, default='HINGE',
                     help="HINGE, WGAN, WGAN-GP, LSGAN, CGAN, Modified_MiniMax, MiniMax")
+parser.add_argument("--g_bce", dest="g_bce", action="store_true", help="whether ")
 parser.add_argument('--n_dis', type=int, default=5,
                     help='Number of discriminator update per generator update.')
 parser.add_argument('--input_dir', type=str, default='./', help="path to folder containing images")
@@ -84,7 +85,6 @@ parser.add_argument("--multiple_A", dest="multiple_A", action="store_true",
 parser.add_argument('--net_type', dest="net_type", type=str, default="UNet", help='')
 parser.add_argument('--upsampe_method', dest="upsampe_method", type=str, default="depth_to_space",
                     help='depth_to_space, resize')
-parser.add_argument("--g_bce", dest="g_bce", action="store_true", help="whether ")
 
 args = parser.parse_args()
 

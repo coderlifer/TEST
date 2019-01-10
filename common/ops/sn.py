@@ -35,7 +35,7 @@ def spectral_normed_weight(W, u=None, num_iters=1, update_collection=None, is_tr
 
         # _, (1, c), (1, m)
         _, u_final, v_final = tf.while_loop(
-            cond=lambda i, _1: i < num_iters,
+            cond=lambda i, _1, _2: i < num_iters,
             body=power_iteration,
             loop_vars=(tf.constant(0, dtype=tf.int32), u)
         )
