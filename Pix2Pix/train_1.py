@@ -343,7 +343,8 @@ def create_model(inputs, targets, max_steps):
             outputs_ = deprocess(outputs)
             targets_ = deprocess(targets)
             gen_loss_L1 = -tf.reduce_mean(
-                targets_ * tf.log(outputs_) + (1.0 - targets_) * tf.log(1.0 - outputs_))
+                targets_ * tf.log(tf.clip_by_value(outputs_, 1e-7, 1.0 - 1e-7)) +
+                (1.0 - targets_) * tf.log(tf.clip_by_value(1.0 - outputs_, 1e-7, 1.0 - 1e-7)))
             # gen_loss_L1 = -tf.reduce_mean(
             #     targets * tf.log(tf.clip_by_value(outputs, 1e-10, 1.0)) +
             #     (1.0 - targets) * tf.log(tf.clip_by_value(1.0 - outputs, 1e-10, 1.0)))
