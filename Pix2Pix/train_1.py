@@ -628,8 +628,8 @@ def train():
                         print("gen_loss_GAN", results["gen_loss_GAN"])
                         print("gen_loss_L1", results["gen_loss_L1"])
 
-                        print("\noutputs_print\n", results["outputs_print"])
-                        print("\ntargets_print\n", results["targets_print"])
+                        # print("\noutputs_print\n", results["outputs_print"])
+                        # print("\ntargets_print\n", results["targets_print"])
 
                         lib.plot.plot('lr', results["lr"])
                         lib.plot.plot('d_loss', results["discrim_loss"])

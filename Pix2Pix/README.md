@@ -28,7 +28,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --ndf=64 \
   --scale_size=572 \
   --TTUR \
-  --l1_weight=0.1 \
+  --l1_weight=0.5 \
   --gan_weight=1.0 \
   --multiple_A \
   --net_type='ResNet' \
