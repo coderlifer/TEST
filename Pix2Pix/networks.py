@@ -215,6 +215,135 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf, conv_type, cha
             spectral_normed=True, update_collection=None, inputs_norm=False,
             resample='down', labels=None, biases=True, activation_fn='relu')
 
+        layers.append(output)
+        print('G.encoder_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
+
+    layer_specs = [
+        ngf * 2,  # encoder_2: [batch, 256, 256, ngf] => [batch, 128, 128, ngf * 2]
+        ngf * 4,  # encoder_3: [batch, 128, 128, ngf * 2] => [batch, 64, 64, ngf * 4]
+        ngf * 8,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 32, 32, ngf * 8]
+        ngf * 8,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
+        ngf * 16,  # encoder_6: [batch, 16, 16, ngf * 16] => [batch, 8, 8, ngf * 16]
+        ngf * 16,  # encoder_7: [batch, 8, 8, ngf * 16] => [batch, 4, 4, ngf * 16]
+    ]
+    for out_channels in layer_specs:
+        with tf.variable_scope("encoder_%d" % (len(layers) + 1)):
+            output = ResidualBlock(
+                layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
+                name='G.Block.%d' % (len(layers) + 1),
+                spectral_normed=True, update_collection=None, inputs_norm=False,
+                resample='down', labels=None, biases=True, activation_fn='relu')
+
+            # output, attn_score = Self_Attn(output)  # attention module
+
+            layers.append(output)
+            print('G.encoder_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
+
+    # [batch, 4, 4, ngf * 16] ----> [batch, 512, 512, ngf]
+    layer_specs_ = [
+        ngf * 16,  # encoder_7: [batch, 4, 4, ngf * 16] => [batch, 8, 8, ngf * 16]
+        ngf * 8,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 8]
+        ngf * 8,  # encoder_5: [batch, 16, 16, ngf * 8] => [batch, 32, 32, ngf * 8]
+        ngf * 4,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 64, 64, ngf * 4]
+        ngf * 2,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 128, 128, ngf * 2]
+        ngf * 1,  # encoder_2: [batch, 128, 128, ngf * 2] => [batch, 256, 256, ngf]
+        ngf * 1,  # encoder_1: [batch, 256, 256, ngf] => [batch, 512, 512, ngf]
+    ]
+    for out_channels in layer_specs_:
+        with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
+            output = ResidualBlock(
+                layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
+                name='G.Block.%d' % (len(layers) - len(layer_specs)),
+                spectral_normed=True, update_collection=None, inputs_norm=False,
+                resample='up', labels=None, biases=True, activation_fn='relu')
+
+            if out_channels == ngf * 4:
+                output, attn_score = Self_Atten(output, spectral_normed=True)  # attention module
+                print('Self_Atten.G: {}'.format(output.shape.as_list()))
+
+            layers.append(output)
+            print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
+
+    # [batch, 512, 512, ngf] ----> [batch, 512, 512, 3]
+    with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
+        output = norm_layer(layers[-1], decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
+        output = nonlinearity(output)
+
+        # output = tf.pad(output, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+        output = lib.ops.conv2d.Conv2D(
+            output, output.shape.as_list()[-1], generator_outputs_channels, 3, 1, 'Conv2D',
+            conv_type='conv2d', channel_multiplier=0, padding='SAME',
+            spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
+
+        output = tf.nn.tanh(output)
+        layers.append(output)
+        print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
+
+    return layers[-1]
+
+
+def resnet_g_vgg(generator_inputs, generator_outputs_channels, ngf, vgg19_npy_path=None):
+    """ Using vgg to encode image, and ResNet architecture to decode image.
+    Args:
+
+    Returns:
+    """
+    layers = []
+
+    if vgg19_npy_path is not None:
+        data_dict = np.load(vgg19_npy_path, encoding='latin1').item()
+    else:
+        data_dict = None
+
+    # encoder_1: [batch, 512, 512, in_channels] => [batch, 256, 256, ngf]
+    with tf.variable_scope("vgg"):
+        rgb_scaled = (generator_inputs + 1) / 2  # [-1, 1] => [0, 1]
+        rgb_scaled *= 255.0
+        # Convert RGB to BGR
+        red, green, blue = tf.split(value=rgb_scaled, num_or_size_splits=3, axis=3)
+        # assert red.get_shape().as_list()[1:] == [224, 224, 1]
+        # assert green.get_shape().as_list()[1:] == [224, 224, 1]
+        # assert blue.get_shape().as_list()[1:] == [224, 224, 1]
+        bgr = tf.concat(values=[
+            blue - VGG_MEAN[0],
+            green - VGG_MEAN[1],
+            red - VGG_MEAN[2],
+        ], axis=3)
+        # assert bgr.get_shape().as_list()[1:] == [224, 224, 3]
+
+        conv1_1 = conv_layer(bgr, 6, 64, "conv1_1", trainable=False, data_dict=None)
+        conv1_2 = conv_layer(conv1_1, 64, 64, "conv1_2", trainable=False, data_dict=data_dict)
+        pool1 = max_pool(conv1_2, 'pool1')  # [112, 112, 64], [256, 256, 64]
+
+        conv2_1 = conv_layer(pool1, 64, 128, "conv2_1", trainable=False, data_dict=data_dict)
+        conv2_2 = conv_layer(conv2_1, 128, 128, "conv2_2", trainable=False, data_dict=data_dict)
+        pool2 = max_pool(conv2_2, 'pool2')  # [56, 56, 128], [128, 128, 128]
+
+        conv3_1 = conv_layer(pool2, 128, 256, "conv3_1", trainable=False, data_dict=data_dict)
+        conv3_2 = conv_layer(conv3_1, 256, 256, "conv3_2", trainable=False, data_dict=data_dict)
+        conv3_3 = conv_layer(conv3_2, 256, 256, "conv3_3", trainable=False, data_dict=data_dict)
+        conv3_4 = conv_layer(conv3_3, 256, 256, "conv3_4", trainable=False, data_dict=data_dict)
+        pool3 = max_pool(conv3_4, 'pool3')  # [28, 28, 256], [64, 64, 256]
+
+        conv4_1 = conv_layer(pool3, 256, 512, "conv4_1", trainable=True, data_dict=data_dict)
+        conv4_2 = conv_layer(conv4_1, 512, 512, "conv4_2", trainable=True, data_dict=data_dict)
+        conv4_3 = conv_layer(conv4_2, 512, 512, "conv4_3", trainable=True, data_dict=data_dict)
+        conv4_4 = conv_layer(conv4_3, 512, 512, "conv4_4", trainable=True, data_dict=data_dict)
+        pool4 = max_pool(conv4_4, 'pool4')  # [14, 14, 512], [32, 32, 512]
+
+        conv5_1 = conv_layer(pool4, 512, 512, "conv5_1", trainable=True, data_dict=data_dict)
+        conv5_2 = conv_layer(conv5_1, 512, 512, "conv5_2", trainable=True, data_dict=data_dict)
+        conv5_3 = conv_layer(conv5_2, 512, 512, "conv5_3", trainable=True, data_dict=data_dict)
+        conv5_4 = conv_layer(conv5_3, 512, 512, "conv5_4", trainable=True, data_dict=data_dict)
+        pool5 = max_pool(conv5_4, 'pool5')  # [7, 7, 512], [16, 16, 512]
+
+
+        output = ResidualBlock(
+            generator_inputs, generator_inputs.shape.as_list()[-1], ngf, 3,
+            name='G.Block.1',
+            spectral_normed=True, update_collection=None, inputs_norm=False,
+            resample='down', labels=None, biases=True, activation_fn='relu')
+
         # inputs = tf.pad(generator_inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         # print('resnet_g.inputs: {}'.format(inputs.shape.as_list()))
         # output = lib.ops.conv2d.Conv2D(
@@ -514,7 +643,7 @@ def resnet_d_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_col
         already. Shape is [batch, height, width, channels].
 
     Returns:
-      [N, 30, 30, ndf]
+      [N, 1]
     """
     layers = []
     inputs = tf.concat([discrim_inputs, discrim_targets], axis=3)

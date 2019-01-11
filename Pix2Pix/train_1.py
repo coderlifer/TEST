@@ -56,12 +56,12 @@ parser.add_argument("--which_direction", type=str, default="AtoB", choices=["Ato
 parser.add_argument("--seed", type=int)
 parser.add_argument("--max_steps", type=int, default=None, help="number of training steps (0 to disable)")
 parser.add_argument("--max_epochs", type=int, default=200, help="number of training epochs")
-parser.add_argument("--summary_freq", type=int, default=10, help="update summaries every summary_freq steps")
+parser.add_argument("--summary_freq", type=int, default=118, help="update summaries every summary_freq steps")
 parser.add_argument("--progress_freq", type=int, default=10, help="display progress every progress_freq steps")
 parser.add_argument("--trace_freq", type=int, default=0, help="trace execution every trace_freq steps")
 parser.add_argument("--display_freq", type=int, default=0,
                     help="write current training images every display_freq steps")
-parser.add_argument("--save_freq", type=int, default=4000, help="save model every save_freq steps, 0 to disable")
+parser.add_argument("--save_freq", type=int, default=1000, help="save model every save_freq steps, 0 to disable")
 parser.add_argument("--aspect_ratio", type=float, default=1.0,
                     help="aspect ratio of output images (width/height)")
 parser.add_argument("--lab_colorization", action="store_true",
@@ -504,14 +504,14 @@ def train():
         }
 
     # summaries
-    # with tf.name_scope("inputs_summary"):
-    #     tf.summary.image("inputs", converted_inputs)
+    with tf.name_scope("inputs_summary"):
+        tf.summary.image("inputs", converted_inputs)
 
-    # with tf.name_scope("targets_summary"):
-    #     tf.summary.image("targets", converted_targets)
-    #
-    # with tf.name_scope("outputs_summary"):
-    #     tf.summary.image("outputs", converted_outputs)
+    with tf.name_scope("targets_summary"):
+        tf.summary.image("targets", converted_targets)
+
+    with tf.name_scope("outputs_summary"):
+        tf.summary.image("outputs", converted_outputs)
 
     # tf.summary.scalar("discriminator_loss", modelNamedtuple.discrim_loss)
     # tf.summary.scalar("generator_loss_GAN", modelNamedtuple.gen_loss_GAN)
@@ -539,13 +539,13 @@ def train():
 
         parameter_count = tf.reduce_sum([tf.reduce_prod(tf.shape(v)) for v in tf.trainable_variables()])
 
-    # summary_op = tf.summary.merge_all()
+    summary_op = tf.summary.merge_all()
     saver = tf.train.Saver(max_to_keep=100)
 
     config = tf.ConfigProto(allow_soft_placement=True)
     config.gpu_options.allow_growth = True
     with tf.Session(config=config) as sess:
-        # summary_writer = tf.summary.FileWriter(args.output_dir, sess.graph)
+        summary_writer = tf.summary.FileWriter(args.output_dir, sess.graph)
         sess.run(tf.global_variables_initializer())
         print("parameter_count =", sess.run(parameter_count))
 
@@ -594,8 +594,8 @@ def train():
                         fetches["gen_loss_GAN"] = modelNamedtuple.gen_loss_GAN
                         fetches["gen_loss_content"] = modelNamedtuple.gen_loss_content
 
-                    # if should(args.summary_freq):
-                    #     fetches["summary"] = summary_op
+                    if should(args.summary_freq):
+                        fetches["summary"] = summary_op
 
                     # if should(args.display_freq):
                     #     fetches["display"] = display_fetches
@@ -606,9 +606,9 @@ def train():
                     for _ in range(args.n_dis):
                         sess.run(modelNamedtuple.d_train)
 
-                    # if should(args.summary_freq):
-                    #     # print("recording summary")
-                    #     summary_writer.add_summary(results["summary"], results["global_step"])
+                    if should(args.summary_freq):
+                        # print("recording summary")
+                        summary_writer.add_summary(results["summary"], results["global_step"])
 
                     # if should(args.display_freq):
                     #     # print("saving display images")
