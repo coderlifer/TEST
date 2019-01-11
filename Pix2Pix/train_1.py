@@ -374,7 +374,7 @@ def create_model(inputs, targets, max_steps):
         #     tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - int(max_steps * 0.5)) / max_steps)))
         if args.TTUR:
             print('\nUsing TTUR!\n')
-            LR_D = tf.constant(0.0002)  # 2e-4  # Initial learning rate
+            LR_D = tf.constant(0.0004)  # 2e-4  # Initial learning rate
             LR_G = tf.constant(0.0001)  # 2e-4  # Initial learning rate
             lr_d = LR_D * decay
             lr_g = LR_G * decay
