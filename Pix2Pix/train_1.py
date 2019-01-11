@@ -585,7 +585,7 @@ def train():
                         "losses": modelNamedtuple.losses,
                         "global_step": modelNamedtuple.global_step,
                         "outputs_print": deprocess(modelNamedtuple.outputs),
-                        "targets_print": deprocess(modelNamedtuple.targets),
+                        "targets_print": deprocess(examples.targets),
                     }
 
                     if should(args.progress_freq):
