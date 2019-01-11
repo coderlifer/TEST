@@ -198,8 +198,7 @@ def resnet_g(generator_inputs, generator_outputs_channels, ngf, conv_type, chann
     return layers[-1]
 
 
-def resnet_g_1(generator_inputs, generator_outputs_channels, ngf, conv_type, channel_multiplier, padding,
-               upsampe_method='depth_to_space'):
+def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
     """ UNet using ResNet architecture.
     Args:
 
@@ -336,7 +335,6 @@ def resnet_g_vgg(generator_inputs, generator_outputs_channels, ngf, vgg19_npy_pa
         conv5_3 = conv_layer(conv5_2, 512, 512, "conv5_3", trainable=True, data_dict=data_dict)
         conv5_4 = conv_layer(conv5_3, 512, 512, "conv5_4", trainable=True, data_dict=data_dict)
         pool5 = max_pool(conv5_4, 'pool5')  # [7, 7, 512], [16, 16, 512]
-
 
         output = ResidualBlock(
             generator_inputs, generator_inputs.shape.as_list()[-1], ngf, 3,

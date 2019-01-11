@@ -127,7 +127,7 @@ def ResidualBlock(inputs, input_dim, output_dim, filter_size, name,
                                  spectral_normed=spectral_normed,
                                  update_collection=update_collection,
                                  inputs_norm=inputs_norm,
-                                 he_init=False, biases=biases)
+                                 he_init=True, biases=biases)
 
     output = inputs
     output = Normalize(name + '.N1', output, labels=labels, spectral_normed=spectral_normed)
@@ -169,7 +169,7 @@ def OptimizedResBlockDisc1(inputs, DIM_D=128, activation_fn='relu',
                              spectral_normed=spectral_normed,
                              update_collection=update_collection,
                              inputs_norm=inputs_norm,
-                             he_init=False, biases=biases)
+                             he_init=True, biases=biases)
 
     output = inputs
     output = conv_1(inputs=output, filter_size=3, name='D.DownBlock.1.Conv1',

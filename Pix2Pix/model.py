@@ -41,10 +41,7 @@ class Pix2Pix(object):
                                          padding=padding,
                                          upsampe_method=upsampe_method)
             elif net_type == 'ResNet':
-                output = networks.resnet_g_1(inputs, outputs_channels, ngf,
-                                             conv_type=conv_type,
-                                             channel_multiplier=channel_multiplier,
-                                             padding=padding)
+                output = networks.resnet_g_1(inputs, outputs_channels, ngf)
             elif net_type == 'VGG':
                 output = networks.vgg_generator(inputs, outputs_channels, ngf,
                                                 conv_type=conv_type,
