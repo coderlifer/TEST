@@ -96,7 +96,7 @@ CROP_SIZE = 512  # 256, 512, 1024
 Examples = collections.namedtuple("Examples", "paths, inputs, targets, count, steps_per_epoch")
 Model = collections.namedtuple("Model",
                                "lr, outputs, predict_real, predict_fake, discrim_loss, discrim_grads_and_vars, "
-                               "gen_loss_GAN, gen_loss_L1, gen_grads_and_vars, d_train, g_train, losses, "
+                               "gen_loss_GAN, gen_loss_content, gen_grads_and_vars, d_train, g_train, losses, "
                                "global_step")
 
 
@@ -342,16 +342,16 @@ def create_model(inputs, targets, max_steps):
         if args.g_bce:
             outputs_ = deprocess(outputs)
             targets_ = deprocess(targets)
-            gen_loss_L1 = -tf.reduce_mean(
+            gen_loss_content = -tf.reduce_mean(
                 targets_ * tf.log(tf.clip_by_value(outputs_, 1e-10, 1.0 - 1e-10)) +
                 (1.0 - targets_) * tf.log(tf.clip_by_value(1.0 - outputs_, 1e-10, 1.0 - 1e-10)))
-            # gen_loss_L1 = -tf.reduce_mean(
+            # gen_loss_content = -tf.reduce_mean(
             #     targets * tf.log(tf.clip_by_value(outputs, 1e-10, 1.0)) +
             #     (1.0 - targets) * tf.log(tf.clip_by_value(1.0 - outputs, 1e-10, 1.0)))
         else:
-            gen_loss_L1 = tf.reduce_mean(tf.abs(targets - outputs))
+            gen_loss_content = tf.reduce_mean(tf.abs(targets - outputs))
 
-        gen_loss = gen_loss_GAN * args.gan_weight + gen_loss_L1 * args.l1_weight
+        gen_loss = gen_loss_GAN * args.gan_weight + gen_loss_content * args.l1_weight
 
     with tf.name_scope('global_step'):
         global_step = tf.train.get_or_create_global_step()
@@ -374,7 +374,7 @@ def create_model(inputs, targets, max_steps):
         #     tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - int(max_steps * 0.5)) / max_steps)))
         if args.TTUR:
             print('\nUsing TTUR!\n')
-            LR_D = tf.constant(0.0004)  # 2e-4  # Initial learning rate
+            LR_D = tf.constant(0.0002)  # 2e-4  # Initial learning rate
             LR_G = tf.constant(0.0001)  # 2e-4  # Initial learning rate
             lr_d = LR_D * decay
             lr_g = LR_G * decay
@@ -403,7 +403,7 @@ def create_model(inputs, targets, max_steps):
         gen_train = gen_optim.apply_gradients(gen_grads_and_vars, global_step=global_step)
 
     ema = tf.train.ExponentialMovingAverage(decay=0.99)
-    update_losses = ema.apply([discrim_loss, gen_loss_GAN, gen_loss_L1])
+    update_losses = ema.apply([discrim_loss, gen_loss_GAN, gen_loss_content])
 
     # global_step = tf.train.get_or_create_global_step()
     # incr_global_step = tf.assign(global_step, global_step + 1)
@@ -416,7 +416,7 @@ def create_model(inputs, targets, max_steps):
         discrim_loss=ema.average(discrim_loss),
         discrim_grads_and_vars=discrim_grads_and_vars,
         gen_loss_GAN=ema.average(gen_loss_GAN),
-        gen_loss_L1=ema.average(gen_loss_L1),
+        gen_loss_content=ema.average(gen_loss_content),
         gen_grads_and_vars=gen_grads_and_vars,
         d_train=discrim_train,
         g_train=gen_train,
@@ -515,7 +515,7 @@ def train():
 
     # tf.summary.scalar("discriminator_loss", modelNamedtuple.discrim_loss)
     # tf.summary.scalar("generator_loss_GAN", modelNamedtuple.gen_loss_GAN)
-    # tf.summary.scalar("generator_loss_L1", modelNamedtuple.gen_loss_L1)
+    # tf.summary.scalar("generator_loss_L1", modelNamedtuple.gen_loss_content)
 
     # for var in tf.trainable_variables():
     #     tf.summary.histogram(var.op.name + "/values", var)
@@ -592,7 +592,7 @@ def train():
                         fetches['lr'] = modelNamedtuple.lr
                         fetches["discrim_loss"] = modelNamedtuple.discrim_loss
                         fetches["gen_loss_GAN"] = modelNamedtuple.gen_loss_GAN
-                        fetches["gen_loss_L1"] = modelNamedtuple.gen_loss_L1
+                        fetches["gen_loss_content"] = modelNamedtuple.gen_loss_content
 
                     # if should(args.summary_freq):
                     #     fetches["summary"] = summary_op
@@ -626,7 +626,7 @@ def train():
                               (train_epoch, train_step, rate, remaining / 60))
                         print("discrim_loss", results["discrim_loss"])
                         print("gen_loss_GAN", results["gen_loss_GAN"])
-                        print("gen_loss_L1", results["gen_loss_L1"])
+                        print("gen_loss_content", results["gen_loss_content"])
 
                         # print("\noutputs_print\n", results["outputs_print"])
                         # print("\ntargets_print\n", results["targets_print"])
@@ -634,7 +634,7 @@ def train():
                         lib.plot.plot('lr', results["lr"])
                         lib.plot.plot('d_loss', results["discrim_loss"])
                         lib.plot.plot('g_loss_GAN', results["gen_loss_GAN"])
-                        lib.plot.plot('g_loss_L1', results["gen_loss_L1"])
+                        lib.plot.plot('gen_loss_content', results["gen_loss_content"])
                         lib.plot.flush()
 
                     if should(args.save_freq):
