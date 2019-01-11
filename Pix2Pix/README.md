@@ -28,7 +28,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --ndf=64 \
   --scale_size=572 \
   --TTUR \
-  --l1_weight=0.05 \
+  --l1_weight=0.1 \
   --gan_weight=1.0 \
   --multiple_A \
   --net_type='ResNet' \
@@ -46,6 +46,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --beta1=0. \
   --beta2=0.9 \
   --loss_type='HINGE' \
+  --g_bce \
   --n_dis=1 \
   --input_dir=/home/tellhow-iot/tem/webpagesaliency/pix2pix_data_2A/val \
   --output_dir=/data/tem/webpagesaliency/output_resize_512/tem/1180 \

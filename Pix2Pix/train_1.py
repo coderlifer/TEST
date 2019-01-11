@@ -343,8 +343,8 @@ def create_model(inputs, targets, max_steps):
             outputs_ = deprocess(outputs)
             targets_ = deprocess(targets)
             gen_loss_L1 = -tf.reduce_mean(
-                targets_ * tf.log(tf.clip_by_value(outputs_, 1e-7, 1.0 - 1e-7)) +
-                (1.0 - targets_) * tf.log(tf.clip_by_value(1.0 - outputs_, 1e-7, 1.0 - 1e-7)))
+                targets_ * tf.log(tf.clip_by_value(outputs_, 1e-10, 1.0 - 1e-10)) +
+                (1.0 - targets_) * tf.log(tf.clip_by_value(1.0 - outputs_, 1e-10, 1.0 - 1e-10)))
             # gen_loss_L1 = -tf.reduce_mean(
             #     targets * tf.log(tf.clip_by_value(outputs, 1e-10, 1.0)) +
             #     (1.0 - targets) * tf.log(tf.clip_by_value(1.0 - outputs, 1e-10, 1.0)))
@@ -584,6 +584,8 @@ def train():
                         "g_train": modelNamedtuple.g_train,
                         "losses": modelNamedtuple.losses,
                         "global_step": modelNamedtuple.global_step,
+                        "outputs_print": deprocess(modelNamedtuple.outputs),
+                        "targets_print": deprocess(modelNamedtuple.targets),
                     }
 
                     if should(args.progress_freq):
@@ -625,6 +627,9 @@ def train():
                         print("discrim_loss", results["discrim_loss"])
                         print("gen_loss_GAN", results["gen_loss_GAN"])
                         print("gen_loss_L1", results["gen_loss_L1"])
+
+                        print("\noutputs_print\n", results["outputs_print"])
+                        print("\ntargets_print\n", results["targets_print"])
 
                         lib.plot.plot('lr', results["lr"])
                         lib.plot.plot('d_loss', results["discrim_loss"])
