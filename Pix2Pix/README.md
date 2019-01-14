@@ -1,6 +1,14 @@
 # TEST
 
 
+- [n1_1_1]: IN, SN, Hinge, 512pix, noINinDiscri, 64ngf, depth_to_space, 400epoch, 2A, n_dis=1, G_lr=0.0002, SNinGandD, TTUR, `Resnet_G`(Use resnet architecture to extract image featrues, encode to 4*4, and decode from it), `UNET_D`(D's output is [N, 30, 30, 1]), **with_att, pixel cross entropy, l1_weight=0.05**. (See BigGAN'structure.) 
+
+
+type | AUC-Judd/Borji/shuffled(C)  | CC(B) | NSS(C)
+---- | ---- | --- | ---
+n1_1_1| 0.8306/0.7734/0.7047 | 0.6872 | 1.5937
+
+
 ## How to run:
 
 ``` python
@@ -17,6 +25,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --beta1=0. \
   --beta2=0.9 \
   --loss_type='HINGE' \
+  --g_bce \
   --n_dis=1 \
   --input_dir=/home/tellhow-iot/tem/webpagesaliency/pix2pix_data_2A/train \
   --output_dir=/data/tem/webpagesaliency/output_resize_512 \
@@ -27,7 +36,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --ndf=64 \
   --scale_size=572 \
   --TTUR \
-  --l1_weight=20 \
+  --l1_weight=0.05 \
   --gan_weight=1.0 \
   --multiple_A \
   --net_type='ResNet' \
@@ -48,7 +57,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --g_bce \
   --n_dis=1 \
   --input_dir=/home/tellhow-iot/tem/webpagesaliency/pix2pix_data_2A/val \
-  --output_dir=/data/tem/webpagesaliency/output_resize_512/tem/1180 \
+  --output_dir=/data/tem/webpagesaliency/output_resize_512/tem/47200 \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=1180 \
@@ -56,10 +65,10 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --ndf=64 \
   --scale_size=512 \
   --TTUR \
-  --l1_weight=20.0 \
+  --l1_weight=0.05 \
   --gan_weight=1.0 \
   --checkpoint_dir=/data/tem/webpagesaliency/output_resize_512/ \
-  --checkpoint=/data/tem/webpagesaliency/output_resize_512/model-1180 \
+  --checkpoint=/data/tem/webpagesaliency/output_resize_512/model-47200 \
   --multiple_A \
   --net_type='ResNet' \
   --upsampe_method=depth_to_space
