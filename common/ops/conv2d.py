@@ -9,7 +9,7 @@ from common.ops.sn import spectral_normed_weight
 
 
 def Conv2D(inputs, input_dim, output_dim, filter_size=3, stride=1, name='Conv2D',
-           conv_type='conv2d', channel_multiplier=0, padding='SAME',
+           conv_type='conv2d', channel_multiplier=0, dilation_rate=2, padding='SAME',
            spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True, biases=True):
     """
     Args:
@@ -34,7 +34,10 @@ def Conv2D(inputs, input_dim, output_dim, filter_size=3, stride=1, name='Conv2D'
     # with tf.name_scope(name) as scope:
     with tf.variable_scope(name):
         if conv_type != "conv2d":
-            assert (channel_multiplier > 0, 'channel_multiplier should >0!')
+            if conv_type == "atrous_conv2d":
+                assert (dilation_rate > 0, 'dilation_rate should >0!')
+            else:
+                assert (channel_multiplier > 0, 'channel_multiplier should >0!')
 
         fan_in = input_dim * filter_size ** 2
         if inputs_norm:
@@ -104,6 +107,15 @@ def Conv2D(inputs, input_dim, output_dim, filter_size=3, stride=1, name='Conv2D'
                 padding=padding,
                 rate=None,
                 name=None,
+                data_format='NHWC'
+            )
+        elif conv_type == 'atrous_conv2d':
+            result = tf.nn.conv2d(
+                input=inputs_,
+                filter=filters,
+                padding=padding,
+                strides=[1, stride, stride, 1],
+                dilation_rate=dilation_rate,
                 data_format='NHWC'
             )
         else:
