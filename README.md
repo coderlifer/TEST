@@ -6,8 +6,7 @@ type | AUC-Judd/Borji/shuffled(C)  | CC(B) | NSS(C)
 n1_1_1| 0.8306/0.7734/0.7047 | 0.6872 | 1.5937
 
 
-[n1_1_1]: IN, SN, Hinge, 512pix, noINinDiscri, 64ngf, depth_to_space, 400epoch, 2A, n_dis=1, D_lr=0.0004, G_lr=0.0001, SNinGandD, TTUR, `Resnet_G`(Use resnet architecture to extract image featrues, encode to 4*4, and decode from it, **with_att**), `UNET_D`(D's output is [N, 30, 30, 1], **without_att**), **pixel cross entropy, l1_weight=0.05**. (See BigGAN'structure.) 
-
+[n1_1_1]: IN, SN, Hinge, 512pix, noINinDiscri, 64ngf, depth_to_space, 400epoch, 2A, n_dis=1, D_lr=0.0004, G_lr=0.0001, SNinGandD, TTUR, `Resnet_G`(resnet_g_1, Use resnet architecture to extract image featrues, encode to 4*4, and decode from it, **with_att**), `UNET_D`(unet_discriminator_1, D's output is [N, 30, 30, 1], **without_att**), **pixel cross entropy, l1_weight=0.05**. (See BigGAN'structure.)
 
 ## How to run:
 
