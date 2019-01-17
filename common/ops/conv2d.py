@@ -115,7 +115,7 @@ def Conv2D(inputs, input_dim, output_dim, filter_size=3, stride=1, name='Conv2D'
                 filter=filters,
                 padding=padding,
                 strides=[1, stride, stride, 1],
-                dilation_rate=dilation_rate,
+                dilations=dilation_rate,
                 data_format='NHWC'
             )
         else:
