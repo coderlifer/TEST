@@ -282,7 +282,7 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
 
 
 def resnet_g_vgg(generator_inputs, generator_outputs_channels, ngf, vgg19_npy_path=None):
-    """ UNet using ResNet architecture.
+    """ Use pretrained vgg to extract image featrues, and ResNet architecture to decode image.
     Args:
 
     Returns:
@@ -574,7 +574,7 @@ def resnet_d_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_c
     Args:
 
     Returns:
-      [N, 30, 30, ndf]
+      [N, 28, 28, 1]
     """
     layers = []
     inputs = tf.concat([discrim_inputs, discrim_targets], axis=3)
@@ -592,8 +592,8 @@ def resnet_d_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_c
 
     layer_specs = [
         ndf * 2,  # encoder_2: [batch, 256, 256, ndf] => [batch, 128, 128, ndf * 2]
-        ndf * 4,  # encoder_3: [batch, 128, 128, ndf] => [batch, 64, 64, ndf * 4]
-        ndf * 8,  # encoder_4: [batch, 64, 64, ndf * 2] => [batch, 32, 32, ndf * 8]
+        ndf * 4,  # encoder_3: [batch, 128, 128, ndf * 2] => [batch, 64, 64, ndf * 4]
+        ndf * 8,  # encoder_4: [batch, 64, 64, ndf * 4] => [batch, 32, 32, ndf * 8]
         # ndf * 8,  # encoder_4: [batch, 32, 32, ndf * 4] => [batch, 16, 16, ndf * 8]
         # ndf * 8,  # encoder_5: [batch, 16, 16, ndf * 8] => [batch, 8, 8, ndf * 8]
         # ndf * 16,  # encoder_6: [batch, 8, 8, ndf * 8] => [batch, 4, 4, ndf * 16]
@@ -622,8 +622,9 @@ def resnet_d_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_c
         output = lib.ops.conv2d.Conv2D(
             output, output.shape.as_list()[-1], ndf * 8, 3, 1, 'atrous_conv2d',
             conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=2,
-            padding=padding, spectral_normed=spectral_normed, update_collection=update_collection,
+            padding='SAME', spectral_normed=spectral_normed, update_collection=update_collection,
             inputs_norm=False, he_init=True, biases=True)
+
         layers.append(output)
         print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
 
@@ -635,8 +636,9 @@ def resnet_d_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_c
         output = lib.ops.conv2d.Conv2D(
             output, output.shape.as_list()[-1], ndf * 8, 3, 1, 'atrous_conv2d',
             conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=2,
-            padding=padding, spectral_normed=spectral_normed, update_collection=update_collection,
+            padding='SAME', spectral_normed=spectral_normed, update_collection=update_collection,
             inputs_norm=False, he_init=True, biases=True)
+
         # output = tf.sigmoid(convolved)
         layers.append(output)
         print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
@@ -1353,7 +1355,7 @@ def unet_discriminator(discrim_inputs, discrim_targets, ndf, spectral_normed, up
 def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
                          conv_type, channel_multiplier, padding):
     """Corresponding to unet_generator_1.
-    Compared to unet_discriminator: more out channels, big kernel size.
+       Compared to unet_discriminator: more out channels, kernel_size=5.
     Args:
 
     Returns:
@@ -1405,6 +1407,74 @@ def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, 
             inputs_norm=False, he_init=True, biases=True)
         # convolved = tf.sigmoid(convolved)
         layers.append(convolved)
+
+    return layers[-1]
+
+
+def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_collection,
+                           conv_type, channel_multiplier, padding):
+    """Compared to unet_discriminator_1: Use `atrous_conv2d`, kernel_size=3.
+
+    Args:
+
+    Returns:
+    """
+    n_layers = 4
+    layers = []
+
+    # 2x [batch, height, width, in_channels] => [batch, height, width, in_channels * 2]
+    inputs = tf.concat([discrim_inputs, discrim_targets], axis=3)
+
+    # layer_1: [batch, 512, 512, in_channels * 2] => [batch, 256, 256, ndf]
+    with tf.variable_scope("layer_1"):
+        padded_input = tf.pad(inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+        convolved = lib.ops.conv2d.Conv2D(
+            padded_input, padded_input.shape.as_list()[-1], ndf, 3, 2, 'atrous_conv2d',
+            conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=2,
+            padding=padding, spectral_normed=spectral_normed, update_collection=update_collection,
+            inputs_norm=False, he_init=True, biases=True)
+        rectified = nonlinearity(convolved, 'lrelu', 0.2)
+
+        layers.append(rectified)
+        print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
+
+    # layer_2: [batch, 256, 256, ndf] => [batch, 128, 128, ndf * 2]
+    # layer_3: [batch, 128, 128, ndf * 2] => [batch, 64, 64, ndf * 4]
+    # layer_4: [batch, 64, 64, ndf * 4] => [batch, 32, 32, ndf * 8]
+    # layer_5: [batch, 32, 32, ndf * 8] => [batch, 31, 31, ndf * 16]
+    for i in range(n_layers):
+        with tf.variable_scope("layer_%d" % (len(layers) + 1)):
+            out_channels_ = ndf * (2 ** (i + 1))
+            stride = 1 if i == n_layers - 1 else 2  # last layer here has stride 1
+            padded_input = tf.pad(layers[-1], [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+            convolved = lib.ops.conv2d.Conv2D(
+                padded_input, padded_input.shape.as_list()[-1], out_channels_, 3, stride, 'atrous_conv2d',
+                conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=2,
+                padding=padding, spectral_normed=spectral_normed, update_collection=update_collection,
+                inputs_norm=False, he_init=True, biases=True)
+
+            # convolved = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
+            rectified = nonlinearity(convolved, 'lrelu', 0.2)
+
+            if out_channels_ == ndf * 2:
+                rectified, attn_score = Self_Atten(rectified, spectral_normed=True)  # attention module
+                print('Self_Atten.D: {}'.format(rectified.shape.as_list()))
+
+            layers.append(rectified)
+            print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
+
+    # layer_6: [batch, 31, 31, ndf * 16] => [batch, 30, 30, 1]
+    with tf.variable_scope("layer_%d" % (len(layers) + 1)):
+        padded_input = tf.pad(rectified, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+        convolved = lib.ops.conv2d.Conv2D(
+            padded_input, padded_input.shape.as_list()[-1], 1, 3, 1, 'atrous_conv2d',
+            conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=2,
+            padding=padding, spectral_normed=spectral_normed, update_collection=update_collection,
+            inputs_norm=False, he_init=True, biases=True)
+
+        # convolved = tf.sigmoid(convolved)
+        layers.append(convolved)
+        print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
 
     return layers[-1]
 
