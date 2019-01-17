@@ -1381,7 +1381,7 @@ def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, 
     # layer_2: [batch, 256, 256, ndf] => [batch, 128, 128, ndf * 2]
     # layer_3: [batch, 128, 128, ndf * 2] => [batch, 64, 64, ndf * 4]
     # layer_4: [batch, 64, 64, ndf * 4] => [batch, 32, 32, ndf * 8]
-    # layer_5: [batch, 32, 32, ndf * 8] => [batch, 31, 31, ndf * 16]
+    # layer_5: [batch, 32, 32, ndf * 8] => [batch, 32, 32, ndf * 16]
     for i in range(n_layers):
         with tf.variable_scope("layer_%d" % (len(layers) + 1)):
             out_channels_ = ndf * (2 ** (i + 1))
@@ -1398,7 +1398,7 @@ def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, 
 
             layers.append(rectified)
 
-    # layer_6: [batch, 31, 31, ndf * 16] => [batch, 30, 30, 1]
+    # layer_6: [batch, 32, 32, ndf * 16] => [batch, 32, 32, 1]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
         padded_input = tf.pad(rectified, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         convolved = lib.ops.conv2d.Conv2D(
@@ -1441,7 +1441,7 @@ def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed
     # layer_2: [batch, 256, 256, ndf] => [batch, 128, 128, ndf * 2]
     # layer_3: [batch, 128, 128, ndf * 2] => [batch, 64, 64, ndf * 4]
     # layer_4: [batch, 64, 64, ndf * 4] => [batch, 32, 32, ndf * 8]
-    # layer_5: [batch, 32, 32, ndf * 8] => [batch, 31, 31, ndf * 16]
+    # layer_5: [batch, 32, 32, ndf * 8] => [batch, 32, 32, ndf * 16]
     for i in range(n_layers):
         with tf.variable_scope("layer_%d" % (len(layers) + 1)):
             out_channels_ = ndf * (2 ** (i + 1))
@@ -1463,7 +1463,7 @@ def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed
             layers.append(rectified)
             print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
 
-    # layer_6: [batch, 31, 31, ndf * 16] => [batch, 30, 30, 1]
+    # layer_6: [batch, 32, 32, ndf * 16] => [batch, 32, 32, 1]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
         padded_input = tf.pad(rectified, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         convolved = lib.ops.conv2d.Conv2D(
