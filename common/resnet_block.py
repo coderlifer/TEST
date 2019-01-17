@@ -106,6 +106,73 @@ def UpsampleConv(inputs, output_dim, filter_size=3, stride=1, name=None,
     return output
 
 
+def ResidualDenseBlock(inputs, input_dim, output_dim, filter_size, name,
+                       spectral_normed=False, update_collection=None, inputs_norm=False,
+                       resample=None, labels=None, biases=True, activation_fn='relu'):
+    """resample: None, 'down', or 'up'.
+    """
+    if resample == 'down':
+        conv_1 = functools.partial(lib.ops.conv2d.Conv2D, input_dim=input_dim, output_dim=input_dim)
+        conv_2 = functools.partial(ConvMeanPool, output_dim=output_dim)
+        conv_shortcut = ConvMeanPool
+    elif resample == 'up':
+        conv_1 = functools.partial(UpsampleConv, output_dim=output_dim)
+        conv_shortcut = UpsampleConv
+        conv_2 = functools.partial(lib.ops.conv2d.Conv2D, input_dim=input_dim+output_dim, output_dim=output_dim)
+    elif resample is None:
+        conv_shortcut = functools.partial(lib.ops.conv2d.Conv2D, input_dim=input_dim)
+        conv_1 = functools.partial(lib.ops.conv2d.Conv2D, input_dim=input_dim, output_dim=output_dim)
+        conv_2 = functools.partial(lib.ops.conv2d.Conv2D, input_dim=input_dim+output_dim, output_dim=output_dim)
+    else:
+        raise Exception('invalid resample value in ResidualDenseBlock!')
+
+    if output_dim == input_dim and resample is None:
+        shortcut = inputs  # Identity skip-connection
+    else:
+        shortcut = conv_shortcut(inputs=inputs, output_dim=output_dim, filter_size=1, name=name + '.Shortcut',
+                                 spectral_normed=spectral_normed,
+                                 update_collection=update_collection,
+                                 inputs_norm=inputs_norm,
+                                 he_init=True, biases=biases)
+
+    output = inputs
+    output = Normalize(name + '.N1', output, labels=labels, spectral_normed=spectral_normed)
+    output = nonlinearity(output, activation_fn=activation_fn)
+    # if resample == 'up':
+    #     output = nonlinearity(output, activation_fn='relu')
+    # else:
+    #     output = lrelu(output, leakiness=0.2)
+
+    output = conv_1(inputs=output, filter_size=filter_size, name=name + '.Conv1',
+                    spectral_normed=spectral_normed,
+                    update_collection=update_collection,
+                    inputs_norm=inputs_norm,
+                    he_init=True, biases=biases)
+
+    output = Normalize(name + '.N2', output, labels=labels, spectral_normed=spectral_normed)
+    output = nonlinearity(output, activation_fn=activation_fn)
+    # if resample == 'up':
+    #     output = nonlinearity(output, activation_fn='relu')
+    # else:
+    #     output = lrelu(output, leakiness=0.2)
+
+    if resample == 'down':
+        inputs_ = tf.image.resize_bicubic(inputs, [tf.shape(output)[1], tf.shape(output)[2]])
+    elif resample == 'up':
+        inputs_ = tf.image.resize_bicubic(inputs, [tf.shape(output)[1], tf.shape(output)[2]])
+    elif resample is None:
+        inputs_ = inputs
+    else:
+        raise Exception('invalid resample value in ResidualDenseBlock!')
+    output = conv_2(inputs=tf.concat([inputs_, output], axis=-1), filter_size=filter_size, name=name + '.Conv2',
+                    spectral_normed=spectral_normed,
+                    update_collection=update_collection,
+                    inputs_norm=inputs_norm,
+                    he_init=True, biases=biases)
+
+    return shortcut + output
+
+
 def ResidualBlock(inputs, input_dim, output_dim, filter_size, name,
                   spectral_normed=False, update_collection=None, inputs_norm=False,
                   resample=None, labels=None, biases=True, activation_fn='relu'):
