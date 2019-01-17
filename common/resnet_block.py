@@ -10,6 +10,7 @@ import sys
 sys.path.append(os.getcwd())
 
 import common as lib
+import common.ops.deconv2d
 import common.ops.conv2d
 import common.ops.linear
 import common.ops.normalization
@@ -91,6 +92,11 @@ def UpsampleConv(inputs, output_dim, filter_size=3, stride=1, name=None,
     output = tf.depth_to_space(output, 2)
     # w, h = inputs.shape.as_list()[1], inputs.shape.as_list()[2]
     # output = tf.image.resize_images(inputs, [w * 2, h * 2])
+    # output = lib.ops.deconv2d.Deconv2D(output, output.shape.as_list()[-1], output_dim, filter_size, stride, name,
+    #                                    spectral_normed=spectral_normed,
+    #                                    update_collection=update_collection,
+    #                                    inputs_norm=inputs_norm,
+    #                                    he_init=he_init, biases=biases)
     output = lib.ops.conv2d.Conv2D(output, output.shape.as_list()[-1], output_dim, filter_size, stride, name,
                                    spectral_normed=spectral_normed,
                                    update_collection=update_collection,

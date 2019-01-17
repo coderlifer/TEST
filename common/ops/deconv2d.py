@@ -7,8 +7,8 @@ import tensorflow as tf
 from common.ops.sn import spectral_normed_weight
 
 
-def Deconv2D(inputs, in_channels, output_channels, filter_size, stride=2, padding='SAME', he_init=True,
-             spectral_normed=False, update_collection=None, inputs_norm=False, biases=True, name='Conv2D'):
+def Deconv2D(inputs, in_channels, output_channels, filter_size, stride=2, padding='SAME', name='Conv2D',
+             spectral_normed=False, update_collection=None, inputs_norm=False, he_init=True, biases=True):
     """
 
     Args:
