@@ -1456,9 +1456,9 @@ def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed
             # convolved = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
             rectified = nonlinearity(convolved, 'lrelu', 0.2)
 
-            if out_channels_ == ndf * 4:
-                rectified, attn_score = Self_Atten(rectified, spectral_normed=True)  # attention module
-                print('Self_Atten.D: {}'.format(rectified.shape.as_list()))
+            # if out_channels_ == ndf * 4:
+            #     rectified, attn_score = Self_Atten(rectified, spectral_normed=True)  # attention module
+            #     print('Self_Atten.D: {}'.format(rectified.shape.as_list()))
 
             layers.append(rectified)
             print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
