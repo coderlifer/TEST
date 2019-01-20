@@ -607,9 +607,9 @@ def resnet_d_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed, update_c
                                    inputs_norm=False,
                                    resample='down', labels=None, biases=True, activation_fn='lrelu')
 
-            if out_channels == ndf * 2:
-                output, attn_score = Self_Atten(output, spectral_normed=spectral_normed)  # attention module
-                print('Self_Atten.D: {}'.format(output.shape.as_list()))
+            # if out_channels == ndf * 2:
+            #     output, attn_score = Self_Atten(output, spectral_normed=spectral_normed)  # attention module
+            #     print('Self_Atten.D: {}'.format(output.shape.as_list()))
 
             layers.append(output)
             print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
