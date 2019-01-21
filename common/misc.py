@@ -467,16 +467,47 @@ def optimistic_restore_vars(save_file):
     # saver = tf.train.Saver(restore_vars)
     # saver.restore(session, save_file)
 
-    # print('\n--------variables stored:--------')
-    # for var_name, saved_var_name in var_names:
-    #     print(var_name)
-
     print('\n--------variables to restore:--------')
     for var in restore_vars:
         print(var)
 
-    # print('\n--------tf.global_variables():--------')
-    # for var in tf.global_variables():
+    return restore_vars
+
+
+def optimistic_restore_dict(save_file):
+    """
+
+    Args:
+      session:
+      save_file:
+
+    Returns:
+    """
+    reader = tf.train.NewCheckpointReader(save_file)
+    saved_shapes = reader.get_variable_to_shape_map()
+    var_names = sorted([(var.name, var.name.split(':')[0]) for var in tf.global_variables()
+                        if (var.name.split(':')[0]) in saved_shapes])
+
+    # # variable: dtype
+    # vars = reader.get_variable_to_dtype_map()
+    # for k in sorted(vars):
+    #     print(k, vars[k])
+
+    restore_vars = dict()
+
+    name2var = dict(zip(map(lambda x: x.name.split(':')[0], tf.global_variables()), tf.global_variables()))
+
+    with tf.variable_scope('', reuse=True):
+        for var_name, saved_var_name in var_names:
+            curr_var = name2var[saved_var_name]
+            var_shape = curr_var.get_shape().as_list()
+            if var_shape == saved_shapes[saved_var_name[10:]] and 'global_step' not in saved_var_name:
+                restore_vars[var_name] = curr_var
+    # saver = tf.train.Saver(restore_vars)
+    # saver.restore(session, save_file)
+
+    # print('\n--------variables to restore:--------')
+    # for var in restore_vars:
     #     print(var)
 
     return restore_vars
