@@ -43,7 +43,7 @@ parser.add_argument("--beta1", type=float, default=0., help="momentum term of ad
 parser.add_argument("--beta2", type=float, default=0.9, help="momentum term of adam")
 parser.add_argument("--loss_type", type=str, default='HINGE',
                     help="HINGE, WGAN, WGAN-GP, LSGAN, CGAN, Modified_MiniMax, MiniMax")
-parser.add_argument("--content_loss", dest="bce", action="store_true", help="whether ")
+parser.add_argument('--content_loss', type=str, default='bce', help="")
 parser.add_argument('--n_dis', type=int, default=5,
                     help='Number of discriminator update per generator update.')
 parser.add_argument('--input_dir', type=str, default='./', help="path to folder containing images")
