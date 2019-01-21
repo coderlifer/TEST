@@ -43,7 +43,7 @@ parser.add_argument("--beta1", type=float, default=0., help="momentum term of ad
 parser.add_argument("--beta2", type=float, default=0.9, help="momentum term of adam")
 parser.add_argument("--loss_type", type=str, default='HINGE',
                     help="HINGE, WGAN, WGAN-GP, LSGAN, CGAN, Modified_MiniMax, MiniMax")
-parser.add_argument("--g_bce", dest="g_bce", action="store_true", help="whether ")
+parser.add_argument("--content_loss", dest="bce", action="store_true", help="whether ")
 parser.add_argument('--n_dis', type=int, default=5,
                     help='Number of discriminator update per generator update.')
 parser.add_argument('--input_dir', type=str, default='./', help="path to folder containing images")
@@ -180,6 +180,108 @@ def append_index(filesets, step=False):
 
         index.write("</tr>")
     return index_path
+
+
+# KL-Divergence Loss
+def kl_divergence(y_true, y_pred):
+    max_y_pred = tf.keras.backend.repeat_elements(
+        tf.keras.backend.expand_dims(
+            tf.keras.backend.repeat_elements(
+                tf.keras.backend.expand_dims(tf.keras.backend.max(tf.keras.backend.max(y_pred, axis=2), axis=2)),
+                CROP_SIZE, axis=-1)),
+        CROP_SIZE, axis=-1)
+    y_pred /= max_y_pred
+
+    sum_y_true = tf.keras.backend.repeat_elements(
+        tf.keras.backend.expand_dims(
+            tf.keras.backend.repeat_elements(
+                tf.keras.backend.expand_dims(tf.keras.backend.sum(tf.keras.backend.sum(y_true, axis=2), axis=2)),
+                CROP_SIZE, axis=-1)),
+        CROP_SIZE, axis=-1)
+    sum_y_pred = tf.keras.backend.repeat_elements(
+        tf.keras.backend.expand_dims(
+            tf.keras.backend.repeat_elements(
+                tf.keras.backend.expand_dims(tf.keras.backend.sum(tf.keras.backend.sum(y_pred, axis=2), axis=2)),
+                CROP_SIZE, axis=-1)),
+        CROP_SIZE, axis=-1)
+    y_true /= (sum_y_true + tf.keras.backend.epsilon())
+    y_pred /= (sum_y_pred + tf.keras.backend.epsilon())
+
+    return 10 * tf.keras.backend.sum(tf.keras.backend.sum(
+        y_true * tf.keras.backend.log((y_true / (y_pred + tf.keras.backend.epsilon())) + tf.keras.backend.epsilon()),
+        axis=-1),
+        axis=-1)
+
+
+# Correlation Coefficient Loss
+def correlation_coefficient(y_true, y_pred):
+    max_y_pred = tf.keras.backend.repeat_elements(
+        tf.keras.backend.expand_dims(
+            tf.keras.backend.repeat_elements(
+                tf.keras.backend.expand_dims(tf.keras.backend.max(tf.keras.backend.max(y_pred, axis=2), axis=2)),
+                CROP_SIZE, axis=-1)),
+        CROP_SIZE, axis=-1)
+    y_pred /= max_y_pred
+
+    sum_y_true = tf.keras.backend.repeat_elements(
+        tf.keras.backend.expand_dims(
+            tf.keras.backend.repeat_elements(
+                tf.keras.backend.expand_dims(tf.keras.backend.sum(tf.keras.backend.sum(y_true, axis=2), axis=2)),
+                CROP_SIZE, axis=-1)),
+        CROP_SIZE, axis=-1)
+    sum_y_pred = tf.keras.backend.repeat_elements(
+        tf.keras.backend.expand_dims(
+            tf.keras.backend.repeat_elements(
+                tf.keras.backend.expand_dims(tf.keras.backend.sum(tf.keras.backend.sum(y_pred, axis=2), axis=2)),
+                CROP_SIZE, axis=-1)),
+        CROP_SIZE, axis=-1)
+
+    y_true /= (sum_y_true + tf.keras.backend.epsilon())
+    y_pred /= (sum_y_pred + tf.keras.backend.epsilon())
+
+    N = CROP_SIZE * CROP_SIZE
+    sum_prod = tf.keras.backend.sum(tf.keras.backend.sum(y_true * y_pred, axis=2), axis=2)
+    sum_x = tf.keras.backend.sum(tf.keras.backend.sum(y_true, axis=2), axis=2)
+    sum_y = tf.keras.backend.sum(tf.keras.backend.sum(y_pred, axis=2), axis=2)
+    sum_x_square = tf.keras.backend.sum(tf.keras.backend.sum(tf.keras.backend.square(y_true), axis=2), axis=2)
+    sum_y_square = tf.keras.backend.sum(tf.keras.backend.sum(tf.keras.backend.square(y_pred), axis=2), axis=2)
+
+    num = sum_prod - ((sum_x * sum_y) / N)
+    den = tf.keras.backend.sqrt(
+        (sum_x_square - tf.keras.backend.square(sum_x) / N) * (sum_y_square - tf.keras.backend.square(sum_y) / N))
+
+    return -2 * num / den
+
+
+# Normalized Scanpath Saliency Loss
+def nss(y_true, y_pred):
+    max_y_pred = tf.keras.backend.repeat_elements(
+        tf.keras.backend.expand_dims(
+            tf.keras.backend.repeat_elements(
+                tf.keras.backend.expand_dims(
+                    tf.keras.backend.max(tf.keras.backend.max(y_pred, axis=2), axis=2)), CROP_SIZE, axis=-1)),
+        CROP_SIZE, axis=-1)
+    y_pred /= max_y_pred
+    y_pred_flatten = tf.keras.backend.batch_flatten(y_pred)
+
+    y_mean = tf.keras.backend.mean(y_pred_flatten, axis=-1)
+    y_mean = tf.keras.backend.repeat_elements(
+        tf.keras.backend.expand_dims(
+            tf.keras.backend.repeat_elements(
+                tf.keras.backend.expand_dims(tf.keras.backend.expand_dims(y_mean)), CROP_SIZE, axis=-1)),
+        CROP_SIZE, axis=-1)
+
+    y_std = tf.keras.backend.std(y_pred_flatten, axis=-1)
+    y_std = tf.keras.backend.repeat_elements(
+        tf.keras.backend.expand_dims(
+            tf.keras.backend.repeat_elements(
+                tf.keras.backend.expand_dims(tf.keras.backend.expand_dims(y_std)), CROP_SIZE, axis=-1)),
+        CROP_SIZE, axis=-1)
+
+    y_pred = (y_pred - y_mean) / (y_std + tf.keras.backend.epsilon())
+
+    return -(tf.keras.backend.sum(tf.keras.backend.sum(y_true * y_pred, axis=2), axis=2) / tf.keras.backend.sum(
+        tf.keras.backend.sum(y_true, axis=2), axis=2))
 
 
 def load_examples():
@@ -339,7 +441,7 @@ def create_model(inputs, targets, max_steps):
         # gen_loss_GAN = tf.reduce_mean(-tf.log(predict_fake + EPS))
         _, gen_loss_GAN = lib.misc.get_loss(predict_real, predict_fake, loss_type=args.loss_type)
 
-        if args.g_bce:
+        if args.content_loss == 'bce':
             outputs_ = deprocess(outputs)
             targets_ = deprocess(targets)
             gen_loss_content = -tf.reduce_mean(
@@ -348,6 +450,12 @@ def create_model(inputs, targets, max_steps):
             # gen_loss_content = -tf.reduce_mean(
             #     targets * tf.log(tf.clip_by_value(outputs, 1e-10, 1.0)) +
             #     (1.0 - targets) * tf.log(tf.clip_by_value(1.0 - outputs, 1e-10, 1.0)))
+        elif args.content_loss == 'nss':
+            outputs_ = deprocess(outputs)
+            targets_ = deprocess(targets)
+
+            gen_loss_content = 10 * kl_divergence(targets_, outputs_) - \
+                               2.0 * correlation_coefficient(targets_, outputs_) - nss(targets_, outputs_)
         else:
             gen_loss_content = tf.reduce_mean(tf.abs(targets - outputs))
 

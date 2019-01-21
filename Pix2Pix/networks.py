@@ -281,6 +281,7 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
     return layers[-1]
 
 
+# TODO
 def resnet_g_vgg(generator_inputs, generator_outputs_channels, ngf, vgg19_npy_path=None):
     """ Use pretrained vgg to extract image featrues, and ResNet architecture to decode image.
     Args:
