@@ -256,9 +256,9 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
                 spectral_normed=True, update_collection=None, inputs_norm=False,
                 resample='up', labels=None, biases=True, activation_fn='relu')
 
-            if out_channels == ngf * 4:
-                output, attn_score = Self_Atten(output, spectral_normed=True)  # attention module
-                print('Self_Atten.G: {}'.format(output.shape.as_list()))
+            # if out_channels == ngf * 4:
+            #     output, attn_score = Self_Atten(output, spectral_normed=True)  # attention module
+            #     print('Self_Atten.G: {}'.format(output.shape.as_list()))
 
             layers.append(output)
             print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
