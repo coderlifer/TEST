@@ -59,15 +59,15 @@ def Conv2D(inputs, input_dim, output_dim, filter_size=3, stride=1, name='Conv2D'
 
         filters = tf.get_variable(
             name='Filters', shape=[filter_size, filter_size, input_dim, output_dim], dtype=tf.float32,
-            initializer=initializer)
+            initializer=initializer) * 0.1
 
         if channel_multiplier > 0:
             depthwise_filters = tf.get_variable(
                 name='depthwise_filters', shape=[filter_size, filter_size, input_dim, channel_multiplier],
-                dtype=tf.float32, initializer=initializer)
+                dtype=tf.float32, initializer=initializer) * 0.1
             pointwise_filters = tf.get_variable(
                 name='pointwise_filters', shape=[1, 1, input_dim * channel_multiplier, output_dim],
-                dtype=tf.float32, initializer=initializer)
+                dtype=tf.float32, initializer=initializer) * 0.1
 
         if spectral_normed:
             with tf.variable_scope('filters'):

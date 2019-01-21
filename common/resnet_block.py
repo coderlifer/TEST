@@ -229,7 +229,7 @@ def ResidualBlock(inputs, input_dim, output_dim, filter_size, name,
                     inputs_norm=inputs_norm,
                     he_init=True, biases=biases)
 
-    return shortcut + output
+    return shortcut + output * 0.2
 
 
 def OptimizedResBlockDisc1(inputs, DIM_D=128, activation_fn='relu',
