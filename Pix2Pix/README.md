@@ -24,7 +24,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --beta1=0. \
   --beta2=0.9 \
   --loss_type='HINGE' \
-  --g_bce \
+  --content_loss='bce' \
   --n_dis=1 \
   --input_dir=/home/tellhow-iot/tem/webpagesaliency/pix2pix_data_2A/train \
   --output_dir=/data/tem/webpagesaliency/output_resize_512 \
@@ -39,6 +39,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --gan_weight=1.0 \
   --multiple_A \
   --net_type='ResNet' \
+  --nasnet=None \
   --upsampe_method='depth_to_space'
 
 
