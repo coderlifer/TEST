@@ -86,6 +86,9 @@ parser.add_argument('--net_type', dest="net_type", type=str, default="UNet", hel
 parser.add_argument('--upsampe_method', dest="upsampe_method", type=str, default="depth_to_space",
                     help='depth_to_space, resize')
 
+parser.add_argument('--nasnet', dest="nasnet", type=str, default="./",
+                    help='pretrained nasnet')
+
 args = parser.parse_args()
 
 tf.logging.set_verbosity(tf.logging.INFO)
