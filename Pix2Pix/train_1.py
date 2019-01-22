@@ -476,13 +476,13 @@ def create_model(inputs, targets, max_steps):
         #     decay_steps=max_steps,
         #     end_learning_rate=args.end_lr
         # )
-        decay = 1.
+        # decay = 1.
         # decay = tf.where(
         #     tf.less(global_step, 23600), tf.maximum(0., 1. - (tf.cast(global_step, tf.float32) / 47200)), 0.5)
-        # decay = tf.where(
-        #     tf.less(global_step, int(max_steps * 0.5)),
-        #     1.,
-        #     tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - int(max_steps * 0.5)) / max_steps)))
+        decay = tf.where(
+            tf.less(global_step, int(max_steps * 0.5)),
+            1.,
+            tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - int(max_steps * 0.5)) / max_steps)))
         if args.TTUR:
             print('\nUsing TTUR!\n')
             LR_D = tf.constant(0.0004)  # 2e-4  # Initial learning rate
