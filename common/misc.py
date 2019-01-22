@@ -478,15 +478,22 @@ def optimistic_restore_dict(save_file):
     """
 
     Args:
-      session:
       save_file:
 
     Returns:
     """
     reader = tf.train.NewCheckpointReader(save_file)
     saved_shapes = reader.get_variable_to_shape_map()
+    print('\n--------saved_shapes.items():--------')
+    for key, val in saved_shapes.items():
+        print('{}: {}'.format(key, val))
+
+    # (g_net/NASNet/decoder_6/G.Block.6.Shortcut/Filters:0, g_net/NASNet/decoder_6/G.Block.6.Shortcut/Filters)
     var_names = sorted([(var.name, var.name.split(':')[0]) for var in tf.global_variables()
-                        if (var.name.split(':')[0]) in saved_shapes])
+                        if (var.name.split(':')[0][13:]) in saved_shapes])
+    print('\n--------var_names: saved_var_name[13:]:--------')
+    for var_name, saved_var_name in var_names:
+        print('{}: {}'.format(var_name, saved_var_name[13:]))
 
     # # variable: dtype
     # vars = reader.get_variable_to_dtype_map()
@@ -495,20 +502,19 @@ def optimistic_restore_dict(save_file):
 
     restore_vars = dict()
 
+    # g_net/NASNet/decoder_6/G.Block.6.Shortcut/Filters: g_net/NASNet/decoder_6/G.Block.6.Shortcut/Filters:0
     name2var = dict(zip(map(lambda x: x.name.split(':')[0], tf.global_variables()), tf.global_variables()))
 
     with tf.variable_scope('', reuse=True):
         for var_name, saved_var_name in var_names:
             curr_var = name2var[saved_var_name]
             var_shape = curr_var.get_shape().as_list()
-            if var_shape == saved_shapes[saved_var_name[10:]] and 'global_step' not in saved_var_name:
-                restore_vars[var_name] = curr_var
-    # saver = tf.train.Saver(restore_vars)
-    # saver.restore(session, save_file)
+            if var_shape == saved_shapes[saved_var_name[13:]] and 'global_step' not in saved_var_name:
+                restore_vars[saved_var_name[13:]] = curr_var
 
-    # print('\n--------variables to restore:--------')
-    # for var in restore_vars:
-    #     print(var)
+    print('\n--------variables to restore:--------')
+    for key, val in restore_vars.items():
+        print('{}: {}'.format(key, val))
 
     return restore_vars
 
