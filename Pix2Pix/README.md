@@ -39,10 +39,10 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --gan_weight=1.0 \
   --multiple_A \
   --net_type='ResNet' \
-  --nasnet=None \
   --upsampe_method='depth_to_space'
 
 
+  --nasnet=None \
 # infer
 # 47200 29500 28320 27140 25960 23600
 CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_1.py \

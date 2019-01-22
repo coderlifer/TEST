@@ -398,84 +398,86 @@ def resnet_g_vgg(generator_inputs, generator_outputs_channels, ngf, vgg19_npy_pa
     return layers[-1]
 
 
-def resnet_g_NASNet(generator_inputs, generator_outputs_channels, ngf, vgg19_npy_path=None):
+def resnet_g_NASNet(generator_inputs, generator_outputs_channels, ngf):
     """ Use pretrained vgg to extract image featrues, and ResNet architecture to decode image.
     Args:
 
     Returns:
     """
     layers = []
-    with tf.variable_scope("NASNet"):
-        network_fn = nets_factory.get_network_fn(
-            'nasnet_large',
-            num_classes=None,
-            weight_decay=5e-5,
-            is_training=False)
-        net, end_points = network_fn(generator_inputs)
+    # with tf.variable_scope("NASNet"):
+    network_fn = nets_factory.get_network_fn(
+        'nasnet_large',
+        num_classes=None,
+        weight_decay=5e-5,
+        is_training=False)
+    net, end_points = network_fn(generator_inputs)
 
-        for key, val in end_points.items():
-            print('{}: {}'.format(key, val))
+    print('\n--------NASNet.end_points--------')
+    for key, val in end_points.items():
+        print('{}: {}'.format(key, val))
 
-        # reduction_cell_1 = end_points['Reduction_Cell_']
-        # reduction_cell_2 = end_points['Reduction_Cell_']
-        # features = tf.concat([reduction_cell_1, reduction_cell_2, conv_last], axis=-1)
+    # reduction_cell_1 = end_points['Reduction_Cell_']
+    # reduction_cell_2 = end_points['Reduction_Cell_']
+    # features = tf.concat([reduction_cell_1, reduction_cell_2, conv_last], axis=-1)
 
-        layers.append(net)
+    layers.append(net)
 
-    layer_specs = [
-        ngf * 8,  # encoder_1: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
-        ngf * 16,  # encoder_2: [batch, 16, 16, ngf * 8] => [batch, 8, 8, ngf * 16]
-        # ngf * 16,  # encoder_2: [batch, 8, 8, ngf * 16] => [batch, 4, 4, ngf * 16]
-    ]
-    for out_channels in layer_specs:
-        with tf.variable_scope('encoder_{}'.format(len(layers))):
-            output = lib.ops.conv2d.Conv2D(
-                layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3, 2, 'atrous_conv2d',
-                conv_type='atrous_conv2d', channel_multiplier=0, dilation_rate=2,
-                padding='SAME', spectral_normed=True, update_collection=None,
-                inputs_norm=False, he_init=True, biases=True)
+    with tf.variable_scope('g_net', reuse=tf.AUTO_REUSE):
+        layer_specs = [
+            ngf * 8,  # encoder_1: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
+            ngf * 16,  # encoder_2: [batch, 16, 16, ngf * 8] => [batch, 8, 8, ngf * 16]
+            # ngf * 16,  # encoder_2: [batch, 8, 8, ngf * 16] => [batch, 4, 4, ngf * 16]
+        ]
+        for out_channels in layer_specs:
+            with tf.variable_scope('encoder_{}'.format(len(layers))):
+                output = lib.ops.conv2d.Conv2D(
+                    layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3, 2, 'atrous_conv2d',
+                    conv_type='atrous_conv2d', channel_multiplier=0, dilation_rate=2,
+                    padding='SAME', spectral_normed=True, update_collection=None,
+                    inputs_norm=False, he_init=True, biases=True)
 
-            layers.append(output)
+                layers.append(output)
 
-    # [batch, 4, 4, ngf * 16] ----> [batch, 512, 512, ngf]
-    layer_specs_ = [
-        # ngf * 16,  # encoder_7: [batch, 4, 4, ngf * 16] => [batch, 8, 8, ngf * 16]
-        ngf * 8,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 8]
-        ngf * 8,  # encoder_5: [batch, 16, 16, ngf * 8] => [batch, 32, 32, ngf * 8]
-        ngf * 4,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 64, 64, ngf * 4]
-        ngf * 2,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 128, 128, ngf * 2]
-        ngf * 1,  # encoder_2: [batch, 128, 128, ngf * 2] => [batch, 256, 256, ngf]
-        ngf * 1,  # encoder_1: [batch, 256, 256, ngf] => [batch, 512, 512, ngf]
-    ]
-    for out_channels in layer_specs_:
+        # [batch, 4, 4, ngf * 16] ----> [batch, 512, 512, ngf]
+        layer_specs_ = [
+            # ngf * 16,  # encoder_7: [batch, 4, 4, ngf * 16] => [batch, 8, 8, ngf * 16]
+            ngf * 8,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 8]
+            ngf * 8,  # encoder_5: [batch, 16, 16, ngf * 8] => [batch, 32, 32, ngf * 8]
+            ngf * 4,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 64, 64, ngf * 4]
+            ngf * 2,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 128, 128, ngf * 2]
+            ngf * 1,  # encoder_2: [batch, 128, 128, ngf * 2] => [batch, 256, 256, ngf]
+            ngf * 1,  # encoder_1: [batch, 256, 256, ngf] => [batch, 512, 512, ngf]
+        ]
+        for out_channels in layer_specs_:
+            with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
+                output = ResidualBlock(
+                    layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
+                    name='G.Block.%d' % (len(layers) - len(layer_specs)),
+                    spectral_normed=True, update_collection=None, inputs_norm=False,
+                    resample='up', labels=None, biases=True, activation_fn='relu')
+
+                if out_channels == ngf * 4:
+                    output, attn_score = Self_Atten(output, spectral_normed=True)  # attention module
+                    print('Self_Atten.G: {}'.format(output.shape.as_list()))
+
+                layers.append(output)
+                print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
+
+        # [batch, 512, 512, ngf] ----> [batch, 512, 512, 3]
         with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
-            output = ResidualBlock(
-                layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
-                name='G.Block.%d' % (len(layers) - len(layer_specs)),
-                spectral_normed=True, update_collection=None, inputs_norm=False,
-                resample='up', labels=None, biases=True, activation_fn='relu')
+            output = norm_layer(layers[-1], decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
+            output = nonlinearity(output)
 
-            if out_channels == ngf * 4:
-                output, attn_score = Self_Atten(output, spectral_normed=True)  # attention module
-                print('Self_Atten.G: {}'.format(output.shape.as_list()))
+            # output = tf.pad(output, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+            output = lib.ops.conv2d.Conv2D(
+                output, output.shape.as_list()[-1], generator_outputs_channels, 3, 1, 'Conv2D',
+                conv_type='conv2d', channel_multiplier=0, padding='SAME',
+                spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
 
+            output = tf.nn.tanh(output)
             layers.append(output)
             print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
-
-    # [batch, 512, 512, ngf] ----> [batch, 512, 512, 3]
-    with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
-        output = norm_layer(layers[-1], decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
-        output = nonlinearity(output)
-
-        # output = tf.pad(output, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
-        output = lib.ops.conv2d.Conv2D(
-            output, output.shape.as_list()[-1], generator_outputs_channels, 3, 1, 'Conv2D',
-            conv_type='conv2d', channel_multiplier=0, padding='SAME',
-            spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
-
-        output = tf.nn.tanh(output)
-        layers.append(output)
-        print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
 
     return layers[-1]
 

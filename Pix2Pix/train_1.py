@@ -650,10 +650,6 @@ def train():
 
         parameter_count = tf.reduce_sum([tf.reduce_prod(tf.shape(v)) for v in tf.trainable_variables()])
 
-    if args.nasnet is not None:
-        restore_dict = lib.misc.optimistic_restore_dict(args.nasnet)
-        restore_saver = tf.train.Saver(restore_dict)
-
     summary_op = tf.summary.merge_all()
     saver = tf.train.Saver(max_to_keep=100)
 
@@ -665,10 +661,11 @@ def train():
         print("parameter_count =", sess.run(parameter_count))
 
         if args.nasnet is not None:
-            restore_saver.restore(sess, args.nasnet)
+            print("loading NASNet from checkpoint!")
+            lib.misc.optimistic_restore(sess, args.nasnet)
 
         if args.checkpoint_dir is not None:
-            print("loading model from checkpoint")
+            print("loading pretrained model from checkpoint!")
             # checkpoint = tf.train.latest_checkpoint(args.checkpoint_dir)
             saver.restore(sess, args.checkpoint)
 

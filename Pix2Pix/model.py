@@ -27,31 +27,32 @@ class Pix2Pix(object):
           upsampe_method:
         Return:
         """
-        with tf.variable_scope('g_net', reuse=reuse):
-            if net_type == 'UNet':
-                output = networks.unet_generator_1(inputs, outputs_channels, ngf,
-                                                   conv_type=conv_type,
-                                                   channel_multiplier=channel_multiplier,
-                                                   padding=padding,
-                                                   upsampe_method=upsampe_method)
-            elif net_type == 'UNet_Attention':
-                output = networks.unet_g(inputs, outputs_channels, ngf,
-                                         conv_type=conv_type,
-                                         channel_multiplier=channel_multiplier,
-                                         padding=padding,
-                                         upsampe_method=upsampe_method)
-            elif net_type == 'ResNet':
-                output = networks.resnet_g_1(inputs, outputs_channels, ngf)
-            elif net_type == 'VGG':
-                output = networks.vgg_generator(inputs, outputs_channels, ngf,
-                                                conv_type=conv_type,
-                                                channel_multiplier=channel_multiplier,
-                                                padding=padding,
-                                                train_mode=None,
-                                                trainable=None,
-                                                vgg19_npy_path='/home/yhx/vgg19.npy')
-            else:
-                raise NotImplementedError('Generator model name [%s] is not recognized' % net_type)
+        # with tf.variable_scope('g_net', reuse=reuse):
+        if net_type == 'UNet':
+            output = networks.unet_generator_1(inputs, outputs_channels, ngf,
+                                               conv_type=conv_type,
+                                               channel_multiplier=channel_multiplier,
+                                               padding=padding,
+                                               upsampe_method=upsampe_method)
+        elif net_type == 'UNet_Attention':
+            output = networks.unet_g(inputs, outputs_channels, ngf,
+                                     conv_type=conv_type,
+                                     channel_multiplier=channel_multiplier,
+                                     padding=padding,
+                                     upsampe_method=upsampe_method)
+        elif net_type == 'ResNet':
+            # output = networks.resnet_g_1(inputs, outputs_channels, ngf)
+            output = networks.resnet_g_NASNet(inputs, outputs_channels, ngf)
+        elif net_type == 'VGG':
+            output = networks.vgg_generator(inputs, outputs_channels, ngf,
+                                            conv_type=conv_type,
+                                            channel_multiplier=channel_multiplier,
+                                            padding=padding,
+                                            train_mode=None,
+                                            trainable=None,
+                                            vgg19_npy_path='/home/yhx/vgg19.npy')
+        else:
+            raise NotImplementedError('Generator model name [%s] is not recognized' % net_type)
 
         return output
 
