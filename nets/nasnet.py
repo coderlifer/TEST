@@ -339,7 +339,7 @@ def build_nasnet_cifar(images, num_classes,
                                       current_step=current_step)
 
 
-build_nasnet_cifar.default_image_size = 32
+# build_nasnet_cifar.default_image_size = 32
 
 
 def build_nasnet_mobile(images, num_classes,
@@ -396,7 +396,7 @@ def build_nasnet_mobile(images, num_classes,
                                       current_step=current_step)
 
 
-build_nasnet_mobile.default_image_size = 224
+# build_nasnet_mobile.default_image_size = 224
 
 
 def build_nasnet_large(images, num_classes,
@@ -452,7 +452,8 @@ def build_nasnet_large(images, num_classes,
                                       current_step=current_step)
 
 
-build_nasnet_large.default_image_size = 331
+# build_nasnet_large.default_image_size = 331
+build_nasnet_large.default_image_size = 512
 
 
 def _build_nasnet_base(images,
