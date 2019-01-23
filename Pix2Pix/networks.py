@@ -415,22 +415,20 @@ def resnet_g_NASNet(generator_inputs, generator_outputs_channels, ngf):
     print('\n--------NASNet.end_points--------')
     for key, val in end_points.items():
         print('{}: {}'.format(key, val))
+    print(' ')
 
-    reduction_cell_0 = end_points['Reduction_Cell_0']  # (1, 32, 32, 1344)
-    print('\n--------reduction_cell_0.shape: {}--------'.format(reduction_cell_0.shape.as_list()))
-    reduction_cell_1 = end_points['Reduction_Cell_1']  # (1, 16, 16, 2688)
-    print('\n--------reduction_cell_1.shape: {}--------'.format(reduction_cell_1.shape.as_list()))
-    cell_17 = end_points['Cell_17']  # (1, 16, 16, 4032)
-    print('\n--------cell_17.shape: {}--------'.format(cell_17.shape.as_list()))
+    reduction_cell_0 = end_points['Reduction_Cell_0']  # [1, 32, 32, 1344]
+    reduction_cell_1 = end_points['Reduction_Cell_1']  # [1, 16, 16, 2688]
+    cell_17 = end_points['Cell_17']  # [1, 16, 16, 4032]
     # features = tf.concat([reduction_cell_0, reduction_cell_1, cell_17], axis=-1)
 
     layers = []
-    layers.append(net)
+    layers.append(cell_17)
 
     with tf.variable_scope('g_net', reuse=tf.AUTO_REUSE):
         layer_specs = [
             ngf * 8,  # encoder_1: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
-            ngf * 16,  # encoder_2: [batch, 16, 16, ngf * 8] => [batch, 8, 8, ngf * 16]
+            # ngf * 16,  # encoder_2: [batch, 16, 16, ngf * 8] => [batch, 8, 8, ngf * 16]
             # ngf * 16,  # encoder_2: [batch, 8, 8, ngf * 16] => [batch, 4, 4, ngf * 16]
         ]
         for out_channels in layer_specs:
