@@ -454,8 +454,11 @@ def create_model(inputs, targets, max_steps):
             #     targets * tf.log(tf.clip_by_value(outputs, 1e-10, 1.0)) +
             #     (1.0 - targets) * tf.log(tf.clip_by_value(1.0 - outputs, 1e-10, 1.0)))
         elif args.content_loss == 'nss':
-            outputs_ = deprocess(outputs)[0]
+            outputs_ = deprocess(outputs)[0, :, :, ]
             targets_ = deprocess(targets)[0]
+
+            print('\noutputs_.shape.as_list(): {}'.format(outputs_.shape.as_list()))
+            print('targets_.shape.as_list(): {}\n'.format(targets_.shape.as_list()))
 
             gen_loss_content = 10 * kl_divergence(targets_, outputs_) - \
                                2.0 * correlation_coefficient(targets_, outputs_) - nss(targets_, outputs_)
