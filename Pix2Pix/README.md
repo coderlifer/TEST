@@ -39,10 +39,10 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --gan_weight=1.0 \
   --multiple_A \
   --net_type='ResNet' \
+  --nasnet='/home/tellhow-iot/tem/webpagesaliency/nasnet/model.ckpt.data-00000-of-00001' \
   --upsampe_method='depth_to_space'
 
 
-  --nasnet=None \
 
 
 # infer

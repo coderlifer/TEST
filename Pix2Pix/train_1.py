@@ -624,9 +624,9 @@ def train():
     with tf.name_scope("outputs_summary"):
         tf.summary.image("outputs", converted_outputs)
 
-    # tf.summary.scalar("discriminator_loss", modelNamedtuple.discrim_loss)
-    # tf.summary.scalar("generator_loss_GAN", modelNamedtuple.gen_loss_GAN)
-    # tf.summary.scalar("generator_loss_L1", modelNamedtuple.gen_loss_content)
+    tf.summary.scalar("discriminator_loss", modelNamedtuple.discrim_loss)
+    tf.summary.scalar("gen_loss_GAN", modelNamedtuple.gen_loss_GAN)
+    tf.summary.scalar("gen_loss_content", modelNamedtuple.gen_loss_content)
 
     # for var in tf.trainable_variables():
     #     tf.summary.histogram(var.op.name + "/values", var)
