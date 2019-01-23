@@ -416,9 +416,13 @@ def resnet_g_NASNet(generator_inputs, generator_outputs_channels, ngf):
     for key, val in end_points.items():
         print('{}: {}'.format(key, val))
 
-    # reduction_cell_1 = end_points['Reduction_Cell_']
-    # reduction_cell_2 = end_points['Reduction_Cell_']
-    # features = tf.concat([reduction_cell_1, reduction_cell_2, conv_last], axis=-1)
+    reduction_cell_0 = end_points['Reduction_Cell_0']  # (1, 32, 32, 1344)
+    print('\n--------reduction_cell_0.shape: {}--------'.format(reduction_cell_0.shape.as_list()))
+    reduction_cell_1 = end_points['Reduction_Cell_1']  # (1, 16, 16, 2688)
+    print('\n--------reduction_cell_1.shape: {}--------'.format(reduction_cell_1.shape.as_list()))
+    cell_17 = end_points['Cell_17']  # (1, 16, 16, 4032)
+    print('\n--------cell_17.shape: {}--------'.format(cell_17.shape.as_list()))
+    # features = tf.concat([reduction_cell_0, reduction_cell_1, cell_17], axis=-1)
 
     layers = []
     layers.append(net)
