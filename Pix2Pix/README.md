@@ -24,7 +24,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --beta1=0. \
   --beta2=0.9 \
   --loss_type='HINGE' \
-  --content_loss='nss' \
+  --content_loss='bce' \
   --n_dis=1 \
   --input_dir=/home/tellhow-iot/tem/webpagesaliency/pix2pix_data_2A/train \
   --output_dir=/data/tem/webpagesaliency/output_resize_512 \
@@ -39,10 +39,34 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --gan_weight=1.0 \
   --multiple_A \
   --net_type='ResNet' \
-  --nasnet='/home/tellhow-iot/tem/webpagesaliency/nasnet/model.ckpt.data-00000-of-00001' \
+  --nasnet='/home/tellhow-iot/tem/webpagesaliency/nasnet/model.ckpt' \
   --upsampe_method='depth_to_space'
 
 
+CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
+  --batch_size=1 \
+  --mode='train' \
+  --conv_type='conv2d' \
+  --channel_multiplier=0 \
+  --beta1=0. \
+  --beta2=0.9 \
+  --loss_type='HINGE' \
+  --content_loss='bce' \
+  --n_dis=1 \
+  --input_dir=/home/tellhow-iot/tem/webpagesaliency/ws_singleA/train \
+  --output_dir=/data/tem/webpagesaliency/output_resize_512 \
+  --max_epochs=400 \
+  --which_direction=AtoB \
+  --save_freq=1180 \
+  --ngf=64 \
+  --ndf=64 \
+  --scale_size=572 \
+  --TTUR \
+  --l1_weight=0.05 \
+  --gan_weight=1.0 \
+  --net_type='ResNet' \
+  --nasnet='/home/tellhow-iot/tem/webpagesaliency/nasnet/model.ckpt' \
+  --upsampe_method='depth_to_space'
 
 
 # infer
@@ -91,7 +115,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --content_loss='bce' \
   --n_dis=1 \
   --input_dir=/home/tellhow-iot/tem/webpagesaliency/pix2pix_data_2A/val \
-  --output_dir=/data/tem/webpagesaliency/output_resize_512/tem/20060 \
+  --output_dir=/data/tem/webpagesaliency/output_resize_512/tem/18880 \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=1180 \
@@ -102,7 +126,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --l1_weight=0.05 \
   --gan_weight=1.0 \
   --checkpoint_dir=/data/tem/webpagesaliency/output_resize_512/ \
-  --checkpoint=/data/tem/webpagesaliency/output_resize_512/model-20060 \
+  --checkpoint=/data/tem/webpagesaliency/output_resize_512/model-18880 \
   --multiple_A \
   --net_type='ResNet' \
   --upsampe_method=depth_to_space

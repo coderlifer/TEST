@@ -399,7 +399,7 @@ def resnet_g_vgg(generator_inputs, generator_outputs_channels, ngf, vgg19_npy_pa
 
 
 def resnet_g_NASNet(generator_inputs, generator_outputs_channels, ngf):
-    """ Use pretrained vgg to extract image featrues, and ResNet architecture to decode image.
+    """ Use pretrained NASNet to extract image featrues, and ResNet architecture to decode image.
     Args:
 
     Returns:
@@ -420,19 +420,25 @@ def resnet_g_NASNet(generator_inputs, generator_outputs_channels, ngf):
     reduction_cell_0 = end_points['Reduction_Cell_0']  # [1, 32, 32, 1344]
     reduction_cell_1 = end_points['Reduction_Cell_1']  # [1, 16, 16, 2688]
     cell_17 = end_points['Cell_17']  # [1, 16, 16, 4032]
-    # features = tf.concat([reduction_cell_0, reduction_cell_1, cell_17], axis=-1)
+    features = tf.concat([reduction_cell_1, cell_17], axis=-1)
 
     layers = []
-    layers.append(cell_17)
+    layers.append(features)
 
     with tf.variable_scope('g_net', reuse=tf.AUTO_REUSE):
         layer_specs = [
-            ngf * 8,  # encoder_1: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
-            # ngf * 16,  # encoder_2: [batch, 16, 16, ngf * 8] => [batch, 8, 8, ngf * 16]
+            ngf * 16,  # encoder_1: [batch, 16, 16, ] => [batch, 8, 8, ngf * 8]
             # ngf * 16,  # encoder_2: [batch, 8, 8, ngf * 16] => [batch, 4, 4, ngf * 16]
         ]
         for out_channels in layer_specs:
             with tf.variable_scope('encoder_{}'.format(len(layers))):
+                output = lib.ops.conv2d.Conv2D(
+                    layers[-1], layers[-1].shape.as_list()[-1], out_channels, 1, 1, 'Conv2D',
+                    conv_type='conv2d', channel_multiplier=0, dilation_rate=0,
+                    padding='SAME', spectral_normed=True, update_collection=None,
+                    inputs_norm=False, he_init=True, biases=True)
+                layers.append(output)
+
                 output = lib.ops.conv2d.Conv2D(
                     layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3, 2, 'atrous_conv2d',
                     conv_type='atrous_conv2d', channel_multiplier=0, dilation_rate=2,
@@ -444,9 +450,9 @@ def resnet_g_NASNet(generator_inputs, generator_outputs_channels, ngf):
         # [batch, 4, 4, ngf * 16] ----> [batch, 512, 512, ngf]
         layer_specs_ = [
             # ngf * 16,  # encoder_7: [batch, 4, 4, ngf * 16] => [batch, 8, 8, ngf * 16]
-            ngf * 8,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 8]
-            ngf * 8,  # encoder_5: [batch, 16, 16, ngf * 8] => [batch, 32, 32, ngf * 8]
-            ngf * 4,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 64, 64, ngf * 4]
+            ngf * 4,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 4]
+            ngf * 4,  # encoder_5: [batch, 16, 16, ngf * 4] => [batch, 32, 32, ngf * 4]
+            ngf * 2,  # encoder_5: [batch, 32, 32, ngf * 4] => [batch, 64, 64, ngf * 2]
             ngf * 2,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 128, 128, ngf * 2]
             ngf * 1,  # encoder_2: [batch, 128, 128, ngf * 2] => [batch, 256, 256, ngf]
             ngf * 1,  # encoder_1: [batch, 256, 256, ngf] => [batch, 512, 512, ngf]
@@ -459,7 +465,7 @@ def resnet_g_NASNet(generator_inputs, generator_outputs_channels, ngf):
                     spectral_normed=True, update_collection=None, inputs_norm=False,
                     resample='up', labels=None, biases=True, activation_fn='relu')
 
-                if out_channels == ngf * 4:
+                if output.shape.as_list()[1] == 128:
                     output, attn_score = Self_Atten(output, spectral_normed=True)  # attention module
                     print('Self_Atten.G: {}'.format(output.shape.as_list()))
 
@@ -471,9 +477,8 @@ def resnet_g_NASNet(generator_inputs, generator_outputs_channels, ngf):
             output = norm_layer(layers[-1], decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
             output = nonlinearity(output)
 
-            # output = tf.pad(output, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
             output = lib.ops.conv2d.Conv2D(
-                output, output.shape.as_list()[-1], generator_outputs_channels, 3, 1, 'Conv2D',
+                output, output.shape.as_list()[-1], generator_outputs_channels, 1, 1, 'Conv2D',
                 conv_type='conv2d', channel_multiplier=0, padding='SAME',
                 spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
 
@@ -1468,6 +1473,7 @@ def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, 
         rectified = nonlinearity(convolved, 'lrelu', 0.2)
 
         layers.append(rectified)
+        print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
 
     # layer_2: [batch, 256, 256, ndf] => [batch, 128, 128, ndf * 2]
     # layer_3: [batch, 128, 128, ndf * 2] => [batch, 64, 64, ndf * 4]
@@ -1488,6 +1494,7 @@ def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, 
             rectified = nonlinearity(convolved, 'lrelu', 0.2)
 
             layers.append(rectified)
+            print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
 
     # layer_6: [batch, 32, 32, ndf * 16] => [batch, 32, 32, 1]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
@@ -1498,6 +1505,7 @@ def unet_discriminator_1(discrim_inputs, discrim_targets, ndf, spectral_normed, 
             inputs_norm=False, he_init=True, biases=True)
         # convolved = tf.sigmoid(convolved)
         layers.append(convolved)
+        print('D.layer_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
 
     return layers[-1]
 
@@ -1559,7 +1567,7 @@ def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed
         padded_input = tf.pad(rectified, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         convolved = lib.ops.conv2d.Conv2D(
             padded_input, padded_input.shape.as_list()[-1], 1, 5, 1, 'atrous_conv2d',
-            conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=2,
+            conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=4,
             padding=padding, spectral_normed=spectral_normed, update_collection=update_collection,
             inputs_norm=False, he_init=True, biases=True)
 

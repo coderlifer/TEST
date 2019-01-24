@@ -91,7 +91,7 @@ def UpsampleConv(inputs, output_dim, filter_size=3, stride=1, name=None,
     # output = tf.concat([output, output, output, output], axis=3)
     # output = tf.depth_to_space(output, 2)
     w, h = output.shape.as_list()[1], output.shape.as_list()[2]
-    output = tf.image.resize_bicubic(output, [w * 2, h * 2], align_corners=False)
+    output = tf.image.resize_bicubic(output, [w * 2, h * 2], align_corners=True)
     # output = lib.ops.deconv2d.Deconv2D(output, output.shape.as_list()[-1], output_dim, filter_size, stride, name,
     #                                    spectral_normed=spectral_normed,
     #                                    update_collection=update_collection,

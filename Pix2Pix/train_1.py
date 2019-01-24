@@ -37,8 +37,8 @@ parser.add_argument("--mode", required=True, choices=["train", "test", "export"]
 parser.add_argument('--conv_type', type=str, default='conv2d', help='conv2d, depthwise_conv2d, separable_conv2d.')
 parser.add_argument('--channel_multiplier', type=int, default=0,
                     help='channel_multiplier of depthwise_conv2d/separable_conv2d.')
-parser.add_argument("--initial_lr", type=float, default=0.0002, help="initial learning rate for adam")
-parser.add_argument("--end_lr", type=float, default=0.0001, help="initial learning rate for adam")
+# parser.add_argument("--initial_lr", type=float, default=0.0002, help="initial learning rate for adam")
+# parser.add_argument("--end_lr", type=float, default=0.0001, help="initial learning rate for adam")
 parser.add_argument("--beta1", type=float, default=0., help="momentum term of adam")
 parser.add_argument("--beta2", type=float, default=0.9, help="momentum term of adam")
 parser.add_argument("--loss_type", type=str, default='HINGE',
@@ -303,13 +303,7 @@ def load_examples():
         if args.flip:
             r = tf.image.random_flip_left_right(r, seed=seed)
 
-            # r = tf.image.random_flip_up_down(r, seed=seed)
-
-            # k = np.random.choice([1, 2, 3, 4], 1, replace=False)[0]
-            # r = tf.image.rot90(image=r, k=k)
-            #
-            # if k > 2:
-            #     r = tf.image.transpose_image(r)
+            r = tf.image.random_flip_up_down(r, seed=seed)
 
         # area produces a nice downscaling, but does nearest neighbor for upscaling
         # assume we're going to be doing downscaling here
@@ -320,7 +314,7 @@ def load_examples():
                 tf.floor(tf.random_uniform([2], 0, args.scale_size - CROP_SIZE + 1, seed=seed)), dtype=tf.int32)
             r = tf.image.crop_to_bounding_box(r, offset[0], offset[1], CROP_SIZE, CROP_SIZE)
         elif args.scale_size < CROP_SIZE:
-            raise Exception("scale size cannot be less than crop size")
+            raise Exception("scale_size cannot be less than CROP_SIZE!")
 
         return r
 
@@ -338,7 +332,7 @@ def load_examples():
         # break apart image pair and move to range [-1, 1]
         width = tf.shape(image_decoded)[1]  # [height, width, channels]
         if args.multiple_A:
-            tf.logging.info('multiple_A is enabled!')
+            tf.logging.info('\nmultiple_A is enabled!\n')
             # for concat features
             a_images_edge = preprocess(image_decoded[:, :width // 3, :])
             a_images = preprocess(image_decoded[:, width // 3:(2 * width) // 3, :])
@@ -346,7 +340,7 @@ def load_examples():
 
             b_images = preprocess(image_decoded[:, (2 * width) // 3:, :])
         else:
-            tf.logging.info('multiple_A is not enabled!')
+            tf.logging.info('\nmultiple_A is not enabled!\n')
             a_images = preprocess(image_decoded[:, :width // 2, :])
             b_images = preprocess(image_decoded[:, width // 2:, :])
 
@@ -454,14 +448,14 @@ def create_model(inputs, targets, max_steps):
             #     targets * tf.log(tf.clip_by_value(outputs, 1e-10, 1.0)) +
             #     (1.0 - targets) * tf.log(tf.clip_by_value(1.0 - outputs, 1e-10, 1.0)))
         elif args.content_loss == 'nss':
-            outputs_ = deprocess(outputs)[0, :, :, ]
-            targets_ = deprocess(targets)[0]
+            outputs_ = deprocess(outputs)[0, :, :, :]
+            targets_ = deprocess(targets)[0, :, :, :]
 
             print('\noutputs_.shape.as_list(): {}'.format(outputs_.shape.as_list()))
             print('targets_.shape.as_list(): {}\n'.format(targets_.shape.as_list()))
 
             gen_loss_content = 10 * kl_divergence(targets_, outputs_) - \
-                               2.0 * correlation_coefficient(targets_, outputs_) - nss(targets_, outputs_)
+                2.0 * correlation_coefficient(targets_, outputs_) - nss(targets_, outputs_)
         else:
             gen_loss_content = tf.reduce_mean(tf.abs(targets - outputs))
 
@@ -488,8 +482,8 @@ def create_model(inputs, targets, max_steps):
             tf.maximum(0., 1. - ((tf.cast(global_step, tf.float32) - int(max_steps * 0.5)) / max_steps)))
         if args.TTUR:
             print('\nUsing TTUR!\n')
-            LR_D = tf.constant(0.0004)  # 2e-4  # Initial learning rate
-            LR_G = tf.constant(0.0001)  # 2e-4  # Initial learning rate
+            LR_D = tf.constant(0.0001)  # 2e-4  # Initial learning rate
+            LR_G = tf.constant(0.00005)  # 2e-4  # Initial learning rate
             lr_d = LR_D * decay
             lr_g = LR_G * decay
         else:
