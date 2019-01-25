@@ -115,7 +115,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --content_loss='bce' \
   --n_dis=1 \
   --input_dir=/home/tellhow-iot/tem/webpagesaliency/pix2pix_data_2A/val \
-  --output_dir=/data/tem/webpagesaliency/output_resize_512/tem/18880 \
+  --output_dir=/data/tem/webpagesaliency/output_resize_512/tem/16520 \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=1180 \
@@ -126,7 +126,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --l1_weight=0.05 \
   --gan_weight=1.0 \
   --checkpoint_dir=/data/tem/webpagesaliency/output_resize_512/ \
-  --checkpoint=/data/tem/webpagesaliency/output_resize_512/model-18880 \
+  --checkpoint=/data/tem/webpagesaliency/output_resize_512/model-16520 \
   --multiple_A \
   --net_type='ResNet' \
   --upsampe_method=depth_to_space

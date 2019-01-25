@@ -42,9 +42,9 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
+# import tensorflow.contrib.slim as slim
 
-# slim = tf.contrib.slim
+slim = tf.contrib.slim
 
 
 def vgg_arg_scope(weight_decay=0.0005):

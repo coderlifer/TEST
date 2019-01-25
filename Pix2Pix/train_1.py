@@ -342,7 +342,13 @@ def load_examples():
         else:
             tf.logging.info('\nmultiple_A is not enabled!\n')
             a_images = preprocess(image_decoded[:, :width // 2, :])
+            print('\na_images.shape.as_list()'.format(a_images.shape.as_list()))
             b_images = preprocess(image_decoded[:, width // 2:, :])
+            print('b_images.shape.as_list()\n'.format(b_images.shape.as_list()))
+
+            # b_images = tf.image.rgb_to_grayscale(image_decoded[:, width // 2:, :])
+            # b_images = tf.image.convert_image_dtype(b_images, tf.float32)
+            # b_images = preprocess(b_images)
 
         if args.which_direction == "AtoB":
             inputs, targets = [a_images, b_images]

@@ -1526,11 +1526,11 @@ def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed
 
     # layer_1: [batch, 512, 512, in_channels * 2] => [batch, 256, 256, ndf]
     with tf.variable_scope("layer_1"):
-        padded_input = tf.pad(inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+        # padded_input = tf.pad(inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         convolved = lib.ops.conv2d.Conv2D(
-            padded_input, padded_input.shape.as_list()[-1], ndf, 5, 2, 'atrous_conv2d',
+            inputs, inputs.shape.as_list()[-1], ndf, 5, 2, 'atrous_conv2d',
             conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=2,
-            padding=padding, spectral_normed=spectral_normed, update_collection=update_collection,
+            padding='SAME', spectral_normed=spectral_normed, update_collection=update_collection,
             inputs_norm=False, he_init=True, biases=True)
         rectified = nonlinearity(convolved, 'lrelu', 0.2)
 
@@ -1545,11 +1545,11 @@ def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed
         with tf.variable_scope("layer_%d" % (len(layers) + 1)):
             out_channels_ = ndf * (2 ** (i + 1))
             stride = 1 if i == n_layers - 1 else 2  # last layer here has stride 1
-            padded_input = tf.pad(layers[-1], [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+            # padded_input = tf.pad(layers[-1], [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
             convolved = lib.ops.conv2d.Conv2D(
-                padded_input, padded_input.shape.as_list()[-1], out_channels_, 5, stride, 'atrous_conv2d',
+                layers[-1], layers[-1].shape.as_list()[-1], out_channels_, 5, stride, 'atrous_conv2d',
                 conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=2,
-                padding=padding, spectral_normed=spectral_normed, update_collection=update_collection,
+                padding='SAME', spectral_normed=spectral_normed, update_collection=update_collection,
                 inputs_norm=False, he_init=True, biases=True)
 
             # convolved = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
@@ -1564,11 +1564,11 @@ def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed
 
     # layer_6: [batch, 32, 32, ndf * 16] => [batch, 32, 32, 1]
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
-        padded_input = tf.pad(rectified, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+        # padded_input = tf.pad(rectified, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         convolved = lib.ops.conv2d.Conv2D(
-            padded_input, padded_input.shape.as_list()[-1], 1, 5, 1, 'atrous_conv2d',
+            layers[-1], layers[-1].shape.as_list()[-1], 1, 5, 1, 'atrous_conv2d',
             conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=4,
-            padding=padding, spectral_normed=spectral_normed, update_collection=update_collection,
+            padding='SAME', spectral_normed=spectral_normed, update_collection=update_collection,
             inputs_norm=False, he_init=True, biases=True)
 
         # convolved = tf.sigmoid(convolved)

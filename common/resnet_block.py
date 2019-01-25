@@ -157,9 +157,9 @@ def ResidualDenseBlock(inputs, input_dim, output_dim, filter_size, name,
     #     output = lrelu(output, leakiness=0.2)
 
     if resample == 'down':
-        inputs_ = tf.image.resize_bicubic(inputs, [tf.shape(output)[1], tf.shape(output)[2]])
+        inputs_ = tf.image.resize_bicubic(inputs, [tf.shape(output)[1], tf.shape(output)[2]], align_corners=True)
     elif resample == 'up':
-        inputs_ = tf.image.resize_bicubic(inputs, [tf.shape(output)[1], tf.shape(output)[2]])
+        inputs_ = tf.image.resize_bicubic(inputs, [tf.shape(output)[1], tf.shape(output)[2]], align_corners=True)
     elif resample is None:
         inputs_ = inputs
     else:
