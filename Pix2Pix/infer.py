@@ -43,7 +43,7 @@ parser.add_argument('--n_dis', type=int, default=5,
                     help='Number of discriminator update per generator update.')
 parser.add_argument('--input_dir', type=str, default='./', help="path to folder containing images")
 parser.add_argument('--output_dir', type=str, default='./output_train', help='Directory to output the result.')
-parser.add_argument('--checkpoint_dir', type=str, default=None,
+parser.add_argument('--checkpoint_dir', type=str, default='/home/tellhow-iot/pix2pix_data/output_resize_512/ model-47200',
                     help='Directory to stroe checkpoints and summaries.')
 parser.add_argument("--which_direction", type=str, default="AtoB", choices=["AtoB", "BtoA"])
 parser.add_argument("--seed", type=int)
@@ -65,7 +65,7 @@ parser.add_argument("--scale_size", type=int, default=512,
                     help="scale images to this size before cropping to 256x256")
 parser.add_argument("--flip", dest="flip", action="store_true", help="flip images horizontally")
 parser.add_argument("--no_flip", dest="flip", action="store_false", help="don't flip images horizontally")
-parser.set_defaults(flip=True)
+# parser.set_defaults(flip=True)
 parser.add_argument("--l1_weight", type=float, default=100.0, help="weight on L1 term for generator gradient")
 parser.add_argument("--gan_weight", type=float, default=1.0, help="weight on GAN term for generator gradient")
 
@@ -79,6 +79,7 @@ parser.add_argument('--upsampe_method', dest="upsampe_method", type=str, default
                     help='depth_to_space, resize')
 
 args = parser.parse_args()
+
 
 tf.logging.set_verbosity(tf.logging.INFO)
 
@@ -102,28 +103,6 @@ def deprocess(image):
     with tf.name_scope("deprocess"):
         # [-1, 1] => [0, 1]
         return (image + 1) / 2
-
-
-def save_images(fetches, step=None):
-    image_dir = os.path.join(args.output_dir, "images")
-    if not os.path.exists(image_dir):
-        os.makedirs(image_dir)
-
-    filesets = []
-    for i, in_path in enumerate(fetches["paths"]):
-        name, _ = os.path.splitext(os.path.basename(in_path.decode("utf8")))
-        fileset = {"name": name, "step": step}
-        for kind in ["inputs", "outputs", "targets"]:
-            filename = name + "-" + kind + ".png"
-            if step is not None:
-                filename = "%08d-%s" % (step, filename)
-            fileset[kind] = filename
-            out_path = os.path.join(image_dir, filename)
-            contents = fetches[kind][i]
-            with open(out_path, "wb") as f:
-                f.write(contents)
-        filesets.append(fileset)
-    return filesets
 
 
 def load_examples(raw_input):
@@ -309,6 +288,7 @@ def infer(images):
 
     # undo colorization splitting on images that we use for display/output
     outputs = deprocess(modelNamedtuple.outputs)
+    outputs = tf.squeeze(outputs)
 
     with tf.name_scope("convert_outputs"):
         converted_outputs = tf.image.convert_image_dtype(outputs, dtype=tf.uint8, saturate=True)
@@ -334,14 +314,13 @@ def infer(images):
             max_steps = min(examples.steps_per_epoch, max_steps)
             for step in range(max_steps):
                 img = sess.run(outputs)
-                img = np.asarray(img[0])
+                img = np.asarray(img)
                 print(img.shape)
                 print(img.dtype)
 
                 img_display = sess.run(converted_outputs)
-                img_display = np.asarray(img_display[0])
-                print(img_display.shape)
-                print(img_display.dtype)
+                with open('./a.png', 'wb') as f:
+                    f.write(img_display)
 
         coord.request_stop()
         coord.join(threads)
