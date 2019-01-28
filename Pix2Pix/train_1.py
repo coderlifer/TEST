@@ -190,7 +190,9 @@ def kl_divergence(y_true, y_pred):
     max_y_pred = tf.keras.backend.repeat_elements(
         tf.keras.backend.expand_dims(
             tf.keras.backend.repeat_elements(
-                tf.keras.backend.expand_dims(tf.keras.backend.max(tf.keras.backend.max(y_pred, axis=2), axis=2)),
+                tf.keras.backend.expand_dims(
+                    tf.keras.backend.max(
+                        tf.keras.backend.max(y_pred, axis=2), axis=2)),
                 CROP_SIZE, axis=-1)),
         CROP_SIZE, axis=-1)
     y_pred /= max_y_pred
@@ -455,11 +457,11 @@ def create_model(inputs, targets, max_steps):
             #     targets * tf.log(tf.clip_by_value(outputs, 1e-10, 1.0)) +
             #     (1.0 - targets) * tf.log(tf.clip_by_value(1.0 - outputs, 1e-10, 1.0)))
         elif args.content_loss == 'nss':
-            outputs_ = deprocess(outputs)[0, :, :, :]
-            targets_ = deprocess(targets)[0, :, :, :]
+            outputs_ = deprocess(tf.transpose(outputs, [0, 3, 1, 2]))
+            targets_ = deprocess(tf.transpose(targets, [0, 3, 1, 2]))
 
-            print('\noutputs_.shape.as_list(): {}'.format(outputs_.shape.as_list()))
-            print('targets_.shape.as_list(): {}\n'.format(targets_.shape.as_list()))
+            # print('\noutputs_.shape.as_list(): {}'.format(outputs_.shape.as_list()))
+            # print('targets_.shape.as_list(): {}\n'.format(targets_.shape.as_list()))
 
             gen_loss_content = 10 * kl_divergence(targets_, outputs_) - \
                                2.0 * correlation_coefficient(targets_, outputs_) - nss(targets_, outputs_)
