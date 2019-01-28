@@ -86,8 +86,8 @@ parser.add_argument('--net_type', dest="net_type", type=str, default="UNet", hel
 parser.add_argument('--upsampe_method', dest="upsampe_method", type=str, default="depth_to_space",
                     help='depth_to_space, resize')
 
-parser.add_argument('--nasnet', dest="nasnet", type=str, default=None,
-                    help='pretrained nasnet')
+parser.add_argument('--pretrained_imagenet', dest="pretrained_imagenet", type=str, default=None,
+                    help='pretrained imagenet')
 
 args = parser.parse_args()
 
@@ -663,9 +663,9 @@ def train():
         sess.run(tf.global_variables_initializer())
         print("parameter_count =", sess.run(parameter_count))
 
-        if args.nasnet is not None:
-            print("loading NASNet from checkpoint!")
-            lib.misc.optimistic_restore(sess, args.nasnet)
+        if args.pretrained_imagenet is not None:
+            print("loading pretrained_imagenet from: {}!".format(args.pretrained_imagenet))
+            lib.misc.optimistic_restore(sess, args.pretrained_imagenet)
 
         if args.checkpoint_dir is not None:
             print("loading pretrained model from checkpoint!")
