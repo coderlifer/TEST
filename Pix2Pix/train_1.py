@@ -378,7 +378,7 @@ def load_examples():
         paths_batch, inputs_batch, targets_batch = iterator.get_next()
 
         inputs_batch.set_shape([args.batch_size, CROP_SIZE, CROP_SIZE, 6 if args.multiple_A else 3])
-        targets_batch.set_shape([args.batch_size, CROP_SIZE, CROP_SIZE, 3])
+        targets_batch.set_shape([args.batch_size, CROP_SIZE, CROP_SIZE, 1])
 
     return Examples(
         paths=paths_batch,
