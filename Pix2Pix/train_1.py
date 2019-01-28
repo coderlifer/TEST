@@ -390,7 +390,8 @@ def load_examples():
 def create_model(inputs, targets, max_steps):
     model = Pix2Pix()
 
-    out_channels = int(targets.get_shape()[-1])
+    # out_channels = int(targets.get_shape()[-1])
+    out_channels = 1
     outputs = model.get_generator(inputs, out_channels, ngf=args.ngf,
                                   conv_type=args.conv_type,
                                   channel_multiplier=args.channel_multiplier,
