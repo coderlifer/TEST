@@ -418,7 +418,7 @@ def resnet_g_VGG16(generator_inputs, generator_outputs_channels, ngf):
         print('{}: {}'.format(key, val))
     print(' ')
 
-    features = end_points['conv5_3']  # [1, 32, 32, 512]
+    features = end_points['vgg_16/conv5/conv5_3']  # [1, 32, 32, 512]
 
     layers = []
     layers.append(features)
