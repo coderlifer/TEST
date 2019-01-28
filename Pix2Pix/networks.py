@@ -458,7 +458,7 @@ def resnet_g_VGG16(generator_inputs, generator_outputs_channels, ngf):
         ]
         for out_channels in layer_specs_:
             with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
-                output = ResidualBlock(
+                output = ResidualDenseBlock(
                     layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
                     name='G.Block.%d' % (len(layers) - len(layer_specs)),
                     spectral_normed=True, update_collection=None, inputs_norm=False,

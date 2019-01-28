@@ -513,7 +513,7 @@ def create_model(inputs, targets, max_steps):
     with tf.name_scope("g_train"):
         gen_tvars = [var for var in tf.trainable_variables()
                      if var.name.startswith("g_net") or 'vgg_16/conv5' in var.name]
-        print('------gen_tvars------\n')
+        print('\n------gen_tvars------')
         for var in gen_tvars:
             print(var.name)
         gen_optim = tf.train.AdamOptimizer(lr_g, beta1=args.beta1, beta2=args.beta2)
@@ -643,18 +643,18 @@ def train():
     #     tf.summary.histogram(var.op.name + "/gradients", grad)
 
     with tf.name_scope("parameter_count"):
-        print('\n----tf.global_variables()----')
-        for var in tf.global_variables():
-            print(var.name)
-
-        print('\n----not in tf.trainable_variables()----')
-        for var in tf.global_variables():
-            if var not in tf.trainable_variables():
-                print(var.name)
-
-        print('\n----tf.trainable_variables()----')
-        for var in tf.trainable_variables():
-            print(var.name)
+        # print('\n----tf.global_variables()----')
+        # for var in tf.global_variables():
+        #     print(var.name)
+        #
+        # print('\n----not in tf.trainable_variables()----')
+        # for var in tf.global_variables():
+        #     if var not in tf.trainable_variables():
+        #         print(var.name)
+        #
+        # print('\n----tf.trainable_variables()----')
+        # for var in tf.trainable_variables():
+        #     print(var.name)
 
         parameter_count = tf.reduce_sum([tf.reduce_prod(tf.shape(v)) for v in tf.trainable_variables()])
 
