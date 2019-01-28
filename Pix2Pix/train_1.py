@@ -350,7 +350,6 @@ def load_examples():
             b_images = preprocess(image_grayscale[:, width // 2:, :])
             # print('b_images.shape.as_list: {}\n'.format(b_images.shape.as_list()))
 
-
         if args.which_direction == "AtoB":
             inputs, targets = [a_images, b_images]
         elif args.which_direction == "BtoA":
@@ -463,7 +462,7 @@ def create_model(inputs, targets, max_steps):
             print('targets_.shape.as_list(): {}\n'.format(targets_.shape.as_list()))
 
             gen_loss_content = 10 * kl_divergence(targets_, outputs_) - \
-                2.0 * correlation_coefficient(targets_, outputs_) - nss(targets_, outputs_)
+                               2.0 * correlation_coefficient(targets_, outputs_) - nss(targets_, outputs_)
         else:
             gen_loss_content = tf.reduce_mean(tf.abs(targets - outputs))
 
