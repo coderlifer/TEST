@@ -346,9 +346,7 @@ def load_examples():
             b_images = preprocess(image_decoded[:, width // 2:, :])
             # print('b_images.shape.as_list: {}\n'.format(b_images.shape.as_list()))
 
-            # b_images = tf.image.rgb_to_grayscale(image_decoded[:, width // 2:, :])
-            # b_images = tf.image.convert_image_dtype(b_images, tf.float32)
-            # b_images = preprocess(b_images)
+            # b_images = tf.image.rgb_to_grayscale(b_images)
 
         if args.which_direction == "AtoB":
             inputs, targets = [a_images, b_images]
@@ -504,13 +502,20 @@ def create_model(inputs, targets, max_steps):
 
     with tf.name_scope("d_train"):
         discrim_tvars = [var for var in tf.trainable_variables() if var.name.startswith("d_net")]
+        print('\n------discrim_tvars------')
+        for var in discrim_tvars:
+            print(var.name)
         discrim_optim = tf.train.AdamOptimizer(lr_d, beta1=args.beta1, beta2=args.beta2)
         # discrim_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
         discrim_grads_and_vars = discrim_optim.compute_gradients(discrim_loss, var_list=discrim_tvars)
         discrim_train = discrim_optim.apply_gradients(discrim_grads_and_vars)
 
     with tf.name_scope("g_train"):
-        gen_tvars = [var for var in tf.trainable_variables() if var.name.startswith("g_net")]
+        gen_tvars = [var for var in tf.trainable_variables()
+                     if var.name.startswith("g_net") or 'vgg_16/conv5' in var.name]
+        print('------gen_tvars------\n')
+        for var in gen_tvars:
+            print(var.name)
         gen_optim = tf.train.AdamOptimizer(lr_g, beta1=args.beta1, beta2=args.beta2)
         # gen_optim = tf.train.AdamOptimizer(learning_rate, beta1=args.beta1, beta2=args.beta2)
         gen_grads_and_vars = gen_optim.compute_gradients(gen_loss, var_list=gen_tvars)
