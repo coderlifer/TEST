@@ -65,9 +65,10 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --l1_weight=0.05 \
   --gan_weight=1.0 \
   --net_type='ResNet' \
-  --nasnet='/home/tellhow-iot/tem/webpagesaliency/nasnet/model.ckpt' \
+  --pretrained_imagenet='/home/tellhow-iot/tem/webpagesaliency/vgg/vgg_16.ckpt' \
   --upsampe_method='depth_to_space'
 
+  --nasnet='/home/tellhow-iot/tem/webpagesaliency/nasnet/model.ckpt' \
 
 # infer
 # 47200 29500 28320 27140 25960 23600
