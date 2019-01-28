@@ -14,12 +14,17 @@ Networks for GAN Pix2Pix.
 # sys.path.append(os.getcwd())
 
 import numpy as np
+import tensorflow as tf
+
+slim = tf.contrib.slim
+
 # import common as lib
 import common.ops.conv2d
 import common.ops.linear
 import common.ops.normalization
 
 from nets import nets_factory
+from nets import vgg
 
 from common.resnet_block import *
 
@@ -298,18 +303,19 @@ def resnet_g_vgg(generator_inputs, generator_outputs_channels, ngf, vgg19_npy_pa
         data_dict = None
 
     with tf.variable_scope("vgg"):
-        rgb_scaled = (generator_inputs + 1) / 2  # [-1, 1] => [0, 1]
-        rgb_scaled *= 255.0
+        # rgb_scaled = (generator_inputs + 1) / 2  # [-1, 1] => [0, 1]
+        # rgb_scaled *= 255.0
         # Convert RGB to BGR
-        red, green, blue = tf.split(value=rgb_scaled, num_or_size_splits=3, axis=3)
+        red, green, blue = tf.split(value=generator_inputs, num_or_size_splits=3, axis=-1)
         # assert red.get_shape().as_list()[1:] == [224, 224, 1]
         # assert green.get_shape().as_list()[1:] == [224, 224, 1]
         # assert blue.get_shape().as_list()[1:] == [224, 224, 1]
-        bgr = tf.concat(values=[
-            blue - VGG_MEAN[0],
-            green - VGG_MEAN[1],
-            red - VGG_MEAN[2],
-        ], axis=3)
+        # bgr = tf.concat(values=[
+        #     blue - VGG_MEAN[0],
+        #     green - VGG_MEAN[1],
+        #     red - VGG_MEAN[2],
+        # ], axis=3)
+        bgr = tf.concat(values=[blue, green, red], axis=3)
         # assert bgr.get_shape().as_list()[1:] == [224, 224, 3]
 
         conv1_1 = conv_layer(bgr, 6, 64, "conv1_1", trainable=False, data_dict=None)
@@ -394,6 +400,89 @@ def resnet_g_vgg(generator_inputs, generator_outputs_channels, ngf, vgg19_npy_pa
         output = tf.nn.tanh(output)
         layers.append(output)
         print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
+
+    return layers[-1]
+
+
+def resnet_g_VGG16(generator_inputs, generator_outputs_channels, ngf):
+    """ Use pretrained NASNet to extract image featrues, and ResNet architecture to decode image.
+    Args:
+
+    Returns:
+    """
+    with slim.arg_scope(vgg.vgg_arg_scope()):
+        outputs, end_points = vgg.vgg_16(generator_inputs, num_classes=None, is_training=False)
+
+    print('\n--------VGG16.end_points--------')
+    for key, val in end_points.items():
+        print('{}: {}'.format(key, val))
+    print(' ')
+
+    features = end_points['conv5']  # [1, 32, 32, 512]
+
+    layers = []
+    layers.append(features)
+
+    with tf.variable_scope('g_net', reuse=tf.AUTO_REUSE):
+        layer_specs = [
+            ngf * 8,  # encoder_1: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
+            ngf * 8,  # encoder_2: [batch, 16, 16, ngf * 8] => [batch, 8, 8, ngf * 16]
+            # ngf * 16,  # encoder_2: [batch, 8, 8, ngf * 16] => [batch, 4, 4, ngf * 16]
+        ]
+        for out_channels in layer_specs:
+            with tf.variable_scope('encoder_{}'.format(len(layers))):
+                # output = lib.ops.conv2d.Conv2D(
+                #     layers[-1], layers[-1].shape.as_list()[-1], out_channels, 1, 1, 'Conv2D',
+                #     conv_type='conv2d', channel_multiplier=0, dilation_rate=0,
+                #     padding='SAME', spectral_normed=True, update_collection=None,
+                #     inputs_norm=False, he_init=True, biases=True)
+                # layers.append(output)
+
+                output = lib.ops.conv2d.Conv2D(
+                    layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3, 2, 'atrous_conv2d',
+                    conv_type='atrous_conv2d', channel_multiplier=0, dilation_rate=2,
+                    padding='SAME', spectral_normed=True, update_collection=None,
+                    inputs_norm=False, he_init=True, biases=True)
+                layers.append(output)
+
+        # [batch, 4, 4, ngf * 16] ----> [batch, 512, 512, ngf]
+        layer_specs_ = [
+            # ngf * 16,  # encoder_7: [batch, 4, 4, ngf * 16] => [batch, 8, 8, ngf * 16]
+            ngf * 4,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 4]
+            ngf * 4,  # encoder_5: [batch, 16, 16, ngf * 4] => [batch, 32, 32, ngf * 4]
+            ngf * 2,  # encoder_5: [batch, 32, 32, ngf * 4] => [batch, 64, 64, ngf * 2]
+            ngf * 2,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 128, 128, ngf * 2]
+            ngf * 1,  # encoder_2: [batch, 128, 128, ngf * 2] => [batch, 256, 256, ngf]
+            ngf * 1,  # encoder_1: [batch, 256, 256, ngf] => [batch, 512, 512, ngf]
+        ]
+        for out_channels in layer_specs_:
+            with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
+                output = ResidualBlock(
+                    layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
+                    name='G.Block.%d' % (len(layers) - len(layer_specs)),
+                    spectral_normed=True, update_collection=None, inputs_norm=False,
+                    resample='up', labels=None, biases=True, activation_fn='relu')
+
+                if output.shape.as_list()[1] == 128:
+                    output, attn_score = Self_Atten(output, spectral_normed=True)  # attention module
+                    print('Self_Atten.G: {}'.format(output.shape.as_list()))
+
+                layers.append(output)
+                print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
+
+        # [batch, 512, 512, ngf] ----> [batch, 512, 512, 3]
+        with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
+            output = norm_layer(layers[-1], decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
+            output = nonlinearity(output)
+
+            output = lib.ops.conv2d.Conv2D(
+                output, output.shape.as_list()[-1], generator_outputs_channels, 1, 1, 'Conv2D',
+                conv_type='conv2d', channel_multiplier=0, padding='SAME',
+                spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
+
+            output = tf.nn.tanh(output)
+            layers.append(output)
+            print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
 
     return layers[-1]
 

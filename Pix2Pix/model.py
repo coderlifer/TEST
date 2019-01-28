@@ -43,7 +43,8 @@ class Pix2Pix(object):
         elif net_type == 'ResNet':
             # with tf.variable_scope('g_net', reuse=reuse):
             #     output = networks.resnet_g_1(inputs, outputs_channels, ngf)
-            output = networks.resnet_g_NASNet(inputs, outputs_channels, ngf)
+            # output = networks.resnet_g_NASNet(inputs, outputs_channels, ngf)
+            output = networks.resnet_g_VGG16(inputs, outputs_channels, ngf)
         elif net_type == 'VGG':
             output = networks.vgg_generator(inputs, outputs_channels, ngf,
                                             conv_type=conv_type,
