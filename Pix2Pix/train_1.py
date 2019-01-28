@@ -322,12 +322,15 @@ def load_examples():
         raw_input = tf.read_file(input_path)
 
         image_decoded = tf.image.decode_png(contents=raw_input, channels=3)
+        image_grayscale = tf.image.rgb_to_grayscale(image_decoded)
         image_decoded = tf.image.convert_image_dtype(image_decoded, tf.float32)
+        image_grayscale = tf.image.convert_image_dtype(image_grayscale, tf.float32)
 
         assertion = tf.assert_equal(tf.shape(image_decoded)[2], 3, message="image does not have 3 channels")
         with tf.control_dependencies([assertion]):
             image_decoded = tf.identity(image_decoded)
         image_decoded.set_shape([None, None, 3])
+        image_grayscale.set_shape([None, None, 1])
 
         # break apart image pair and move to range [-1, 1]
         width = tf.shape(image_decoded)[1]  # [height, width, channels]
@@ -343,10 +346,10 @@ def load_examples():
             tf.logging.info('\nmultiple_A is not enabled!\n')
             a_images = preprocess(image_decoded[:, :width // 2, :])
             # print('\na_images.shape.as_list: {}'.format(a_images.shape.as_list()))
-            b_images = preprocess(image_decoded[:, width // 2:, :])
+            # b_images = preprocess(image_decoded[:, width // 2:, :])
+            b_images = preprocess(image_grayscale[:, width // 2:, :])
             # print('b_images.shape.as_list: {}\n'.format(b_images.shape.as_list()))
 
-            # b_images = tf.image.rgb_to_grayscale(b_images)
 
         if args.which_direction == "AtoB":
             inputs, targets = [a_images, b_images]
