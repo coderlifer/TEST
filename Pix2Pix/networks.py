@@ -425,8 +425,8 @@ def resnet_g_VGG16(generator_inputs, generator_outputs_channels, ngf):
 
     with tf.variable_scope('g_net', reuse=tf.AUTO_REUSE):
         layer_specs = [
-            ngf * 8,  # encoder_1: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
-            ngf * 8,  # encoder_2: [batch, 16, 16, ngf * 8] => [batch, 8, 8, ngf * 16]
+            ngf * 16,  # encoder_1: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
+            ngf * 16,  # encoder_2: [batch, 16, 16, ngf * 8] => [batch, 8, 8, ngf * 16]
             # ngf * 16,  # encoder_2: [batch, 8, 8, ngf * 16] => [batch, 4, 4, ngf * 16]
         ]
         for out_channels in layer_specs:
@@ -449,10 +449,10 @@ def resnet_g_VGG16(generator_inputs, generator_outputs_channels, ngf):
         # [batch, 4, 4, ngf * 16] ----> [batch, 512, 512, ngf]
         layer_specs_ = [
             # ngf * 16,  # encoder_7: [batch, 4, 4, ngf * 16] => [batch, 8, 8, ngf * 16]
-            ngf * 4,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 4]
-            ngf * 4,  # encoder_5: [batch, 16, 16, ngf * 4] => [batch, 32, 32, ngf * 4]
-            ngf * 2,  # encoder_5: [batch, 32, 32, ngf * 4] => [batch, 64, 64, ngf * 2]
-            ngf * 2,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 128, 128, ngf * 2]
+            ngf * 8,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 4]
+            ngf * 8,  # encoder_5: [batch, 16, 16, ngf * 4] => [batch, 32, 32, ngf * 4]
+            ngf * 4,  # encoder_5: [batch, 32, 32, ngf * 4] => [batch, 64, 64, ngf * 2]
+            ngf * 4,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 128, 128, ngf * 2]
             ngf * 1,  # encoder_2: [batch, 128, 128, ngf * 2] => [batch, 256, 256, ngf]
             ngf * 1,  # encoder_1: [batch, 256, 256, ngf] => [batch, 512, 512, ngf]
         ]
@@ -464,7 +464,7 @@ def resnet_g_VGG16(generator_inputs, generator_outputs_channels, ngf):
                     spectral_normed=True, update_collection=None, inputs_norm=False,
                     resample='up', labels=None, biases=True, activation_fn='relu')
 
-                if output.shape.as_list()[1] == 128:
+                if output.shape.as_list()[1] == 64:
                     output, attn_score = Self_Atten(output, spectral_normed=True)  # attention module
                     print('Self_Atten.G: {}'.format(output.shape.as_list()))
 
@@ -1644,7 +1644,7 @@ def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed
             # convolved = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
             rectified = nonlinearity(convolved, 'lrelu', 0.2)
 
-            if rectified.shape.as_list()[1] == 128:
+            if rectified.shape.as_list()[1] == 64:
                 rectified, attn_score = Self_Atten(rectified, spectral_normed=True)  # attention module
                 print('Self_Atten.D: {}'.format(rectified.shape.as_list()))
 
