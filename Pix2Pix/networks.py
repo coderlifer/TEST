@@ -444,7 +444,7 @@ def resnet_g_VGG16(generator_inputs, generator_outputs_channels, ngf):
                     padding='SAME', spectral_normed=True, update_collection=None,
                     inputs_norm=False, he_init=True, biases=True)
                 layers.append(output)
-                print('encoder_{}: {}'.format(len(layers), output.shape.as_list()))
+                print('encoder_{}: {}'.format(len(layers) - 1, output.shape.as_list()))
 
         # [batch, 4, 4, ngf * 16] ----> [batch, 512, 512, ngf]
         layer_specs_ = [
