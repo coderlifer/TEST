@@ -321,7 +321,7 @@ if __name__ == '__main__':
 
     # 调用多次，算saliency
     webpage = imageio.imread("./cat.png")
-    print('input.shape: {}'.format(webpage.shape))
+    print('\ninput.shape: {}\n'.format(webpage.shape))
     webpage = np.asarray(webpage).astype(np.float32)
 
     saliency = sess.run(outputs, feed_dict={input_p: webpage})
@@ -331,3 +331,4 @@ if __name__ == '__main__':
     # saliency = np.asarray(saliency)
     # print(saliency.shape)
     # print(saliency.dtype)
+    # `infer.py`.
