@@ -22,7 +22,7 @@ sys.path.append(os.getcwd())
 
 import common as lib
 import common.misc
-import common.plot
+# import common.plot
 
 from Pix2Pix.model import Pix2Pix
 
@@ -44,7 +44,7 @@ parser.add_argument('--n_dis', type=int, default=5,
 parser.add_argument('--input_dir', type=str, default='./', help="path to folder containing images")
 parser.add_argument('--output_dir', type=str, default='./output_train', help='Directory to output the result.')
 parser.add_argument('--checkpoint_dir', type=str,
-                    default='/home/tellhow-iot/pix2pix_data/output_resize_512/ model-47200',
+                    default='/home/tellhow-iot/pix2pix_data/output_resize_512/',
                     help='Directory to stroe checkpoints and summaries.')
 parser.add_argument("--which_direction", type=str, default="AtoB", choices=["AtoB", "BtoA"])
 parser.add_argument("--seed", type=int)
