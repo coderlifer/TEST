@@ -294,9 +294,9 @@ def _create_model(input_ph):
     outputs = deprocess(modelNamedtuple.outputs)
     outputs = tf.squeeze(outputs)
 
-    # with tf.name_scope("convert_outputs"):
-    #     converted_outputs = tf.image.convert_image_dtype(outputs, dtype=tf.uint8, saturate=True)
-    #     converted_outputs = tf.image.encode_png(converted_outputs)
+    with tf.name_scope("convert_outputs"):
+        converted_outputs = tf.image.convert_image_dtype(outputs, dtype=tf.uint8, saturate=True)
+        converted_outputs = tf.image.encode_png(converted_outputs)
 
     saver = tf.train.Saver(max_to_keep=20)
     config = tf.ConfigProto(allow_soft_placement=True)
@@ -309,7 +309,7 @@ def _create_model(input_ph):
         checkpoint = tf.train.latest_checkpoint(args.checkpoint_dir)
         saver.restore(sess, checkpoint)
 
-    return outputs, sess
+    return converted_outputs, sess
 
 
 if __name__ == '__main__':
@@ -321,6 +321,9 @@ if __name__ == '__main__':
     webpage = imageio.imread("./cat.png")
     webpage = np.asarray(webpage).astype(np.float32)
     saliency = sess.run(outputs, feed_dict={input_p: webpage})
-    saliency = np.asarray(saliency)
-    print(saliency.shape)
-    print(saliency.dtype)
+
+    with open('./a.png', 'wb') as f:
+        f.write(saliency)
+    # saliency = np.asarray(saliency)
+    # print(saliency.shape)
+    # print(saliency.dtype)
