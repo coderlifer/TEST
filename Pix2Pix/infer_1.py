@@ -255,7 +255,7 @@ def create_model(inputs, targets, max_steps):
     )
 
 
-def _create_model(input_ph):
+def _create_model(input_placeholder):
     if args.seed is None:
         args.seed = random.randint(0, 2 ** 31 - 1)
 
@@ -281,7 +281,7 @@ def _create_model(input_ph):
     with open(os.path.join("test_options.json"), "w") as f:
         f.write(json.dumps(vars(args), sort_keys=True, indent=4))
 
-    examples = load_examples(input_ph)
+    examples = load_examples(input_placeholder)
 
     max_steps = 2 ** 32
     if args.max_epochs is not None:
@@ -300,6 +300,25 @@ def _create_model(input_ph):
         converted_outputs = tf.image.convert_image_dtype(outputs, dtype=tf.uint8, saturate=True)
         converted_outputs = tf.image.encode_png(converted_outputs)
 
+    # saver = tf.train.Saver(max_to_keep=20)
+    # config = tf.ConfigProto(allow_soft_placement=True)
+    # config.gpu_options.allow_growth = True
+    # sess = tf.Session(config=config)
+    # sess.run(tf.global_variables_initializer())
+    #
+    # if args.checkpoint_dir is not None:
+    #     print("loading model from checkpoint")
+    #     checkpoint = tf.train.latest_checkpoint(args.checkpoint_dir)
+    #     saver.restore(sess, checkpoint)
+
+    return converted_outputs
+
+
+if __name__ == '__main__':
+    # 调用一次，创建模型
+    input_placeholder = tf.placeholder(tf.uint8, [None, None, 3], 'input_placeholder')
+    outputs = _create_model(input_placeholder)
+
     saver = tf.train.Saver(max_to_keep=20)
     config = tf.ConfigProto(allow_soft_placement=True)
     config.gpu_options.allow_growth = True
@@ -311,23 +330,11 @@ def _create_model(input_ph):
         checkpoint = tf.train.latest_checkpoint(args.checkpoint_dir)
         saver.restore(sess, checkpoint)
 
-    return converted_outputs, sess
-
-
-if __name__ == '__main__':
-    # 调用一次，创建模型
-    input_p = tf.placeholder(tf.uint8, [None, None, 3], 'input_placeholder')
-    outputs, sess = _create_model(input_p)
-
     # 调用多次，算saliency
     webpage = imageio.imread("./cat.png")
-    print('\ninput.shape: {}'.format(webpage.shape))
-    print('input.shape: {}\n'.format(webpage.dtype))
-    saliency = sess.run(outputs, feed_dict={input_p: webpage})
+    saliency = sess.run(outputs, feed_dict={input_placeholder: webpage})
 
     with open('./a.png', 'wb') as f:
         f.write(saliency)
     # saliency = np.asarray(saliency)
-    # print(saliency.shape)
-    # print(saliency.dtype)
     # `infer.py`.
