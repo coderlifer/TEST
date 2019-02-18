@@ -276,7 +276,7 @@ def _create_model(input_ph):
         args.scale_size = CROP_SIZE
         args.flip = False
 
-    with open(os.path.join(args.output_dir, "options.json"), "w") as f:
+    with open(os.path.join("test_options.json"), "w") as f:
         f.write(json.dumps(vars(args), sort_keys=True, indent=4))
 
     examples = load_examples(input_ph)
