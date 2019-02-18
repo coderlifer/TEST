@@ -316,14 +316,13 @@ def _create_model(input_ph):
 
 if __name__ == '__main__':
     # 调用一次，创建模型
-    input_p = tf.placeholder(tf.float32, [None, None, 3], 'input_placeholder')
+    input_p = tf.placeholder(tf.uint8, [None, None, 3], 'input_placeholder')
     outputs, sess = _create_model(input_p)
 
     # 调用多次，算saliency
     webpage = imageio.imread("./cat.png")
-    print('\ninput.shape: {}\n'.format(webpage.shape))
-    webpage = np.asarray(webpage).astype(np.float32)
-
+    print('\ninput.shape: {}'.format(webpage.shape))
+    print('input.shape: {}\n'.format(webpage.dtype))
     saliency = sess.run(outputs, feed_dict={input_p: webpage})
 
     with open('./a.png', 'wb') as f:
