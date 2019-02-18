@@ -43,7 +43,8 @@ parser.add_argument('--n_dis', type=int, default=5,
                     help='Number of discriminator update per generator update.')
 parser.add_argument('--input_dir', type=str, default='./', help="path to folder containing images")
 parser.add_argument('--output_dir', type=str, default='./output_train', help='Directory to output the result.')
-parser.add_argument('--checkpoint_dir', type=str, default='/home/tellhow-iot/pix2pix_data/output_resize_512/ model-47200',
+parser.add_argument('--checkpoint_dir', type=str,
+                    default='/home/tellhow-iot/pix2pix_data/output_resize_512/ model-47200',
                     help='Directory to stroe checkpoints and summaries.')
 parser.add_argument("--which_direction", type=str, default="AtoB", choices=["AtoB", "BtoA"])
 parser.add_argument("--seed", type=int)
@@ -79,7 +80,6 @@ parser.add_argument('--upsampe_method', dest="upsampe_method", type=str, default
                     help='depth_to_space, resize')
 
 args = parser.parse_args()
-
 
 tf.logging.set_verbosity(tf.logging.INFO)
 
@@ -143,16 +143,20 @@ def load_examples(raw_input):
         target_images = tf.image.resize_images(
             targets, [args.scale_size, args.scale_size], method=tf.image.ResizeMethod.AREA)
 
-    paths_batch, inputs_batch, targets_batch = \
-        tf.train.batch(["", input_images, target_images], batch_size=args.batch_size)
-    steps_per_epoch = int(math.ceil(1 / args.batch_size))
+    paths_batch = tf.convert_to_tensor("", tf.string)
+    # paths_batch, inputs_batch, targets_batch = \
+    #     tf.train.batch(["", input_images, target_images], batch_size=args.batch_size)
+    # steps_per_epoch = int(math.ceil(1 / args.batch_size))
+
+    input_images = tf.expand_dims(input_images, 0)
+    target_images = tf.expand_dims(target_images, 0)
 
     return Examples(
         paths=paths_batch,
-        inputs=inputs_batch,
-        targets=targets_batch,
+        inputs=input_images,
+        targets=target_images,
         count=1,
-        steps_per_epoch=steps_per_epoch,
+        steps_per_epoch=1,
     )
 
 
@@ -249,7 +253,7 @@ def create_model(inputs, targets, max_steps):
     )
 
 
-def infer(images):
+def _create_model(input_ph):
     if args.seed is None:
         args.seed = random.randint(0, 2 ** 31 - 1)
 
@@ -275,7 +279,7 @@ def infer(images):
     with open(os.path.join(args.output_dir, "options.json"), "w") as f:
         f.write(json.dumps(vars(args), sort_keys=True, indent=4))
 
-    examples = load_examples(images)
+    examples = load_examples(input_ph)
 
     max_steps = 2 ** 32
     if args.max_epochs is not None:
@@ -290,44 +294,33 @@ def infer(images):
     outputs = deprocess(modelNamedtuple.outputs)
     outputs = tf.squeeze(outputs)
 
-    with tf.name_scope("convert_outputs"):
-        converted_outputs = tf.image.convert_image_dtype(outputs, dtype=tf.uint8, saturate=True)
-        converted_outputs = tf.image.encode_png(converted_outputs)
+    # with tf.name_scope("convert_outputs"):
+    #     converted_outputs = tf.image.convert_image_dtype(outputs, dtype=tf.uint8, saturate=True)
+    #     converted_outputs = tf.image.encode_png(converted_outputs)
 
     saver = tf.train.Saver(max_to_keep=20)
     config = tf.ConfigProto(allow_soft_placement=True)
     config.gpu_options.allow_growth = True
-    with tf.Session(config=config) as sess:
-        sess.run(tf.global_variables_initializer())
+    sess = tf.Session(config=config)
+    sess.run(tf.global_variables_initializer())
 
-        coord = tf.train.Coordinator()
-        threads = tf.train.start_queue_runners(sess=sess, coord=coord)
+    if args.checkpoint_dir is not None:
+        print("loading model from checkpoint")
+        checkpoint = tf.train.latest_checkpoint(args.checkpoint_dir)
+        saver.restore(sess, checkpoint)
 
-        if args.checkpoint_dir is not None:
-            print("loading model from checkpoint")
-            checkpoint = tf.train.latest_checkpoint(args.checkpoint_dir)
-            saver.restore(sess, checkpoint)
-
-        if args.mode == "test":
-            # testing
-            # at most, process the test data once
-            max_steps = min(examples.steps_per_epoch, max_steps)
-            for step in range(max_steps):
-                img = sess.run(outputs)
-                img = np.asarray(img)
-                print(img.shape)
-                print(img.dtype)
-
-                img_display = sess.run(converted_outputs)
-                with open('./a.png', 'wb') as f:
-                    f.write(img_display)
-
-        coord.request_stop()
-        coord.join(threads)
+    return outputs, sess
 
 
 if __name__ == '__main__':
-    img = imageio.imread("./cat.png")
-    img = np.asarray(img).astype(np.float32)
+    # 调用一次，创建模型
+    input_p = tf.placeholder(tf.float32, [None, None, 3], 'input_p')
+    outputs, sess = _create_model(input_p)
 
-    infer(img)
+    # 调用多次，算saliency
+    webpage = imageio.imread("./cat.png")
+    webpage = np.asarray(webpage).astype(np.float32)
+    saliency = sess.run(outputs, feed_dict={input_p: webpage})
+    saliency = np.asarray(saliency)
+    print(saliency.shape)
+    print(saliency.dtype)
