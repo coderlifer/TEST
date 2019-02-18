@@ -149,7 +149,9 @@ def load_examples(raw_input):
     # steps_per_epoch = int(math.ceil(1 / args.batch_size))
 
     input_images = tf.expand_dims(input_images, 0)
+    print('\ninput_images.shape.as_list(): {}'.format(input_images.shape.as_list()))
     target_images = tf.expand_dims(target_images, 0)
+    print('target_images.shape.as_list(): {}\n'.format(target_images.shape.as_list()))
 
     return Examples(
         paths=paths_batch,
@@ -314,12 +316,14 @@ def _create_model(input_ph):
 
 if __name__ == '__main__':
     # 调用一次，创建模型
-    input_p = tf.placeholder(tf.float32, [None, None, 3], 'input_p')
+    input_p = tf.placeholder(tf.float32, [None, None, 3], 'input_placeholder')
     outputs, sess = _create_model(input_p)
 
     # 调用多次，算saliency
     webpage = imageio.imread("./cat.png")
+    print('input.shape: {}'.format(webpage.shape))
     webpage = np.asarray(webpage).astype(np.float32)
+
     saliency = sess.run(outputs, feed_dict={input_p: webpage})
 
     with open('./a.png', 'wb') as f:
