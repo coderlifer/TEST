@@ -205,7 +205,32 @@ def msers_detection(root_dir, subfolder):
 if __name__ == '__main__':
     # mkval('/home/thinkpad/Downloads/DT/pix2pix_data/stimuli', 'mixed')
     # rename_files('/home/thinkpad/Downloads/DT/pix2pix_data/', 'val')
-    resize_img('/media/thinkpad/Windows/Users/Lenovo/Downloads/Saliency/ws_pred/output_test/val/59000', 'val')
+    # resize_img('/media/thinkpad/Windows/Users/Lenovo/Downloads/Saliency/ws_pred/output_test/val/59000', 'val')
     # feat_extr('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data/A', 'test')
     # edge_detection('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data/A', 'test')
     # msers_detection('/home/thinkpad/Downloads/DT/webpage_data/pix2pix_data/A', 'test')
+
+    a = '/home/thinkpad/Downloads/DT/tem/31860/val'
+    a_imgs = [os.path.join(a, item) for item in os.listdir(a)]
+    a_imgs.sort()
+    print(a_imgs)
+    b = '/home/thinkpad/Downloads/DT/tem/val'
+    b_imgs = [os.path.join(b, item) for item in os.listdir(b)]
+    b_imgs.sort()
+    print(b_imgs)
+
+    for i in range(len(a_imgs)):
+        a_img = cv2.imread(a_imgs[i], cv2.IMREAD_GRAYSCALE)
+        # print(a_img.shape)
+        b_img = cv2.imread(b_imgs[i], cv2.IMREAD_GRAYSCALE)
+        height, width = b_img.shape
+        # print(height, width)
+        # im = cv2.imread(os.path.join(input_dir, img), cv2.IMREAD_UNCHANGED)
+
+        img_resized = cv2.resize(a_img, (width, height), interpolation=cv2.INTER_NEAREST)
+        # img_resized = cv2.resize(a_img, (width, height), interpolation=cv2.INTER_CUBIC)
+        print(tuple(img_resized.shape))
+
+        prefix = os.path.splitext(a_imgs[i])[0] + '.png'
+        print(prefix)
+        cv2.imwrite(prefix, img_resized)
