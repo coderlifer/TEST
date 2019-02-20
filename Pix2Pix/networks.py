@@ -288,6 +288,89 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
     return layers[-1]
 
 
+
+def resnet_g_2(generator_inputs, generator_outputs_channels, ngf):
+    """ UNet using ResNet architecture.
+    Args:
+
+    Returns:
+    """
+    layers = []
+
+    # encoder_1: [batch, 512, 512, in_channels] => [batch, 256, 256, ngf]
+    with tf.variable_scope("encoder_1"):
+        output = ResidualDenseBlock(
+            generator_inputs, generator_inputs.shape.as_list()[-1], ngf, 3,
+            name='G.Block.1',
+            spectral_normed=True, update_collection=None, inputs_norm=False,
+            resample='down', labels=None, biases=True, activation_fn='relu')
+
+        layers.append(output)
+        print('G.encoder_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
+
+    layer_specs = [
+        ngf * 4,  # encoder_2: [batch, 256, 256, ngf] => [batch, 128, 128, ngf * 2]
+        ngf * 4,  # encoder_3: [batch, 128, 128, ngf * 2] => [batch, 64, 64, ngf * 4]
+        ngf * 8,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 32, 32, ngf * 8]
+        ngf * 8,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
+        ngf * 16,  # encoder_6: [batch, 16, 16, ngf * 16] => [batch, 8, 8, ngf * 16]
+        # ngf * 16,  # encoder_7: [batch, 8, 8, ngf * 16] => [batch, 4, 4, ngf * 16]
+    ]
+    for out_channels in layer_specs:
+        with tf.variable_scope("encoder_%d" % (len(layers) + 1)):
+            output = ResidualDenseBlock(
+                layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
+                name='G.Block.%d' % (len(layers) + 1),
+                spectral_normed=True, update_collection=None, inputs_norm=False,
+                resample='down', labels=None, biases=True, activation_fn='relu')
+
+            # output, attn_score = Self_Attn(output)  # attention module
+
+            layers.append(output)
+            print('G.encoder_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
+
+    # [batch, 4, 4, ngf * 16] ----> [batch, 512, 512, ngf]
+    layer_specs_ = [
+        # ngf * 16,  # encoder_7: [batch, 4, 4, ngf * 16] => [batch, 8, 8, ngf * 16]
+        ngf * 8,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 4]
+        ngf * 8,  # encoder_5: [batch, 16, 16, ngf * 4] => [batch, 32, 32, ngf * 4]
+        ngf * 4,  # encoder_5: [batch, 32, 32, ngf * 4] => [batch, 64, 64, ngf * 2]
+        ngf * 4,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 128, 128, ngf * 2]
+        ngf * 1,  # encoder_2: [batch, 128, 128, ngf * 2] => [batch, 256, 256, ngf]
+        ngf * 1,  # encoder_1: [batch, 256, 256, ngf] => [batch, 512, 512, ngf]
+    ]
+    for out_channels in layer_specs_:
+        with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
+            output = ResidualDenseBlock(
+                layers[-1], layers[-1].shape.as_list()[-1], out_channels, 3,
+                name='G.Block.%d' % (len(layers) - len(layer_specs)),
+                spectral_normed=True, update_collection=None, inputs_norm=False,
+                resample='up', labels=None, biases=True, activation_fn='relu')
+
+            if output.shape.as_list()[1] == 64:
+                output, attn_score = Self_Atten(output, spectral_normed=True)  # attention module
+                print('Self_Atten.G: {}'.format(output.shape.as_list()))
+
+            layers.append(output)
+            print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
+
+    # [batch, 512, 512, ngf] ----> [batch, 512, 512, 3]
+    with tf.variable_scope('decoder_{}'.format(len(layers) - len(layer_specs))):
+        output = norm_layer(layers[-1], decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
+        output = nonlinearity(output)
+
+        output = lib.ops.conv2d.Conv2D(
+            output, output.shape.as_list()[-1], generator_outputs_channels, 1, 1, 'Conv2D',
+            conv_type='conv2d', channel_multiplier=0, padding='SAME',
+            spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
+
+        output = tf.nn.tanh(output)
+        layers.append(output)
+        print('G.decoder_{}: {}'.format(len(layers) - len(layer_specs) - 1, layers[-1].shape.as_list()))
+
+    return layers[-1]
+
+
 # TODO
 def resnet_g_vgg(generator_inputs, generator_outputs_channels, ngf, vgg19_npy_path=None):
     """ Use pretrained vgg to extract image featrues, and ResNet architecture to decode image.
