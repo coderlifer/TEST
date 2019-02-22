@@ -344,7 +344,7 @@ def load_examples():
             a_images = preprocess(image_decoded[:, width // 3:(2 * width) // 3, :])
             a_images = tf.concat(values=[a_images_edge, a_images], axis=2)
 
-            b_images = preprocess(image_decoded[:, (2 * width) // 3:, :])
+            b_images = preprocess(image_grayscale[:, (2 * width) // 3:, :])
         else:
             tf.logging.info('\nmultiple_A is not enabled!\n')
             a_images = preprocess(image_decoded[:, :width // 2, :])
