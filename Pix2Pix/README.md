@@ -43,6 +43,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --upsampe_method='depth_to_space'
 
 
+# n2
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --batch_size=1 \
   --mode='train' \
@@ -69,6 +70,33 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --upsampe_method='depth_to_space'
 
   --nasnet='/home/tellhow-iot/tem/webpagesaliency/nasnet/model.ckpt' \
+
+
+# n2_1
+CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
+  --batch_size=1 \
+  --mode='train' \
+  --conv_type='conv2d' \
+  --channel_multiplier=0 \
+  --beta1=0. \
+  --beta2=0.9 \
+  --loss_type='HINGE' \
+  --content_loss='nss' \
+  --n_dis=1 \
+  --input_dir=/home/tellhow-iot/tem/webpagesaliency/ws_singleA/train \
+  --output_dir=/data/tem/webpagesaliency/output_resize_512 \
+  --max_epochs=400 \
+  --which_direction=AtoB \
+  --save_freq=1180 \
+  --ngf=64 \
+  --ndf=64 \
+  --scale_size=572 \
+  --TTUR \
+  --l1_weight=1.0 \
+  --gan_weight=1.0 \
+  --net_type='ResNet' \
+  --upsampe_method='depth_to_space'
+
 
 # infer
 # 47200 29500 28320 27140 25960 23600
@@ -102,6 +130,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_1.py \
   --upsampe_method=depth_to_space
 
 
+# n2
 # 47200 46020 29500 28320 27140 25960 23600
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --batch_size=1 \

@@ -42,8 +42,8 @@ class Pix2Pix(object):
                                      upsampe_method=upsampe_method)
         elif net_type == 'ResNet':
             with tf.variable_scope('g_net', reuse=reuse):
-                # output = networks.resnet_g_1(inputs, outputs_channels, ngf)
-                output = networks.resnet_g_2(inputs, outputs_channels, ngf)
+                output = networks.resnet_g_1(inputs, outputs_channels, ngf)
+                # output = networks.resnet_g_2(inputs, outputs_channels, ngf)
             # output = networks.resnet_g_NASNet(inputs, outputs_channels, ngf)
             # output = networks.resnet_g_VGG16(inputs, outputs_channels, ngf)
         elif net_type == 'VGG':
@@ -93,10 +93,14 @@ class Pix2Pix(object):
                 #                                conv_type=conv_type,
                 #                                channel_multiplier=channel_multiplier,
                 #                                padding=padding)
-                output = networks.unet_discriminator_1_1(inputs, targets, ndf, spectral_normed, update_collection,
-                                                         conv_type=conv_type,
-                                                         channel_multiplier=channel_multiplier,
-                                                         padding=padding)
+                # output = networks.unet_discriminator_1_1(inputs, targets, ndf, spectral_normed, update_collection,
+                #                                          conv_type=conv_type,
+                #                                          channel_multiplier=channel_multiplier,
+                #                                          padding=padding)
+                output = networks.unet_discriminator_1(inputs, targets, ndf, spectral_normed, update_collection,
+                                                       conv_type=conv_type,
+                                                       channel_multiplier=channel_multiplier,
+                                                       padding=padding)
             elif net_type == 'VGG':
                 output = networks.vgg_discriminator(inputs, targets, ndf, spectral_normed, update_collection,
                                                     conv_type=conv_type,

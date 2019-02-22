@@ -265,15 +265,17 @@ def kldiv(s_map, gt):
 #############################################
 
 if __name__ == '__main__':
-    pre_dir = '/home/thinkpad/Downloads/DT/tem/41300/val'
+    pre_dir = '/home/thinkpad/Downloads/images'
     pre_files = os.listdir(pre_dir)
     pre_files.sort()
     pre_files = [os.path.join(pre_dir, pre_file) for pre_file in pre_files]
+    # print(pre_files)
 
-    gt_dir = '/media/thinkpad/Windows/Users/Lenovo/Downloads/Saliency/ws_pred/webpage_dataset/pix2pix_data/C/val_resized_512'
+    gt_dir = '/media/thinkpad/Windows/Users/Lenovo/Downloads/Saliency/ws_pred/webpage_dataset/pix2pix_data/B/val_resized_512'
     gt_files = os.listdir(gt_dir)
     gt_files.sort()
     gt_files = [os.path.join(gt_dir, gt_file) for gt_file in gt_files]
+    # print(gt_files)
 
     gts = list()
     for gt_file in gt_files:
@@ -301,13 +303,13 @@ if __name__ == '__main__':
     # auc_shuff_score = auc_shuff(s_map_norm, gt, gt)
     # print('auc shuffled :', auc_shuff_score)
 
-    nss_score_sum = 0
-    for i in range(len(gt_files)):
-        nss_score = nss(s_maps[i], gts[i])
-        print('nss :', nss_score)
-
-        nss_score_sum += nss_score
-    print('mean nss_score: {}'.format(np.float32(nss_score_sum) / len(gt_files)))
+    # nss_score_sum = 0
+    # for i in range(len(gt_files)):
+    #     nss_score = nss(s_maps[i], gts[i])
+    #     print('nss :', nss_score)
+    #
+    #     nss_score_sum += nss_score
+    # print('mean nss_score: {}'.format(np.float32(nss_score_sum) / len(gt_files)))
 
     # infogain_score = infogain(s_map_norm, gt, gt)
     # print('info gain :', infogain_score)
@@ -315,7 +317,16 @@ if __name__ == '__main__':
     # # continous gts
     # sim_score = similarity(s_map, gt)
     # print('sim score :', sim_score)
+
     # cc_score = cc(s_map, gt)
     # print('cc score :', cc_score)
+    cc_score_sum = 0
+    for i in range(len(gt_files)):
+        cc_score = cc(s_maps[i], gts[i])
+        print('nss :', cc_score)
+
+        cc_score_sum += cc_score
+    print('mean nss_score: {}'.format(np.float32(cc_score_sum) / len(gt_files)))
+
     # kldiv_score = kldiv(s_map, gt)
     # print('kldiv score :', kldiv_score)
