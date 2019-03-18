@@ -1494,6 +1494,33 @@ def unet_generator_1(generator_inputs, generator_outputs_channels, ngf, conv_typ
 
             layers.append(output)
 
+    layers1 = []
+    # encoder_1: [batch, 512, 512, in_channels] => [batch, 256, 256, ngf]
+    with tf.variable_scope("encoder_1"):
+        output = lib.ops.conv2d.Conv2D(
+            generator_inputs, generator_inputs.shape.as_list()[-1], ngf, 5, 2, 'Conv2D',
+            conv_type=conv_type, channel_multiplier=channel_multiplier, padding=padding,
+            spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
+        layers1.append(output)
+
+    for out_channels in layer_specs:
+        with tf.variable_scope("encoder_%d" % (len(layers1) + 1)):
+            # [batch, in_height, in_width, in_channels] => [batch, in_height/2, in_width/2, out_channels]
+            output = lib.ops.conv2d.Conv2D(
+                layers1[-1], layers1[-1].shape.as_list()[-1], out_channels, 5, 2, 'Conv2D',
+                conv_type=conv_type, channel_multiplier=channel_multiplier, padding=padding,
+                spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
+
+            output = norm_layer(output, decay=0.9, epsilon=1e-6, is_training=True, norm_type="IN")
+            output = nonlinearity(output, 'lrelu', 0.2)
+
+            # output, attn_score = Self_Attn(output)  # attention module
+            layers1.append(output)
+
+    # midd = tf.concat([layer[-1], layers1[-1]], axis=-1)
+    midd = tf.add(layers[-1], layers1[-1])
+    layers[-1] = midd
+
     layer_specs = [
         # (ngf * 8, 0.5),  # decoder_8: [batch, 1, 1, ngf * 8] => [batch, 2, 2, ngf * 8 * 2]
         # (ngf * 8, 0.5),  # decoder_7: [batch, 2, 2, ngf * 8 * 2] => [batch, 4, 4, ngf * 8 * 2]

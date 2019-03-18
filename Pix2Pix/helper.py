@@ -12,7 +12,7 @@ import scipy.misc
 import shutil
 
 GRAY_SCALE = np.array([512, 512], dtype=np.float32)
-RGB_SCALE = np.array([512, 512], dtype=np.float32)
+RGB_SCALE = np.array([1360, 768], dtype=np.float32)
 # RGB_SCALE = np.array([256, 256], dtype=np.float32)
 
 

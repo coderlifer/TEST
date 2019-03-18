@@ -14,36 +14,7 @@ n1_1_1| 0.8306/0.7734/0.7047 | 0.6872 | 1.5937
 # cd to `Pix2Pix` folder and run command bellow
 
 # train
-CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
-  --batch_size=1 \
-  --mode='train' \
-  --conv_type='conv2d' \
-  --channel_multiplier=0 \
-  --initial_lr=0.0002 \
-  --end_lr=0.0001 \
-  --beta1=0. \
-  --beta2=0.9 \
-  --loss_type='HINGE' \
-  --content_loss='bce' \
-  --n_dis=1 \
-  --input_dir=/home/tellhow-iot/tem/webpagesaliency/ws_singleA/train \
-  --output_dir=/data/tem/webpagesaliency/output_resize_512 \
-  --max_epochs=400 \
-  --which_direction=AtoB \
-  --save_freq=1180 \
-  --ngf=64 \
-  --ndf=64 \
-  --scale_size=572 \
-  --TTUR \
-  --l1_weight=0.05 \
-  --gan_weight=1.0 \
-  --multiple_A \
-  --net_type='ResNet' \
-  --nasnet='/home/tellhow-iot/tem/webpagesaliency/nasnet/model.ckpt' \
-  --upsampe_method='depth_to_space'
-
-
-# n2
+# n1_1_1_nss_2A
 CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --batch_size=1 \
   --mode='train' \
@@ -54,7 +25,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --loss_type='HINGE' \
   --content_loss='nss' \
   --n_dis=1 \
-  --input_dir=/home/tellhow-iot/tem/webpagesaliency/ws_singleA/train \
+  --input_dir=/home/tellhow-iot/tem/webpagesaliency/pix2pix_data_2A/train \
   --output_dir=/data/tem/webpagesaliency/output_resize_512 \
   --max_epochs=400 \
   --which_direction=AtoB \
@@ -65,15 +36,12 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --TTUR \
   --l1_weight=1.0 \
   --gan_weight=1.0 \
+  --multiple_A \
   --net_type='ResNet' \
-  --pretrained_imagenet='/home/tellhow-iot/tem/webpagesaliency/vgg/vgg_16.ckpt' \
   --upsampe_method='depth_to_space'
-
-  --nasnet='/home/tellhow-iot/tem/webpagesaliency/nasnet/model.ckpt' \
-
-
-# n2_1
-CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
+  
+# n1_1_1_nss_1A
+CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_1.py \
   --batch_size=1 \
   --mode='train' \
   --conv_type='conv2d' \
@@ -83,8 +51,8 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --loss_type='HINGE' \
   --content_loss='nss' \
   --n_dis=1 \
-  --input_dir=/home/tellhow-iot/tem/webpagesaliency/ws_singleA/train \
-  --output_dir=/data/tem/webpagesaliency/output_resize_512 \
+  --input_dir=/home/tem/ws_singleA/train \
+  --output_dir=/data/tem/webpagesaliency/output_resize_512_1A \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=1180 \
