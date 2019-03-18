@@ -245,6 +245,37 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
             layers.append(output)
             print('G.encoder_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
 
+
+    layers1 = []
+    # encoder_1: [batch, 512, 512, in_channels] => [batch, 256, 256, ngf]
+    with tf.variable_scope("subnet_1"):
+        output = ResidualBlock(
+            generator_inputs, generator_inputs.shape.as_list()[-1], ngf, 3,
+            name='G.Block.1',
+            spectral_normed=True, update_collection=None, inputs_norm=False,
+            resample='down', labels=None, biases=True, activation_fn='relu')
+
+        layers1.append(output)
+        print('G.subnet_{}: {}'.format(len(layers1), layers1[-1].shape.as_list()))
+
+    for out_channels in layer_specs:
+        with tf.variable_scope("subnet_%d" % (len(layers1) + 1)):
+            output = ResidualBlock(
+                layers1[-1], layers1[-1].shape.as_list()[-1], out_channels, 3,
+                name='G.Block.%d' % (len(layers1) + 1),
+                spectral_normed=True, update_collection=None, inputs_norm=False,
+                resample='down', labels=None, biases=True, activation_fn='relu')
+
+            # output, attn_score = Self_Attn(output)  # attention module
+
+            layers1.append(output)
+            print('G.subnet_{}: {}'.format(len(layers1), layers1[-1].shape.as_list()))
+
+    # midd = tf.concat([layer[-1], layers1[-1]], axis=-1)
+    midd = tf.add(layers[-1], layers1[-1])
+    layers[-1] = midd
+
+
     # [batch, 4, 4, ngf * 16] ----> [batch, 512, 512, ngf]
     layer_specs_ = [
         ngf * 16,  # encoder_7: [batch, 4, 4, ngf * 16] => [batch, 8, 8, ngf * 16]
