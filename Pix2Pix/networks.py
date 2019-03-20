@@ -293,7 +293,7 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
                 spectral_normed=True, update_collection=None, inputs_norm=False,
                 resample='up', labels=None, biases=True, activation_fn='relu')
 
-            if out_channels == ngf * 2:
+            if out_channels == ngf * 4:
                 output, attn_score = Self_Atten(output, spectral_normed=True)  # attention module
                 print('Self_Atten.G: {}'.format(output.shape.as_list()))
 
@@ -306,16 +306,16 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
         output = nonlinearity(output)
 
         # output = tf.pad(output, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
-        # output = lib.ops.conv2d.Conv2D(
-        #     output, output.shape.as_list()[-1], generator_outputs_channels, 3, 1, 'Conv2D',
-        #     conv_type='conv2d', channel_multiplier=0, padding='SAME',
-        #     spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
-
         output = lib.ops.conv2d.Conv2D(
-            output, output.shape.as_list()[-1], generator_outputs_channels, 3, 1, 'atrous_conv2d',
-            conv_type='atrous_conv2d', channel_multiplier=0, dilation_rate=2,
-            padding='SAME', spectral_normed=True, update_collection=None,
-            inputs_norm=False, he_init=True, biases=True)
+            output, output.shape.as_list()[-1], generator_outputs_channels, 3, 1, 'Conv2D',
+            conv_type='conv2d', channel_multiplier=0, padding='SAME',
+            spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
+
+        # output = lib.ops.conv2d.Conv2D(
+        #     output, output.shape.as_list()[-1], generator_outputs_channels, 3, 1, 'atrous_conv2d',
+        #     conv_type='atrous_conv2d', channel_multiplier=0, dilation_rate=2,
+        #     padding='SAME', spectral_normed=True, update_collection=None,
+        #     inputs_norm=False, he_init=True, biases=True)
 
         output = tf.nn.tanh(output)
         layers.append(output)

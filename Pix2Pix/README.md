@@ -41,7 +41,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --upsampe_method='depth_to_space'
   
 # n1_1_1_nss_1A
-CUDA_VISIBLE_DEVICES=0 python3 Pix2Pix/train_1.py \
+CUDA_VISIBLE_DEVICES=1 python3 Pix2Pix/train_1.py \
   --batch_size=1 \
   --mode='train' \
   --conv_type='conv2d' \
@@ -52,7 +52,7 @@ CUDA_VISIBLE_DEVICES=0 python3 Pix2Pix/train_1.py \
   --content_loss='bce' \
   --n_dis=1 \
   --input_dir=/home/tem/ws/ws_singleA/train \
-  --output_dir=/data/tem/webpagesaliency/output_resize_512_1A \
+  --output_dir=/data/tem/webpagesaliency/output_resize_512_2 \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=1180 \
@@ -67,7 +67,6 @@ CUDA_VISIBLE_DEVICES=0 python3 Pix2Pix/train_1.py \
 
 
 # infer
-# 47200 29500 28320 27140 25960 23600
 CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_1.py \
   --batch_size=1 \
   --mode='test' \
@@ -98,9 +97,8 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_1.py \
   --upsampe_method=depth_to_space
 
 
-# n2
-# 47200 46020 29500 28320 27140 25960 23600
-CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
+# n1_1_1_nss_1A
+CUDA_VISIBLE_DEVICES=0 python3 Pix2Pix/train_1.py \
   --batch_size=1 \
   --mode='test' \
   --conv_type='conv2d' \
@@ -108,10 +106,10 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --beta1=0. \
   --beta2=0.9 \
   --loss_type='HINGE' \
-  --content_loss='nss' \
+  --content_loss='bce' \
   --n_dis=1 \
-  --input_dir=/home/tellhow-iot/tem/webpagesaliency/ws_singleA/val \
-  --output_dir=/data/tem/webpagesaliency/output_resize_512/tem/47200 \
+  --input_dir=/home/tem/ws/ws_singleA/val \
+  --output_dir=/data/tem/webpagesaliency/output_resize_512_2/tem/1180 \
   --max_epochs=400 \
   --which_direction=AtoB \
   --save_freq=1180 \
@@ -121,7 +119,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --TTUR \
   --l1_weight=0.05 \
   --gan_weight=1.0 \
-  --checkpoint_dir=/data/tem/webpagesaliency/output_resize_512/ \
-  --checkpoint=/data/tem/webpagesaliency/output_resize_512/model-47200 \
+  --checkpoint_dir=/data/tem/webpagesaliency/output_resize_512_2/ \
+  --checkpoint=/data/tem/webpagesaliency/output_resize_512_2/model-1180 \
   --net_type='ResNet' \
   --upsampe_method=depth_to_space
