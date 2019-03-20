@@ -93,14 +93,12 @@ class Pix2Pix(object):
                 #                                conv_type=conv_type,
                 #                                channel_multiplier=channel_multiplier,
                 #                                padding=padding)
-                # output = networks.unet_discriminator_1_1(inputs, targets, ndf, spectral_normed, update_collection,
-                #                                          conv_type=conv_type,
-                #                                          channel_multiplier=channel_multiplier,
-                #                                          padding=padding)
-                output = networks.unet_discriminator_1(inputs, targets, ndf, spectral_normed, update_collection,
-                                                       conv_type=conv_type,
-                                                       channel_multiplier=channel_multiplier,
-                                                       padding=padding)
+                output = networks.unet_discriminator_1_1(
+                    inputs, targets, ndf, spectral_normed, update_collection, conv_type=conv_type,
+                    channel_multiplier=channel_multiplier, padding=padding)
+                # output = networks.unet_discriminator_1(
+                #     inputs, targets, ndf, spectral_normed, update_collection, conv_type=conv_type,
+                #     channel_multiplier=channel_multiplier, padding=padding)
             elif net_type == 'VGG':
                 output = networks.vgg_discriminator(inputs, targets, ndf, spectral_normed, update_collection,
                                                     conv_type=conv_type,

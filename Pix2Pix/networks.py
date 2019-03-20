@@ -228,7 +228,7 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
         ngf * 2,  # encoder_2: [batch, 256, 256, ngf] => [batch, 128, 128, ngf * 2]
         ngf * 4,  # encoder_3: [batch, 128, 128, ngf * 2] => [batch, 64, 64, ngf * 4]
         ngf * 8,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 32, 32, ngf * 8]
-        ngf * 8,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
+        ngf * 16,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
         ngf * 16,  # encoder_6: [batch, 16, 16, ngf * 16] => [batch, 8, 8, ngf * 16]
         ngf * 16,  # encoder_7: [batch, 8, 8, ngf * 16] => [batch, 4, 4, ngf * 16]
     ]
@@ -244,7 +244,6 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
 
             layers.append(output)
             print('G.encoder_{}: {}'.format(len(layers), layers[-1].shape.as_list()))
-
 
     layers1 = []
     # encoder_1: [batch, 512, 512, in_channels] => [batch, 256, 256, ngf]
@@ -271,15 +270,15 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
             layers1.append(output)
             print('G.subnet_{}: {}'.format(len(layers1), layers1[-1].shape.as_list()))
 
-    # midd = tf.concat([layer[-1], layers1[-1]], axis=-1)
-    midd = tf.add(layers[-1], layers1[-1])
+    midd = tf.concat([layers[-1], layers1[-1]], axis=-1)
+    # midd = tf.add(layers[-1], layers1[-1])
     layers[-1] = midd
-
+    print('midd: {}'.format(len(layers1), layers1[-1].shape.as_list()))
 
     # [batch, 4, 4, ngf * 16] ----> [batch, 512, 512, ngf]
     layer_specs_ = [
         ngf * 16,  # encoder_7: [batch, 4, 4, ngf * 16] => [batch, 8, 8, ngf * 16]
-        ngf * 8,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 8]
+        ngf * 16,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 8]
         ngf * 8,  # encoder_5: [batch, 16, 16, ngf * 8] => [batch, 32, 32, ngf * 8]
         ngf * 4,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 64, 64, ngf * 4]
         ngf * 2,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 128, 128, ngf * 2]
@@ -307,10 +306,16 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
         output = nonlinearity(output)
 
         # output = tf.pad(output, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
+        # output = lib.ops.conv2d.Conv2D(
+        #     output, output.shape.as_list()[-1], generator_outputs_channels, 3, 1, 'Conv2D',
+        #     conv_type='conv2d', channel_multiplier=0, padding='SAME',
+        #     spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
+
         output = lib.ops.conv2d.Conv2D(
-            output, output.shape.as_list()[-1], generator_outputs_channels, 3, 1, 'Conv2D',
-            conv_type='conv2d', channel_multiplier=0, padding='SAME',
-            spectral_normed=True, update_collection=None, inputs_norm=False, he_init=True, biases=True)
+            output, output.shape.as_list()[-1], generator_outputs_channels, 3, 1, 'atrous_conv2d',
+            conv_type='atrous_conv2d', channel_multiplier=0, dilation_rate=2,
+            padding='SAME', spectral_normed=True, update_collection=None,
+            inputs_norm=False, he_init=True, biases=True)
 
         output = tf.nn.tanh(output)
         layers.append(output)
@@ -1796,7 +1801,7 @@ def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed
         # padded_input = tf.pad(rectified, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         convolved = lib.ops.conv2d.Conv2D(
             layers[-1], layers[-1].shape.as_list()[-1], 1, 5, 1, 'atrous_conv2d',
-            conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=4,
+            conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=2,
             padding='SAME', spectral_normed=spectral_normed, update_collection=update_collection,
             inputs_norm=False, he_init=True, biases=True)
 
