@@ -230,7 +230,7 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
         ngf * 8,  # encoder_4: [batch, 64, 64, ngf * 4] => [batch, 32, 32, ngf * 8]
         ngf * 16,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 16, 16, ngf * 8]
         ngf * 16,  # encoder_6: [batch, 16, 16, ngf * 16] => [batch, 8, 8, ngf * 16]
-        ngf * 16,  # encoder_7: [batch, 8, 8, ngf * 16] => [batch, 4, 4, ngf * 16]
+        # ngf * 16,  # encoder_7: [batch, 8, 8, ngf * 16] => [batch, 4, 4, ngf * 16]
     ]
     for out_channels in layer_specs:
         with tf.variable_scope("encoder_%d" % (len(layers) + 1)):
@@ -277,7 +277,7 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
 
     # [batch, 4, 4, ngf * 16] ----> [batch, 512, 512, ngf]
     layer_specs_ = [
-        ngf * 16,  # encoder_7: [batch, 4, 4, ngf * 16] => [batch, 8, 8, ngf * 16]
+        # ngf * 16,  # encoder_7: [batch, 4, 4, ngf * 16] => [batch, 8, 8, ngf * 16]
         ngf * 16,  # encoder_6: [batch, 8, 8, ngf * 16] => [batch, 16, 16, ngf * 8]
         ngf * 8,  # encoder_5: [batch, 16, 16, ngf * 8] => [batch, 32, 32, ngf * 8]
         ngf * 4,  # encoder_5: [batch, 32, 32, ngf * 8] => [batch, 64, 64, ngf * 4]
@@ -293,7 +293,7 @@ def resnet_g_1(generator_inputs, generator_outputs_channels, ngf):
                 spectral_normed=True, update_collection=None, inputs_norm=False,
                 resample='up', labels=None, biases=True, activation_fn='relu')
 
-            if out_channels == ngf * 4:
+            if out_channels == ngf * 2:
                 output, attn_score = Self_Atten(output, spectral_normed=True)  # attention module
                 print('Self_Atten.G: {}'.format(output.shape.as_list()))
 
@@ -1763,7 +1763,7 @@ def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed
     with tf.variable_scope("layer_1"):
         # padded_input = tf.pad(inputs, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         convolved = lib.ops.conv2d.Conv2D(
-            inputs, inputs.shape.as_list()[-1], ndf, 5, 2, 'atrous_conv2d',
+            inputs, inputs.shape.as_list()[-1], ndf, 3, 2, 'atrous_conv2d',
             conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=2,
             padding='SAME', spectral_normed=spectral_normed, update_collection=update_collection,
             inputs_norm=False, he_init=True, biases=True)
@@ -1782,14 +1782,14 @@ def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed
             stride = 1 if i == n_layers - 1 else 2  # last layer here has stride 1
             # padded_input = tf.pad(layers[-1], [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
             convolved = lib.ops.conv2d.Conv2D(
-                layers[-1], layers[-1].shape.as_list()[-1], out_channels_, 5, stride, 'atrous_conv2d',
+                layers[-1], layers[-1].shape.as_list()[-1], out_channels_, 3, stride, 'atrous_conv2d',
                 conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=2,
                 padding='SAME', spectral_normed=spectral_normed, update_collection=update_collection,
                 inputs_norm=False, he_init=True, biases=True)
             # convolved = norm_layer(convolved, decay=0.9, epsilon=1e-5, is_training=True, norm_type="IN")
             rectified = nonlinearity(convolved, 'lrelu', 0.2)
 
-            if rectified.shape.as_list()[1] == 64:
+            if rectified.shape.as_list()[1] == ndf * 2:
                 rectified, attn_score = Self_Atten(rectified, spectral_normed=True)  # attention module
                 print('Self_Atten.D: {}'.format(rectified.shape.as_list()))
 
@@ -1800,7 +1800,7 @@ def unet_discriminator_1_1(discrim_inputs, discrim_targets, ndf, spectral_normed
     with tf.variable_scope("layer_%d" % (len(layers) + 1)):
         # padded_input = tf.pad(rectified, [[0, 0], [2, 2], [2, 2], [0, 0]], mode="REFLECT")
         convolved = lib.ops.conv2d.Conv2D(
-            layers[-1], layers[-1].shape.as_list()[-1], 1, 5, 1, 'atrous_conv2d',
+            layers[-1], layers[-1].shape.as_list()[-1], 1, 3, 1, 'atrous_conv2d',
             conv_type='atrous_conv2d', channel_multiplier=channel_multiplier, dilation_rate=2,
             padding='SAME', spectral_normed=spectral_normed, update_collection=update_collection,
             inputs_norm=False, he_init=True, biases=True)

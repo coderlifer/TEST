@@ -41,7 +41,7 @@ CUDA_VISIBLE_DEVICES=1 python Pix2Pix/train_1.py \
   --upsampe_method='depth_to_space'
   
 # n1_1_1_nss_1A
-CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_1.py \
+CUDA_VISIBLE_DEVICES=0 python3 Pix2Pix/train_1.py \
   --batch_size=1 \
   --mode='train' \
   --conv_type='conv2d' \
@@ -49,9 +49,9 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_1.py \
   --beta1=0. \
   --beta2=0.9 \
   --loss_type='HINGE' \
-  --content_loss='nss' \
+  --content_loss='bce' \
   --n_dis=1 \
-  --input_dir=/home/tem/ws_singleA/train \
+  --input_dir=/home/tem/ws/ws_singleA/train \
   --output_dir=/data/tem/webpagesaliency/output_resize_512_1A \
   --max_epochs=400 \
   --which_direction=AtoB \
@@ -60,7 +60,7 @@ CUDA_VISIBLE_DEVICES=0 python Pix2Pix/train_1.py \
   --ndf=64 \
   --scale_size=572 \
   --TTUR \
-  --l1_weight=1.0 \
+  --l1_weight=0.05 \
   --gan_weight=1.0 \
   --net_type='ResNet' \
   --upsampe_method='depth_to_space'
